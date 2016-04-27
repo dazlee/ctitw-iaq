@@ -18,3 +18,6 @@ Route::get('/', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+
+Route::post('/upload', 'DeviceHistoryController@upload');
+Route::resource('devices', 'DeviceHistoryController');
