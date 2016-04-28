@@ -19,5 +19,5 @@ Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
-Route::post('/upload', 'DeviceHistoryController@upload');
+Route::post('/devices/file', 'DeviceHistoryController@upload');
 Route::resource('devices', 'DeviceHistoryController');

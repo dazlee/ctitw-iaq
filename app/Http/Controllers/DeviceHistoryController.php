@@ -27,13 +27,17 @@ class DeviceHistoryController extends Controller
 
     public function upload(Request $request) {
 	if (!$request->hasFile($this->formDataKey)) {
-	    return response()->json(['err' => 'invalid form-data key'], 401);
+	    return response()->json(['err' => 'invalid form-data key'], 406);
 	}
 
 	$file = $request->file($this->formDataKey);
 	$content = file_get_contents($file);
 	$rows = DeviceHistory::parseContent($content);
 	
+	if (empty($rows)) {
+	    return response()->json(['err' => 'The format of file is uncorrect'], 406);
+	} 
+
 	DeviceHistory::insert($rows);
         return response()->json(['msg' => 'Success to insert ' . count($rows) . ' rows'], 201);
     }
