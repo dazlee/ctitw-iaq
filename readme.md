@@ -26,13 +26,14 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
-## 1. Command for auto build
+## Setup process
+### 1. Command for auto build
     composer install
     composer dump-autoload
     cp .env.example .env
     php artisan key:generate
 
-## 2. copy dbname, root, password configurations in .env into config/database.php
+### 2. copy dbname, root, password configurations in .env into config/database.php
 
 (optional) if you use different db/table name from laravel default setting, do following:
 
