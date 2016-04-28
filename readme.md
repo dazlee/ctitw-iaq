@@ -8,7 +8,7 @@
 
 ### 2. copy dbname, root, password configurations in .env into config/database.php
 
-(optional) if you use different db/table name from laravel default setting, do following:
+### 3. migrate database tables
 
     php artisan migrate # generate database table
 
