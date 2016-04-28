@@ -31,6 +31,6 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
     composer dump-autoload
     php artisan key:generate
     cp .env.example .evn
-# modify the database root, password and dbname in .env and config/database.php
-php artisan migrate # generate database table
+modify the database root, password and dbname in .env and config/database.php
+    php artisan migrate # generate database table
 
