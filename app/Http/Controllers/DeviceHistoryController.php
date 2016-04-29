@@ -12,6 +12,7 @@ class DeviceHistoryController extends Controller
 {
 
     private $formDataKey = 'file';
+    private $limit = 30;
     private $rules = [
 	'device_id' => 'required',
         'co2' => 'required|numeric',
@@ -20,7 +21,7 @@ class DeviceHistoryController extends Controller
         'created_at' => 'required|date_format:Y-m-d h:i:s',
 	'updated_at' => 'date_format:Y-m-d h:i:s',
     ];
-
+    
     private function validator(array $data) {
 	return Validator::make($data, $this->rules);
     }
@@ -39,14 +40,14 @@ class DeviceHistoryController extends Controller
 	} 
 
 	DeviceHistory::insert($rows);
-        return response()->json(['msg' => 'Success to insert ' . count($rows) . ' rows'], 201);
+        return response()->json(['msg' => $rows], 201);
     }
 
+    
     public function index() {
-	return DeviceHistory::all();
+	return DeviceHistory::orderBy('created_at', 'asc')->paginate($this->limit*16);
     }
-	
-    /*
+    /*	
     public function store(Request $request) {
 	$validator = $this->validator($request->all());
 
@@ -59,6 +60,6 @@ class DeviceHistoryController extends Controller
     */
 
     public function show($deivceId) {
-	return DeviceHistory::where('device_id', $deivceId)->get();
+	return DeviceHistory::where('device_id', $deivceId)->orderBy('created_at', 'asc')->paginate($this->limit);
     }
 }
