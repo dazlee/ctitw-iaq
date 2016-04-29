@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="page-wrapper" id="page-wrapper">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
@@ -11,7 +11,7 @@
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="flot-chart">
-                        <div class="flot-chart-content" id="flot-line-chart" style="width: 500px; height: 300px;"></div>
+                        <div class="flot-chart-content" id="flot-line-chart" style="width: 100%; height: 300px;"></div>
                     </div>
                 </div>
                 <!-- /.panel-body -->
