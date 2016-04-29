@@ -10,9 +10,7 @@
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <div class="flot-chart">
-                <div class="flot-chart-content" id="historychart" style="width: 100%; height: 500px;"></div>
-            </div>
+            <div class="highchart-content" id="historychart" style="width: 100%; height: 500px;"></div>
         </div>
     </div>
 
@@ -21,8 +19,6 @@
 @endsection
 
 @section('scripts')
-<!-- <script src="/js/flot-data.js"></script> -->
-
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script data-main="js/dashboard" src="/js/requirejs/require.js"></script>

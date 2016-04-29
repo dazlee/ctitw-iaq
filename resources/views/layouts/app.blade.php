@@ -12,14 +12,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
 
     <link href="/components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
-    <link href="/css/morris.css" rel="stylesheet">
-    <link href="/css/timeline.css" rel="stylesheet">
     <link href="/css/sb-admin-2.css" rel="stylesheet">
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
+    <link href="/css/main.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Lato';
@@ -31,7 +30,7 @@
     </style>
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom:0px;">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom:0px;padding-right: 30px;">
         <div class="navbar-header">
 
             <!-- Collapsed Hamburger -->
@@ -114,19 +113,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-
     <script src="/components/metisMenu/dist/metisMenu.min.js"></script>
-
     <script src="/js/sb-admin-2.js"></script>
-
-    <!-- Flot Charts JavaScript -->
-    <script src="/js/flot/excanvas.min.js"></script>
-    <script src="/js/flot/jquery.flot.js"></script>
-    <!-- <script src="/js/flot/jquery.flot.pie.js"></script> -->
-    <!-- <script src="/js/flot/jquery.flot.resize.js"></script> -->
-    <script src="/js/flot/jquery.flot.time.js"></script>
-    <script src="/js/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
-
     @yield('scripts')
 </body>
 </html>
