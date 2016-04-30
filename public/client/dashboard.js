@@ -1,6 +1,17 @@
 define(function () {
     return {
         initialize: function (deviceData) {
+            // initialize date range checker
+            $('.input-daterange input').each(function() {
+                $(this).datepicker();
+            });
+
+            $('#unit-selector a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            // initialize chart
             $('#historychart').highcharts({
                 chart: {
                     spacingBottom: 50,
