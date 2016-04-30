@@ -1,98 +1,44 @@
-define(function () {
-    return {
-        initialize: function (deviceData) {
-            // initialize date range checker
-            $('.input-daterange input').each(function() {
-                $(this).datepicker();
-            });
+define(["./constants/chart.js",
+        "underscore",
+        "fetch-utils",
+        "device-utils",
+        "utils"], function (chartOptions, _, fetchUtils, deviceUtils, utils) {
+    function initializeDateRangePicker() {
+        // initialize date range checker
+        $('.input-daterange input').each(function() {
+            $(this).datepicker();
+        });
+    }
 
-            $('#unit-selector a').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
+    function initializeUnitSelector() {
+        $('#unit-selector a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    }
 
-            // initialize chart
-            $('#historychart').highcharts({
-                chart: {
-                    spacingBottom: 50,
-                    zoomType: "x",
-                },
-                exporting: { enabled: false },
-                title: {
-                    text: '歷史紀錄'
-                },
-                subtitle: {
-                    text: ''
-                },
-                xAxis: {
-                    crosshair: true,
-                    type: 'datetime',
-                    labels: {
-                        formatter: function() {
-                            var datetimeStr = Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.value);
-                            return datetimeStr;
-                        }
-                    }
-                },
-                yAxis: [{ // Primary yAxis
-                    labels: {
-                        format: '{value} ppm',
-                        style: {
-                            color: Highcharts.getOptions().colors[0]
-                        }
-                    },
-                    title: {
-                        text: '二氧化碳',
-                        style: {
-                            color: Highcharts.getOptions().colors[0]
-                        }
-                    },
-                    opposite: true
+    function initializeActions() {
+        $("#refresh").click(function (e) {
+            e.preventDefault();
 
-                }, { // Secondary yAxis
-                    gridLineWidth: 0,
-                    title: {
-                        text: '溫度',
-                        style: {
-                            color: Highcharts.getOptions().colors[3]
-                        }
-                    },
-                    labels: {
-                        format: '{value} °C',
-                        style: {
-                            color: Highcharts.getOptions().colors[3]
-                        }
-                    }
+            console.log("should refresh");
+        });
 
-                }, { // Tertiary yAxis
-                    gridLineWidth: 0,
-                    title: {
-                        text: '濕度',
-                        style: {
-                            color: Highcharts.getOptions().colors[2]
-                        }
-                    },
-                    labels: {
-                        format: '{value} %',
-                        style: {
-                            color: Highcharts.getOptions().colors[2]
-                        }
-                    },
-                    opposite: true
-                }],
-                tooltip: {
-                    xDateFormat: "%Y-%m-%d %H:%M:%S",
-                    shared: true
-                },
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    x: 0,
-                    verticalAlign: 'bottom',
-                    y: 30,
-                    floating: true,
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-                },
+        $("#download").click(function (e) {
+            e.preventDefault();
+
+            console.log("should download");
+        });
+    }
+
+    function initializeChart() {
+        fetchUtils.fetchJSON("/api/devices/1", {
+            Accept: "application/json"
+        })
+        .then(function (json) {
+            var deviceData = deviceUtils.parseData(json.data);
+            var options = {};
+            _.extend(options, chartOptions, {
                 series: [{
                     name: '二氧化碳',
                     yAxis: 0,
@@ -126,6 +72,16 @@ define(function () {
 
                 }]
             });
+            $('#historychart').highcharts(options);
+        });
+    }
+
+    return {
+        initialize: function () {
+            initializeDateRangePicker();
+            initializeUnitSelector();
+            initializeActions();
+            initializeChart();
         }
     };
 });
