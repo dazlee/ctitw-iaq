@@ -21,4 +21,10 @@ Route::get('/home', 'HomeController@index');
 Route::get('/dashboard', 'DashboardController@index');
 
 Route::post('/devices/file', 'DeviceHistoryController@upload');
-Route::resource('devices', 'DeviceHistoryController');
+
+/**
+ * APIs
+ */
+Route::group(['prefix'=>'api'], function () {
+    Route::resource('devices', 'DeviceHistoryController');
+});

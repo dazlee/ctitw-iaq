@@ -21,5 +21,5 @@
 @section('scripts')
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script data-main="js/dashboard" src="/js/requirejs/require.js"></script>
+<script data-main="js/dashboard" src="/js/lib/requirejs/require.js"></script>
 @endsection

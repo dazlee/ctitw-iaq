@@ -1,6 +1,6 @@
 define(function () {
     return {
-        initialize: function (deviceDate) {
+        initialize: function (deviceData) {
             $('#historychart').highcharts({
                 chart: {
                     spacingBottom: 50,
@@ -85,7 +85,7 @@ define(function () {
                 series: [{
                     name: '二氧化碳',
                     yAxis: 0,
-                    data: deviceDate.co2,
+                    data: deviceData.co2,
                     tooltip: {
                         valueDecimals: 2,
                         valueSuffix: ' ppm'
@@ -95,7 +95,7 @@ define(function () {
                 {
                     name: '溫度',
                     yAxis: 1,
-                    data: deviceDate.temperature,
+                    data: deviceData.temp,
                     tooltip: {
                         valueDecimals: 2,
                         valueSuffix: ' °C'
@@ -106,7 +106,7 @@ define(function () {
                 {
                     name: '濕度',
                     yAxis: 2,
-                    data: deviceDate.moisture,
+                    data: deviceData.rh,
                     tooltip: {
                         valueDecimals: 2,
                         valueSuffix: ' %'

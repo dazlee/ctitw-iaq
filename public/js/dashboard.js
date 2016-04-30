@@ -1,54 +1,20 @@
-require(["../client/dashboard"], function (Dashboard) {
-    // should set up API
-    fetch("/", {
+require(["../client/dashboard",
+         "lib/fetch-utils",
+         "lib/device-utils",
+         "lib/utils"], function (Dashboard, fetchUtils, deviceUtils, utils) {
+
+    var statusCheckerJSONParser = utils.compose([fetchUtils.checkStatus, fetchUtils.parseJSON]);
+
+    fetch("/api/devices/1", {
         method: "GET",
         headers: {
-            // Accept: "application/json"
+            Accept: "application/json"
         },
     })
-    .then(function(response) {
-        // should parse response value
-        Dashboard.initialize({
-            co2: [
-                [1167692400000, 61.05],
-                [1167778800000, 58.32],
-                [1167865200000, 57.35],
-                [1167951600000, 56.31],
-                [1168210800000, 55.55],
-                [1168297200000, 55.64],
-                [1168383600000, 54.02],
-                [1168470000000, 51.88],
-                [1168556400000, 52.99],
-                [1168815600000, 52.99],
-                [1168902000000, 51.21],
-            ],
-            temperature: [
-                [1167692400000, 36.2],
-                [1167778800000, 33.2],
-                [1167865200000, 34.2],
-                [1167951600000, 35.2],
-                [1168210800000, 36.2],
-                [1168297200000, 32.2],
-                [1168383600000, 26.2],
-                [1168470000000, 25.2],
-                [1168556400000, 24.2],
-                [1168815600000, 23.2],
-                [1168902000000, 22.2],
-            ],
-            moisture: [
-                [1167692400000, 60.2],
-                [1167778800000, 56.2],
-                [1167865200000, 76.2],
-                [1167951600000, 88.2],
-                [1168210800000, 78.2],
-                [1168297200000, 76.2],
-                [1168383600000, 86.2],
-                [1168470000000, 94.2],
-                [1168556400000, 56.2],
-                [1168815600000, 78.2],
-                [1168902000000, 67.2],
-            ],
-        });
+    .then(statusCheckerJSONParser)
+    .then(function(json) {
+        var initData = deviceUtils.parseData(json.data);
+        Dashboard.initialize(initData);
     });
 
 });
