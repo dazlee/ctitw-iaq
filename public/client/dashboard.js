@@ -20,8 +20,7 @@ define(["./constants/chart.js",
     function initializeActions() {
         $("#refresh").click(function (e) {
             e.preventDefault();
-
-            console.log("should refresh");
+            initializeChart();
         });
 
         $("#download").click(function (e) {
@@ -31,48 +30,29 @@ define(["./constants/chart.js",
         });
     }
 
+    var historyChart;
     function initializeChart() {
         fetchUtils.fetchJSON("/api/devices/1", {
             Accept: "application/json"
         })
         .then(function (json) {
             var deviceData = deviceUtils.parseData(json.data);
+            var series = deviceUtils.generateChartSeries(deviceData);
             var options = {};
-            _.extend(options, chartOptions, {
-                series: [{
-                    name: '二氧化碳',
-                    yAxis: 0,
-                    data: deviceData.co2,
-                    tooltip: {
-                        valueDecimals: 2,
-                        valueSuffix: ' ppm'
-                    },
-                    color: Highcharts.getOptions().colors[0]
-                },
-                {
-                    name: '溫度',
-                    yAxis: 1,
-                    data: deviceData.temp,
-                    tooltip: {
-                        valueDecimals: 2,
-                        valueSuffix: ' °C'
-                    },
-                    color: Highcharts.getOptions().colors[3]
-
-                },
-                {
-                    name: '濕度',
-                    yAxis: 2,
-                    data: deviceData.rh,
-                    tooltip: {
-                        valueDecimals: 2,
-                        valueSuffix: ' %'
-                    },
-                    color: Highcharts.getOptions().colors[2]
-
-                }]
+            _.extend(options, chartOptions.outline, {
+                series: series,
             });
-            $('#historychart').highcharts(options);
+            historyChart = $('#historychart').highcharts(options);
+        });
+    }
+    function refreshChart() {
+        fetchUtils.fetchJSON("/api/devices/2", {
+            Accept: "application/json"
+        })
+        .then(function (json) {
+            var deviceData = deviceUtils.parseData(json.data);
+            var series = deviceUtils.generateChartSeries(deviceData);
+            historyChart.setData(series);
         });
     }
 
