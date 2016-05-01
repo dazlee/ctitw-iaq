@@ -1,0 +1,20 @@
+.p-0 {
+    padding: 0px;
+}
+.pt-6 {
+    padding-top: 6px;
+}
+
+.f-m {
+    font-size: 14px;
+}
+
+
+.nav-pills>li>a {
+    padding: 5px 10px;
+    color: #555;
+}
+.nav-pills>li.active>a {
+    color: white;
+    background-color: #f0ad4e !important;
+}
