@@ -18,7 +18,8 @@ class DeviceHistoryController extends Controller
         'co2'           => 'required|numeric',
         'temp'          => 'required|numeric',
         'rh'            => 'required|numeric',
-        'created_at'    => 'required|date_format:Y-m-d h:i:s',
+        'record_at'    => 'required|date_format:Y-m-d h:i:s',
+        'created_at'    => 'date_format:Y-m-d h:i:s',
         'updated_at'    => 'date_format:Y-m-d h:i:s',
     ];
 
@@ -45,7 +46,7 @@ class DeviceHistoryController extends Controller
 
 
     public function index() {
-        return DeviceHistory::orderBy('created_at', 'asc')->paginate($this->limit*16);
+        return DeviceHistory::orderBy('record_at', 'asc')->paginate($this->limit*16);
     }
     /*
     public function store(Request $request) {
@@ -60,6 +61,6 @@ class DeviceHistoryController extends Controller
     */
 
     public function show($deivceId) {
-        return DeviceHistory::where('device_id', $deivceId)->orderBy('created_at', 'asc')->paginate($this->limit);
+        return DeviceHistory::where('device_id', $deivceId)->orderBy('record_at', 'asc')->paginate($this->limit);
     }
 }
