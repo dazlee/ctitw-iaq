@@ -3,21 +3,20 @@ define(["client/constants/chart.js",
         "moment",
         "curry"], function (chartOptions, utils, moment, curry) {
 
-    function gteDays (momentObj, days) {
-        return momentObj.asDays() >= days;
+    function gteDays (ms, days) {
+        return moment.duration(ms).asDays() >= days;
     }
-    function gteMonths (momentObj, months) {
-        return momentObj.asMonths() >= months;
+    function gteMonths (ms, months) {
+        return moment.duration(ms).asMonths() >= months;
     }
-    function gteHours (momentObj, hours) {
-        return momentObj.asHours() >= hours;
+    function gteHours (ms, hours) {
+        return moment.duration(ms).asHours() >= hours;
     }
 
     var filterDeviceData = curry(function (checker, days, data) {
         var previousTimestamp = 0;
         return data.reduce(function (reduced, v) {
-            var diff = moment.duration(v[0] - previousTimestamp);
-            if (checker(diff, days)) {
+            if (checker(v[0] - previousTimestamp, days)) {
                 previousTimestamp = v[0];
                 reduced.push(v);
             }
