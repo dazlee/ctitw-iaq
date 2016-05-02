@@ -20,11 +20,10 @@ Route::auth();
 Route::get('/home', 'HomeController@index');
 Route::get('/dashboard', 'DashboardController@index');
 
-Route::post('/devices/file', 'DeviceHistoryController@upload');
-
 /**
  * APIs
  */
 Route::group(['prefix'=>'api'], function () {
+    Route::post('devices/file', 'DeviceHistoryController@upload');
     Route::resource('devices', 'DeviceHistoryController');
 });
