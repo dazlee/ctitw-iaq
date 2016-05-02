@@ -28,8 +28,8 @@ class DeviceHistoryTableSeeder extends Seeder
                     'rh' => rand()%100,
                     'record_at' => $record_at,
                     'created_at' => $created_at,
-                    'updated_at' => $updated_at,	
-		        ]);
+                    'updated_at' => $updated_at
+                ]);
             }
         }
     }
