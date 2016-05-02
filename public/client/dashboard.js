@@ -7,11 +7,16 @@ define(["chartConfigs",
     var _deviceId;
     var _deviceData = {};
     var _filter = "hr";
+    var _startDate;
+    var _endDate;
 
     function initializeDateRangePicker() {
         // initialize date range checker
-        $('.input-daterange input').each(function() {
-            $(this).datepicker();
+        _endDate = new Date();
+        _startDate = new Date();
+        _startDate.setDate(_startDate.getDate() - 30);
+        $(".input-daterange").datepicker({
+            endDate: new Date(),
         });
     }
 
