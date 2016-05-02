@@ -2,7 +2,11 @@ define(["./constants/chart.js",
         "underscore",
         "fetch-utils",
         "device-utils",
-        "utils"], function (chartOptions, _, fetchUtils, deviceUtils, utils) {
+        "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, utils) {
+
+    var _deviceData = {};
+    var _filter = "hr";
+
     function initializeDateRangePicker() {
         // initialize date range checker
         $('.input-daterange input').each(function() {
@@ -14,13 +18,20 @@ define(["./constants/chart.js",
         $('#unit-selector a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
+
+            var filter = e.target.dataset.filter;
+            if (filter !== _filter) {
+                var deviceData = deviceUtils.filterDeviceData(_deviceData, filter);
+                _filter = filter;
+                drawChart(deviceData, chartConfigs.outline);
+            }
         });
     }
 
     function initializeActions() {
         $("#refresh").click(function (e) {
             e.preventDefault();
-            initializeChart();
+            refreshChart();
         });
 
         $("#download").click(function (e) {
@@ -30,19 +41,15 @@ define(["./constants/chart.js",
         });
     }
 
-    var historyChart;
     function initializeChart() {
         fetchUtils.fetchJSON("/api/devices/1", {
             Accept: "application/json"
         })
         .then(function (json) {
             var deviceData = deviceUtils.parseData(json.data);
-            var series = deviceUtils.generateChartSeries(deviceData);
-            var options = {};
-            _.extend(options, chartOptions.outline, {
-                series: series,
-            });
-            historyChart = $('#historychart').highcharts(options);
+            drawChart(deviceData, chartConfigs.outline);
+
+            _deviceData = deviceData;
         });
     }
     function refreshChart() {
@@ -50,10 +57,21 @@ define(["./constants/chart.js",
             Accept: "application/json"
         })
         .then(function (json) {
+            $('#historychart').highcharts().destroy();
+
             var deviceData = deviceUtils.parseData(json.data);
-            var series = deviceUtils.generateChartSeries(deviceData);
-            historyChart.setData(series);
+            drawChart(deviceData, chartConfigs.outline);
+
+            _deviceData = deviceData;
         });
+    }
+    function drawChart(deviceData, chartOptions) {
+        var series = deviceUtils.generateChartSeries(deviceData);
+        var options = {};
+        _.extend(options, chartOptions, {
+            series: series,
+        });
+        $('#historychart').highcharts(options);
     }
 
     return {

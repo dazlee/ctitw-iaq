@@ -26,11 +26,11 @@
                 </div>
                 <div id="unit-selector" class="col-sm-6 p-0 pt-6">
                     <ul class="nav nav-pills">
-                      <li role="presentation" class="active btn-default"><a id="hr" href="#">小時</a></li>
-                      <li role="presentation"><a id="8hrs" href="#">8小時</a></li>
-                      <li role="presentation"><a id="day" href="#">日</a></li>
-                      <li role="presentation"><a id="week" href="#">週</a></li>
-                      <li role="presentation"><a id="month" href="#">月</a></li>
+                      <li role="presentation" class="active btn-default"><a data-filter="hr" href="#">小時</a></li>
+                      <li role="presentation"><a data-filter="8hrs" href="#">8小時</a></li>
+                      <li role="presentation"><a data-filter="day" href="#">日</a></li>
+                      <li role="presentation"><a data-filter="week" href="#">週</a></li>
+                      <li role="presentation"><a data-filter="month" href="#">月</a></li>
                     </ul>
                 </div>
             </div>
