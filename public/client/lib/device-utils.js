@@ -1,5 +1,34 @@
 define(["client/constants/chart.js",
-        "moment"], function (chartOptions, moment) {
+        "utils",
+        "moment",
+        "curry"], function (chartOptions, utils, moment, curry) {
+
+    function gteDays (momentObj, days) {
+        return momentObj.asDays() >= days;
+    }
+    function gteMonths (momentObj, months) {
+        return momentObj.asMonths() >= months;
+    }
+    function gteHours (momentObj, hours) {
+        return momentObj.asHours() >= hours;
+    }
+
+    var filterDeviceData = curry(function (checker, days, data) {
+        var previousTimestamp = 0;
+        return data.reduce(function (reduced, v) {
+            var diff = moment.duration(v[0] - previousTimestamp);
+            if (checker(diff, days)) {
+                previousTimestamp = v[0];
+                reduced.push(v);
+            }
+            return reduced;
+        }, []);
+    });
+
+    var filterDeviceDataByDays = filterDeviceData(gteDays);
+    var filterDeviceDataByMonths = filterDeviceData(gteMonths);
+    var filterDeviceDataByHours = filterDeviceData(gteHours);
+
     return {
         parseData: function (dataList) {
             var parsedData = {
@@ -48,50 +77,15 @@ define(["client/constants/chart.js",
             var previousTimestamp = 0;
             switch (filter) {
                 case "hr":
-                    console.log("should filter by hr");
-                    return deviceData;
+                    return utils.reduceObject(deviceData, filterDeviceDataByHours(1));
                 case "8hrs":
-                    console.log("should filter by 8hrs");
-                    break;
+                    return utils.reduceObject(deviceData, filterDeviceDataByHours(8));
                 case "day":
-                    console.log("should filter by day");
-                    break;
+                    return utils.reduceObject(deviceData, filterDeviceDataByDays(1));
                 case "week":
-                    previousTimestamp = 0;
-                    var filteredCo2 = deviceData.co2.reduce(function (reduced, v) {
-                        var diff = moment.duration(v[0] - previousTimestamp);
-                        if (diff.asDays() > 6) {
-                            previousTimestamp = v[0];
-                            reduced.push(v);
-                        }
-                        return reduced;
-                    }, []);
-                    previousTimestamp = 0;
-                    var filteredTemp = deviceData.temp.reduce(function (reduced, v) {
-                        var diff = moment.duration(v[0] - previousTimestamp);
-                        if (diff.asDays() > 6) {
-                            previousTimestamp = v[0];
-                            reduced.push(v);
-                        }
-                        return reduced;
-                    }, []);
-                    previousTimestamp = 0;
-                    var filteredRh = deviceData.rh.reduce(function (reduced, v) {
-                        var diff = moment.duration(v[0] - previousTimestamp);
-                        if (diff.asDays() > 6) {
-                            previousTimestamp = v[0];
-                            reduced.push(v);
-                        }
-                        return reduced;
-                    }, []);
-                    return {
-                        co2: filteredCo2,
-                        temp: filteredTemp,
-                        rh: filteredRh,
-                    };
+                    return utils.reduceObject(deviceData, filterDeviceDataByDays(7));
                 case "month":
-                    console.log("should filter by month");
-                    break;
+                    return utils.reduceObject(deviceData, filterDeviceDataByMonths(1));
                 default:
 
             }

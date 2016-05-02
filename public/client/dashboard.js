@@ -2,7 +2,7 @@ define(["./constants/chart.js",
         "underscore",
         "fetch-utils",
         "device-utils",
-        "utils"], function (chartOptions, _, fetchUtils, deviceUtils, utils) {
+        "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, utils) {
 
     var _deviceData = {};
     var _filter = "hr";
@@ -19,13 +19,11 @@ define(["./constants/chart.js",
             e.preventDefault();
             $(this).tab('show');
 
-            // should refresh chart to zoom
             var filter = e.target.dataset.filter;
             if (filter !== _filter) {
                 var deviceData = deviceUtils.filterDeviceData(_deviceData, filter);
                 _filter = filter;
-console.log(deviceData);
-                drawChart(deviceData);
+                drawChart(deviceData, chartConfigs.outline);
             }
         });
     }
@@ -49,8 +47,8 @@ console.log(deviceData);
         })
         .then(function (json) {
             var deviceData = deviceUtils.parseData(json.data);
+            drawChart(deviceData, chartConfigs.outline);
 
-            drawChart(deviceData);
             _deviceData = deviceData;
         });
     }
@@ -60,16 +58,17 @@ console.log(deviceData);
         })
         .then(function (json) {
             $('#historychart').highcharts().destroy();
-            var deviceData = deviceUtils.parseData(json.data);
 
-            drawChart(deviceData);
+            var deviceData = deviceUtils.parseData(json.data);
+            drawChart(deviceData, chartConfigs.outline);
+
             _deviceData = deviceData;
         });
     }
-    function drawChart(deviceData) {
+    function drawChart(deviceData, chartOptions) {
         var series = deviceUtils.generateChartSeries(deviceData);
         var options = {};
-        _.extend(options, chartOptions.outline, {
+        _.extend(options, chartOptions, {
             series: series,
         });
         $('#historychart').highcharts(options);
