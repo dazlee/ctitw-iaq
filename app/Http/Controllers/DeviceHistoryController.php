@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests;
 use App\DeviceHistory;
+use App\Device;
 
 class DeviceHistoryController extends Controller
 {
@@ -18,7 +19,8 @@ class DeviceHistoryController extends Controller
         'co2'           => 'required|numeric',
         'temp'          => 'required|numeric',
         'rh'            => 'required|numeric',
-        'created_at'    => 'required|date_format:Y-m-d h:i:s',
+        'record_at'    => 'required|date_format:Y-m-d h:i:s',
+        'created_at'    => 'date_format:Y-m-d h:i:s',
         'updated_at'    => 'date_format:Y-m-d h:i:s',
     ];
 
@@ -33,19 +35,25 @@ class DeviceHistoryController extends Controller
 
         $file = $request->file($this->formDataKey);
         $content = file_get_contents($file);
-        $rows = DeviceHistory::parseContent($content);
+        $device_history_list = DeviceHistory::parseContent($content);
+        $device_list = [];
 
-        if (empty($rows)) {
+        if (empty($device_history_list)) {
             return response()->json(['err' => 'The format of file is uncorrect'], 406);
         }
 
-        DeviceHistory::insert($rows);
-        return response()->json(['msg' => $rows], 201);
+        foreach ($device_history_list as $row) {
+            Device::firstOrCreate(array('id' => $row['device_id']));
+        }
+
+        DeviceHistory::insert($device_history_list);
+        return response()->json(['msg' => $device_history_list], 201);
     }
 
 
     public function index() {
-        return DeviceHistory::orderBy('created_at', 'asc')->paginate($this->limit*16);
+        $device_count = Device::count();
+        return DeviceHistory::orderBy('record_at', 'asc')->paginate($this->limit*$device_count);
     }
     /*
     public function store(Request $request) {
@@ -60,6 +68,6 @@ class DeviceHistoryController extends Controller
     */
 
     public function show($deivceId) {
-        return DeviceHistory::where('device_id', $deivceId)->orderBy('created_at', 'asc')->paginate($this->limit);
+        return DeviceHistory::where('device_id', $deivceId)->orderBy('record_at', 'asc')->paginate($this->limit);
     }
 }
