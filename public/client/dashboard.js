@@ -1,9 +1,10 @@
-define(["./constants/chart.js",
+define(["chartConfigs",
         "underscore",
         "fetch-utils",
         "device-utils",
         "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, utils) {
 
+    var _deviceId;
     var _deviceData = {};
     var _filter = "hr";
 
@@ -19,6 +20,8 @@ define(["./constants/chart.js",
             e.preventDefault();
             $(this).tab('show');
 
+            if (typeof _deviceId === "undefined") return;
+
             var filter = e.target.dataset.filter;
             if (filter !== _filter) {
                 var deviceData = deviceUtils.filterDeviceData(_deviceData, filter);
@@ -29,6 +32,8 @@ define(["./constants/chart.js",
     }
 
     function initializeActions() {
+        if (typeof _deviceId === "undefined") return;
+
         $("#refresh").click(function (e) {
             e.preventDefault();
             refreshChart();
@@ -42,7 +47,10 @@ define(["./constants/chart.js",
     }
 
     function initializeChart() {
-        fetchUtils.fetchJSON("/api/devices/1", {
+        _deviceId = document.querySelector('#historychart').dataset.deviceId;
+        if (typeof _deviceId === "undefined") return;
+
+        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -53,7 +61,7 @@ define(["./constants/chart.js",
         });
     }
     function refreshChart() {
-        fetchUtils.fetchJSON("/api/devices/2", {
+        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
             Accept: "application/json"
         })
         .then(function (json) {
