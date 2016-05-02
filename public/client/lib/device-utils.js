@@ -86,7 +86,7 @@ define(["client/constants/chart.js",
                 case "month":
                     return utils.reduceObject(deviceData, filterDeviceDataByMonths(1));
                 default:
-
+                    return deviceData;
             }
         },
     };
