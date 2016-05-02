@@ -1,16 +1,22 @@
-define(["./constants/chart.js",
+define(["chartConfigs",
         "underscore",
         "fetch-utils",
         "device-utils",
         "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, utils) {
 
+    var _deviceId;
     var _deviceData = {};
     var _filter = "hr";
+    var _startDate;
+    var _endDate;
 
     function initializeDateRangePicker() {
         // initialize date range checker
-        $('.input-daterange input').each(function() {
-            $(this).datepicker();
+        _endDate = new Date();
+        _startDate = new Date();
+        _startDate.setDate(_startDate.getDate() - 30);
+        $(".input-daterange").datepicker({
+            endDate: new Date(),
         });
     }
 
@@ -18,6 +24,8 @@ define(["./constants/chart.js",
         $('#unit-selector a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
+
+            if (typeof _deviceId === "undefined") return;
 
             var filter = e.target.dataset.filter;
             if (filter !== _filter) {
@@ -29,6 +37,8 @@ define(["./constants/chart.js",
     }
 
     function initializeActions() {
+        if (typeof _deviceId === "undefined") return;
+
         $("#refresh").click(function (e) {
             e.preventDefault();
             refreshChart();
@@ -42,7 +52,10 @@ define(["./constants/chart.js",
     }
 
     function initializeChart() {
-        fetchUtils.fetchJSON("/api/devices/1", {
+        _deviceId = document.querySelector('#historychart').dataset.deviceId;
+        if (typeof _deviceId === "undefined") return;
+
+        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -53,7 +66,7 @@ define(["./constants/chart.js",
         });
     }
     function refreshChart() {
-        fetchUtils.fetchJSON("/api/devices/2", {
+        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
             Accept: "application/json"
         })
         .then(function (json) {

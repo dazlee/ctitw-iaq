@@ -96,7 +96,16 @@
                         <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 部門<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="/dashboard/1">部門一</a>
+                                <a href="/dashboard/1">部門1</a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/2">部門2</a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/3">部門3</a>
+                            </li>
+                            <li>
+                                <a href="/dashboard/4">部門4</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->

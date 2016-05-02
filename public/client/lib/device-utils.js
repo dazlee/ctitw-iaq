@@ -1,7 +1,7 @@
-define(["client/constants/chart.js",
+define(["chartConfigs",
         "utils",
         "moment",
-        "curry"], function (chartOptions, utils, moment, curry) {
+        "curry"], function (chartConfigs, utils, moment, curry) {
 
     function gteDays (ms, days) {
         return moment.duration(ms).asDays() >= days;
@@ -46,7 +46,7 @@ define(["client/constants/chart.js",
         },
         generateChartSeries: function (deviceData) {
             return [
-                _.extend({}, chartOptions.series0, {
+                _.extend({}, chartConfigs.series0, {
                     name: '二氧化碳',
                     data: deviceData.co2,
                     tooltip: {
@@ -54,7 +54,7 @@ define(["client/constants/chart.js",
                         valueSuffix: ' ppm'
                     },
                 }),
-                _.extend({}, chartOptions.series1, {
+                _.extend({}, chartConfigs.series1, {
                     name: '溫度',
                     data: deviceData.temp,
                     tooltip: {
@@ -62,7 +62,7 @@ define(["client/constants/chart.js",
                         valueSuffix: ' °C'
                     },
                 }),
-                _.extend({}, chartOptions.series2, {
+                _.extend({}, chartConfigs.series2, {
                     name: '濕度',
                     data: deviceData.rh,
                     tooltip: {
