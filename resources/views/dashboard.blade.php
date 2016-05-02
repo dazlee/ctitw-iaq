@@ -14,9 +14,9 @@
                     <span class="label label-default f-m">選擇時間範圍</span>
                 </div>
                 <div class="col-sm-6 input-group input-daterange">
-                    <input type="text" class="form-control" value="<?php echo date_format($from, "m-d-Y"); ?>">
+                    <input type="text" class="form-control" name="from" value="<?php echo date_format($from, "m-d-Y"); ?>">
                     <span class="input-group-addon">-</span>
-                    <input type="text" class="form-control" value="<?php echo date_format($to, "m-d-Y"); ?>">
+                    <input type="text" class="form-control" name="to" value="<?php echo date_format($to, "m-d-Y"); ?>">
                 </div>
             </div>
             <div class="row pt-6">
