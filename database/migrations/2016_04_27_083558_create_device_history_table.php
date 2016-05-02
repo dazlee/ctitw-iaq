@@ -14,13 +14,13 @@ class CreateDeviceHistoryTable extends Migration
     {
         Schema::create('device_history', function (Blueprint $table) {
             $table->increments('id');
-	        $table->string('device_id');
-	        $table->float('co2');
-	        $table->float('temp');
+            $table->string('device_id');
+            $table->float('co2');
+            $table->float('temp');
             $table->float('rh');
             $table->dateTime('record_at');
             $table->timestamps();
-	        $table->unique(['device_id', 'record_at']);
+            $table->unique(['device_id', 'record_at']);
         });
     }
 

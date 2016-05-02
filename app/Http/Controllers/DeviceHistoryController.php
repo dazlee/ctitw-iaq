@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use App\Http\Requests;
 use App\DeviceHistory;
+use App\Device;
 
 class DeviceHistoryController extends Controller
 {
@@ -34,19 +35,25 @@ class DeviceHistoryController extends Controller
 
         $file = $request->file($this->formDataKey);
         $content = file_get_contents($file);
-        $rows = DeviceHistory::parseContent($content);
+        $device_history_list = DeviceHistory::parseContent($content);
+        $device_list = [];
 
-        if (empty($rows)) {
+        if (empty($device_history_list)) {
             return response()->json(['err' => 'The format of file is uncorrect'], 406);
         }
 
-        DeviceHistory::insert($rows);
-        return response()->json(['msg' => $rows], 201);
+        foreach ($device_history_list as $row) {
+            Device::firstOrCreate(array('id' => $row['device_id']));
+        }
+
+        DeviceHistory::insert($device_history_list);
+        return response()->json(['msg' => $device_history_list], 201);
     }
 
 
     public function index() {
-        return DeviceHistory::orderBy('record_at', 'asc')->paginate($this->limit*16);
+        $device_count = Device::count();
+        return DeviceHistory::orderBy('record_at', 'asc')->paginate($this->limit*$device_count);
     }
     /*
     public function store(Request $request) {
