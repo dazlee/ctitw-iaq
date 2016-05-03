@@ -95,10 +95,10 @@
                                 <a href="/stats">即時圖表</a>
                             </li>
                             <li>
-                                <a href="/stats/history">歷史圖表</a>
+                                <a href="/history">歷史圖表</a>
                             </li>
                             <li>
-                                <a href="/stats/all">各部門資訊</a>
+                                <a href="/all">各部門資訊</a>
                             </li>
                         </ul>
                     </li>
