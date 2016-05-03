@@ -92,10 +92,10 @@ define(["chartConfigs",
 
     return {
         initialize: function () {
-            // initializeDateRangePicker();
-            // initializeUnitSelector();
-            // initializeActions();
-            // initializeChart();
+            initializeDateRangePicker();
+            initializeUnitSelector();
+            initializeActions();
+            initializeChart();
         }
     };
 });

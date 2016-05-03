@@ -8,7 +8,52 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">即時統計</h3>
+        </div>
+    </div>
     <div class="row mt-10">
+        <div class="col-md-12">
+            <div class="col-sm-4">
+                <div class="panel horizontal-panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">二氧化碳</h3>
+                    </div>
+                    <div class="panel-body">
+                        500 ppm
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="panel horizontal-panel panel-green">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">溫度</h3>
+                    </div>
+                    <div class="panel-body">
+                        32 C
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="panel horizontal-panel panel-yellow">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">濕度</h3>
+                    </div>
+                    <div class="panel-body">
+                        45 %
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">歷史資訊</h3>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="row">
                 <div class="col-sm-2 pt-6">
@@ -64,7 +109,7 @@
         </div>
     </div>
 
-    <div class="row mt-10">
+    <div class="row mt-20">
         <div class="col-md-11 col-md-offset-1">
             <div class="row">
                 <div class="col-sm-2 pt-6">
