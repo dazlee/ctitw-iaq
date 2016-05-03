@@ -7,13 +7,15 @@ define(function () {
                 }, x);
             };
         },
-        reduceObject: function (target, func) {
+        mapObject: function (target, func) {
             var keys = Object.keys(target);
             var length = keys.length;
             var result = {};
+            var key;
 
             for (var i = 0; i < length; i++) {
-                result[keys[i]] = func(target[keys[i]]);
+                key = keys[i];
+                result[key] = func(target[key], key);
             }
             return result;
         },

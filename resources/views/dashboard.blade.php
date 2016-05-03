@@ -109,16 +109,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th>A001-1</th>
-                            <td><span class="fg-red">1124</span></td>
-                            <td>1234</td>
-                            <td>1234</td>
-                            <td>1124</td>
-                            <td>1234</td>
-                            <td>1234</td>
-                            <td>1124</td>
-                            <td>1234</td>
-                            <td>1234</td>
+                            <th class="device-id"><?php echo $id;?></th>
+                            <td class="co2-max"></td>
+                            <td class="co2-min"></td>
+                            <td class="co2-avg"></td>
+                            <td class="temp-max"></td>
+                            <td class="temp-min"></td>
+                            <td class="temp-avg"></td>
+                            <td class="rh-max"></td>
+                            <td class="rh-min"></td>
+                            <td class="rh-avg"></td>
                         </tr>
                     </tbody>
                 </table>
