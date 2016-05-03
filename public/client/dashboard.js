@@ -1,9 +1,10 @@
 define(["client/components/realtime-info-board",
+        "client/components/history-stats-board",
         "chartConfigs",
         "underscore",
         "fetch-utils",
         "device-utils",
-        "utils"], function (RealtimeInfoBoard, chartConfigs, _, fetchUtils, deviceUtils, utils) {
+        "utils"], function (RealtimeInfoBoard, HistoryStatsBoard, chartConfigs, _, fetchUtils, deviceUtils, utils) {
 
     var _deviceId;
     var _deviceData = {};
@@ -15,7 +16,7 @@ define(["client/components/realtime-info-board",
         _period.from = new Date();
         _period.to = new Date();
         _period.from.setDate(_period.from.getDate() - 30);
-        $(".input-daterange").datepicker({
+        $("#history-daterange").datepicker({
             endDate: new Date(),
         })
         .on("changeDate", function (e) {
@@ -93,6 +94,7 @@ define(["client/components/realtime-info-board",
     return {
         initialize: function () {
             RealtimeInfoBoard.initialize();
+            HistoryStatsBoard.initialize();
 
             initializeDateRangePicker();
             initializeUnitSelector();
