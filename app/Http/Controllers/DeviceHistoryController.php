@@ -13,7 +13,7 @@ class DeviceHistoryController extends Controller
 {
 
     private $formDataKey = 'file';
-    private $limit = 30;
+    private $limit = 1008;
     private $rules = [
         'device_id'     => 'required',
         'co2'           => 'required|numeric',
@@ -52,8 +52,9 @@ class DeviceHistoryController extends Controller
 
 
     public function index() {
-        $device_count = Device::count();
-        return DeviceHistory::orderBy('record_at', 'asc')->paginate($this->limit*$device_count);
+        $date = new \DateTime();
+        $datetime = $date->modify('-6 day')->format('Y-m-d');
+        return DeviceHistory::whereDate('record_at', '>', $datetime)->orderBy('record_at', 'asc')->get();
     }
     /*
     public function store(Request $request) {
@@ -70,6 +71,7 @@ class DeviceHistoryController extends Controller
     public function show(Request $request, $deivceId) {
         $fromDate = $request->query('fromDate');
         $toDate = $request->query('toDate');
+
         if (isset($fromDate) && isset($toDate)) {
             $fromDate = date_create($fromDate)->setTime(00, 00, 00);
             $toDate = date_create($toDate)->setTime(23, 59, 59);
@@ -78,9 +80,12 @@ class DeviceHistoryController extends Controller
                         ->orderBy('record_at', 'asc')
                         ->paginate($this->limit);
         } else {
+            $date = new \DateTime();
+            $datetime = $date->modify('-6 day')->format('Y-m-d');
             return DeviceHistory::where('device_id', $deivceId)
+                        ->whereDate('record_at', '>', $datetime)
                         ->orderBy('record_at', 'asc')
-                        ->paginate($this->limit);
+                        ->get();
         }
     }
 }
