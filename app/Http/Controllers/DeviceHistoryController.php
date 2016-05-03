@@ -55,55 +55,25 @@ class DeviceHistoryController extends Controller
         $row = $request->query('row');
 
         if (isset($row) && $row == -1) {
-            return DeviceHistory::orderBy('record_at', 'desc')
-                ->take(Device::count())
-                ->get();
+            return DeviceHistory::latest()->take(Device::count())->get();
         }
 
-        $date = new \DateTime();
-        $datetime = $date->modify('-6 day')->format('Y-m-d');
-        return DeviceHistory::whereDate('record_at', '>', $datetime)->orderBy('record_at', 'asc')->get();
-    }
-    /*
-    public function store(Request $request) {
-    $validator = $this->validator($request->all());
-
-    if ($validator->fails()) {
-        return response()->json($validator->messages(), 401);
+        return DeviceHistory::oneWeek()->get();
     }
 
-    return DeviceHistory::create($request->all());
-    }
-    */
-
-    public function show(Request $request, $deivceId) {
+    public function show(Request $request, $deviceId) {
         $fromDate = $request->query('fromDate');
         $toDate = $request->query('toDate');
         $row = $request->query('row');
 
         if (isset($fromDate) && isset($toDate)) {
-            $fromDate = date_create($fromDate)->setTime(00, 00, 00);
-            $toDate = date_create($toDate)->setTime(23, 59, 59);
-            return array(
-                'data' => DeviceHistory::where('device_id', $deivceId)
-                            ->whereBetween('record_at', array($fromDate, $toDate))
-                            ->orderBy('record_at', 'asc')
-                            ->get(),
-            );
+            return ['data' => DeviceHistory::betweenDatesByDeviceId($deviceId, $fromDate, $toDate)->get()];
         }
         
         if (isset($row) && $row == -1) {
-            return DeviceHistory::where('device_id', $deivceId)
-                        ->orderBy('record_at', 'desc')
-                        ->first();
-                            
+            return DeviceHistory::latestByDeviceId($deviceId)->first();
         } 
 
-        $date = new \DateTime();
-        $datetime = $date->modify('-6 day')->format('Y-m-d');
-        return DeviceHistory::where('device_id', $deivceId)
-                    ->whereDate('record_at', '>', $datetime)
-                    ->orderBy('record_at', 'asc')
-                    ->get();
+        return DeviceHistory::oneWeekByDeviceId($deviceId)->get();
     }
 }
