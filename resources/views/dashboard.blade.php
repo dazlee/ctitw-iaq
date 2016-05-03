@@ -1,13 +1,70 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="page-wrapper" id="page-wrapper">
+<div class="page-wrapper dashboard" id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">部門一</h1>
         </div>
     </div>
-    <div class="row">
+
+    <div class="row mt-10">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="row">
+                <div class="col-sm-2 pt-6">
+                    <span class="label label-default f-m">選擇時間範圍</span>
+                </div>
+                <div class="col-sm-6 input-group input-daterange">
+                    <input type="text" class="form-control" name="from" value="<?php echo date_format($from, "m-d-Y"); ?>">
+                    <span class="input-group-addon">-</span>
+                    <input type="text" class="form-control" name="to" value="<?php echo date_format($to, "m-d-Y"); ?>">
+                </div>
+                <div class="col-sm-1">
+                    <button id="refreshTable" class="btn btn-success btn-sm">刷新</button>
+                </div>
+            </div>
+            <div class="row pt-6">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>設備</th>
+                            <th colspan="3">二氧化碳</th>
+                            <th colspan="3">溫度</th>
+                            <th colspan="3">濕度</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>最大值</th>
+                            <th>最小值</th>
+                            <th>平均值</th>
+                            <th>最大值</th>
+                            <th>最小值</th>
+                            <th>平均值</th>
+                            <th>最大值</th>
+                            <th>最小值</th>
+                            <th>平均值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>A001-1</th>
+                            <td><span class="fg-red">1124</span></td>
+                            <td>1234</td>
+                            <td>1234</td>
+                            <td>1124</td>
+                            <td>1234</td>
+                            <td>1234</td>
+                            <td>1124</td>
+                            <td>1234</td>
+                            <td>1234</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-10">
         <div class="col-md-11 col-md-offset-1">
             <div class="row">
                 <div class="col-sm-2 pt-6">
@@ -21,7 +78,7 @@
             </div>
             <div class="row pt-6">
                 <div class="col-sm-2 pt-6">
-                    <button id="refresh" class="btn btn-success btn-sm">刷新</button>
+                    <button id="refreshHistory" class="btn btn-success btn-sm">刷新</button>
                     <button id="download" class="btn btn-primary btn-sm">下載</button>
                 </div>
                 <div id="unit-selector" class="col-sm-6 p-0 pt-6">
@@ -41,7 +98,6 @@
             <div data-device-id="<?php echo $id;?>" class="highchart-content" id="historychart" style="width: 100%; height: 500px;"></div>
         </div>
     </div>
-
 
 </div>
 @endsection

@@ -40,7 +40,7 @@ define(["chartConfigs",
     }
 
     function initializeActions() {
-        $("#refresh").click(function (e) {
+        $("#refreshHistory").click(function (e) {
             e.preventDefault();
             refreshChart();
         });
@@ -92,10 +92,10 @@ define(["chartConfigs",
 
     return {
         initialize: function () {
-            initializeDateRangePicker();
-            initializeUnitSelector();
-            initializeActions();
-            initializeChart();
+            // initializeDateRangePicker();
+            // initializeUnitSelector();
+            // initializeActions();
+            // initializeChart();
         }
     };
 });

@@ -5,6 +5,14 @@
     padding-top: 6px;
 }
 
+
+.mt-10 {
+    margin-top: 10px;
+}
+.mb-10 {
+    margin-bottom: 10px;
+}
+
 .f-m {
     font-size: 14px;
 }
@@ -17,4 +25,9 @@
 .nav-pills>li.active>a {
     color: white;
     background-color: #f0ad4e !important;
+}
+
+
+.fg-red {
+    color: red;
 }
