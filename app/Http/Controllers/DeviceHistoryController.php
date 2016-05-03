@@ -55,25 +55,26 @@ class DeviceHistoryController extends Controller
         $row = $request->query('row');
 
         if (isset($row) && $row == -1) {
-            return DeviceHistory::latest()->take(Device::count())->get();
+            return ['data' => DeviceHistory::latest()->take(Device::count())->get()];
         }
 
-        return DeviceHistory::oneWeek()->get();
+        return ['data' => DeviceHistory::oneWeek()->get()];
     }
 
     public function show(Request $request, $deviceId) {
         $fromDate = $request->query('fromDate');
         $toDate = $request->query('toDate');
         $row = $request->query('row');
+        
 
         if (isset($fromDate) && isset($toDate)) {
             return ['data' => DeviceHistory::betweenDatesByDeviceId($deviceId, $fromDate, $toDate)->get()];
         }
         
         if (isset($row) && $row == -1) {
-            return DeviceHistory::latestByDeviceId($deviceId)->first();
+            return ['data' => DeviceHistory::latestByDeviceId($deviceId)->first()];
         } 
 
-        return DeviceHistory::oneWeekByDeviceId($deviceId)->get();
+        return ['data' => DeviceHistory::oneWeekByDeviceId($deviceId)->get()];
     }
 }
