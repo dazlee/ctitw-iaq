@@ -33,9 +33,8 @@ define(["client/components/realtime-info-board",
 
             var filter = e.target.dataset.filter;
             if (filter !== _filter) {
-                var deviceData = deviceUtils.filterDeviceData(_deviceData, filter);
+                drawChart(deviceUtils.filterDeviceData(_deviceData, filter), chartConfigs.outline);
                 _filter = filter;
-                drawChart(deviceData, chartConfigs.outline);
             }
         });
     }
@@ -62,7 +61,7 @@ define(["client/components/realtime-info-board",
         })
         .then(function (json) {
             var deviceData = deviceUtils.parseData(json.data);
-            drawChart(deviceData, chartConfigs.outline);
+            drawChart(deviceUtils.filterDeviceData(deviceData, _filter), chartConfigs.outline);
 
             _deviceData = deviceData;
         });
@@ -77,7 +76,7 @@ define(["client/components/realtime-info-board",
             $('#historychart').highcharts().destroy();
 
             var deviceData = deviceUtils.parseData(json.data);
-            drawChart(deviceData, chartConfigs.outline);
+            drawChart(deviceUtils.filterDeviceData(deviceData, _filter), chartConfigs.outline);
 
             _deviceData = deviceData;
         });
