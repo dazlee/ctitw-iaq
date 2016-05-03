@@ -89,7 +89,18 @@
                         <!-- /input-group -->
                     </li>
                     <li>
-                        <a href="/"><i class="fa fa-dashboard fa-fw"></i> 整體環境</a>
+                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/stats">即時圖表</a>
+                            </li>
+                            <li>
+                                <a href="/history">歷史圖表</a>
+                            </li>
+                            <li>
+                                <a href="/all">各部門資訊</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 部門<span class="fa arrow"></span></a>
