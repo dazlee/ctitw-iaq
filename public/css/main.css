@@ -5,6 +5,17 @@
     padding-top: 6px;
 }
 
+
+.mt-10 {
+    margin-top: 10px;
+}
+.mt-20 {
+    margin-top: 20px;
+}
+.mb-10 {
+    margin-bottom: 10px;
+}
+
 .f-m {
     font-size: 14px;
 }
@@ -17,4 +28,37 @@
 .nav-pills>li.active>a {
     color: white;
     background-color: #f0ad4e !important;
+}
+
+
+.fg-red {
+    color: red;
+}
+
+
+.horizontal-panel {
+    display: flex;
+    min-height: 100px;
+}
+.horizontal-panel .panel-heading {
+    flex: 1;
+    -webkit-flex: 1;
+    border-top-right-radius: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+}
+.horizontal-panel .panel-body {
+    flex: 1;
+    -webkit-flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
 }

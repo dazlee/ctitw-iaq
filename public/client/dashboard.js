@@ -1,22 +1,26 @@
-define(["chartConfigs",
+define(["client/components/realtime-info-board",
+        "chartConfigs",
         "underscore",
         "fetch-utils",
         "device-utils",
-        "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, utils) {
+        "utils"], function (RealtimeInfoBoard, chartConfigs, _, fetchUtils, deviceUtils, utils) {
 
     var _deviceId;
     var _deviceData = {};
     var _filter = "hr";
-    var _startDate;
-    var _endDate;
+    var _period = {};
 
     function initializeDateRangePicker() {
         // initialize date range checker
-        _endDate = new Date();
-        _startDate = new Date();
-        _startDate.setDate(_startDate.getDate() - 30);
+        _period.from = new Date();
+        _period.to = new Date();
+        _period.from.setDate(_period.from.getDate() - 30);
         $(".input-daterange").datepicker({
             endDate: new Date(),
+        })
+        .on("changeDate", function (e) {
+            _period[e.target.name] = e.date;
+            console.log(_period);
         });
     }
 
@@ -29,17 +33,14 @@ define(["chartConfigs",
 
             var filter = e.target.dataset.filter;
             if (filter !== _filter) {
-                var deviceData = deviceUtils.filterDeviceData(_deviceData, filter);
+                drawChart(deviceUtils.filterDeviceData(_deviceData, filter), chartConfigs.outline);
                 _filter = filter;
-                drawChart(deviceData, chartConfigs.outline);
             }
         });
     }
 
     function initializeActions() {
-        if (typeof _deviceId === "undefined") return;
-
-        $("#refresh").click(function (e) {
+        $("#refreshHistory").click(function (e) {
             e.preventDefault();
             refreshChart();
         });
@@ -60,12 +61,14 @@ define(["chartConfigs",
         })
         .then(function (json) {
             var deviceData = deviceUtils.parseData(json.data);
-            drawChart(deviceData, chartConfigs.outline);
+            drawChart(deviceUtils.filterDeviceData(deviceData, _filter), chartConfigs.outline);
 
             _deviceData = deviceData;
         });
     }
     function refreshChart() {
+        if (typeof _deviceId === "undefined") return;
+
         fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
             Accept: "application/json"
         })
@@ -73,7 +76,7 @@ define(["chartConfigs",
             $('#historychart').highcharts().destroy();
 
             var deviceData = deviceUtils.parseData(json.data);
-            drawChart(deviceData, chartConfigs.outline);
+            drawChart(deviceUtils.filterDeviceData(deviceData, _filter), chartConfigs.outline);
 
             _deviceData = deviceData;
         });
@@ -89,6 +92,8 @@ define(["chartConfigs",
 
     return {
         initialize: function () {
+            RealtimeInfoBoard.initialize();
+
             initializeDateRangePicker();
             initializeUnitSelector();
             initializeActions();
