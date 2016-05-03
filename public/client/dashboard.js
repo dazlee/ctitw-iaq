@@ -1,8 +1,9 @@
-define(["chartConfigs",
+define(["client/components/realtime-info-board",
+        "chartConfigs",
         "underscore",
         "fetch-utils",
         "device-utils",
-        "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, utils) {
+        "utils"], function (RealtimeInfoBoard, chartConfigs, _, fetchUtils, deviceUtils, utils) {
 
     var _deviceId;
     var _deviceData = {};
@@ -92,6 +93,8 @@ define(["chartConfigs",
 
     return {
         initialize: function () {
+            RealtimeInfoBoard.initialize();
+
             initializeDateRangePicker();
             initializeUnitSelector();
             initializeActions();
