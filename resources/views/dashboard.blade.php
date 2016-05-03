@@ -16,32 +16,44 @@
     <div class="row mt-10">
         <div class="col-md-12">
             <div class="col-sm-4">
-                <div class="panel horizontal-panel panel-primary">
+                <div class="panel number-panel horizontal-panel panel-primary">
                     <div class="panel-heading">
-                        <h3 class="panel-title">二氧化碳</h3>
+                        <i class="fa fa-cloud"></i>
                     </div>
                     <div class="panel-body">
-                        500 ppm
+                        <div class="content">
+                            <div class="title">二氧化碳</div>
+                            <div class="value fg-red">500 ppm</div>
+                        </div>
+                        <div class="footer">法定均值 690 ppm</div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="panel horizontal-panel panel-green">
+                <div class="panel number-panel horizontal-panel panel-yellow">
                     <div class="panel-heading">
-                        <h3 class="panel-title">溫度</h3>
+                        <i class="fa fa-sun-o"></i>
                     </div>
                     <div class="panel-body">
-                        32 C
+                        <div class="content">
+                            <div class="title">溫度</div>
+                            <div class="value">25.5 C</div>
+                        </div>
+                        <div class="footer">法定均值 28.4c</div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="panel horizontal-panel panel-yellow">
+                <div class="panel number-panel horizontal-panel panel-green">
                     <div class="panel-heading">
-                        <h3 class="panel-title">濕度</h3>
+                        <i class="fa fa-tint"></i>
                     </div>
                     <div class="panel-body">
-                        45 %
+                        <div class="content">
+                            <div class="title">濕度</div>
+                            <div class="value">65%</div>
+                        </div>
+                        <div class="footer">法定均值 70%</div>
                     </div>
                 </div>
             </div>
