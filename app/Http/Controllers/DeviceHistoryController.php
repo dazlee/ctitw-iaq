@@ -51,7 +51,15 @@ class DeviceHistoryController extends Controller
     }
 
 
-    public function index() {
+    public function index(Request $request) {
+        $row = $request->query('row');
+
+        if (isset($row) && $row == -1) {
+            return DeviceHistory::orderBy('record_at', 'desc')
+                ->take(Device::count())
+                ->get();
+        }
+
         $date = new \DateTime();
         $datetime = $date->modify('-6 day')->format('Y-m-d');
         return DeviceHistory::whereDate('record_at', '>', $datetime)->orderBy('record_at', 'asc')->get();
@@ -71,6 +79,7 @@ class DeviceHistoryController extends Controller
     public function show(Request $request, $deivceId) {
         $fromDate = $request->query('fromDate');
         $toDate = $request->query('toDate');
+        $row = $request->query('row');
 
         if (isset($fromDate) && isset($toDate)) {
             $fromDate = date_create($fromDate)->setTime(00, 00, 00);
@@ -79,13 +88,20 @@ class DeviceHistoryController extends Controller
                         ->whereBetween('record_at', array($fromDate, $toDate))
                         ->orderBy('record_at', 'asc')
                         ->paginate($this->limit);
-        } else {
-            $date = new \DateTime();
-            $datetime = $date->modify('-6 day')->format('Y-m-d');
-            return DeviceHistory::where('device_id', $deivceId)
-                        ->whereDate('record_at', '>', $datetime)
-                        ->orderBy('record_at', 'asc')
-                        ->get();
         }
+        
+        if (isset($row) && $row == -1) {
+            return DeviceHistory::where('device_id', $deivceId)
+                        ->orderBy('record_at', 'desc')
+                        ->first();
+                            
+        } 
+
+        $date = new \DateTime();
+        $datetime = $date->modify('-6 day')->format('Y-m-d');
+        return DeviceHistory::where('device_id', $deivceId)
+                    ->whereDate('record_at', '>', $datetime)
+                    ->orderBy('record_at', 'asc')
+                    ->get();
     }
 }
