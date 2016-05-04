@@ -67,7 +67,21 @@ class DeviceHistoryController extends Controller
     }
     */
 
-    public function show($deivceId) {
-        return DeviceHistory::where('device_id', $deivceId)->orderBy('record_at', 'asc')->paginate($this->limit);
+    public function show(Request $request, $deivceId) {
+        $fromDate = date_create($request->query('fromDate'));
+        $toDate = date_create($request->query('toDate'));
+
+        if (isset($fromDate) && isset($toDate)) {
+            $fromDate->setTime(00, 00, 00);
+            $toDate->setTime(23, 59, 59);
+            return DeviceHistory::where('device_id', $deivceId)
+                        ->whereBetween('record_at', array($fromDate, $toDate))
+                        ->orderBy('record_at', 'asc')
+                        ->paginate($this->limit);
+        } else {
+            return DeviceHistory::where('device_id', $deivceId)
+                        ->orderBy('record_at', 'asc')
+                        ->paginate($this->limit);
+        }
     }
 }
