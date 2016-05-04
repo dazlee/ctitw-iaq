@@ -19,7 +19,7 @@
                 <div class="col-sm-2 pt-6">
                     <span class="label label-default f-m">選擇時間範圍</span>
                 </div>
-                <div class="col-sm-6 input-group input-daterange">
+                <div id="average-daterange" class="col-sm-6 input-group input-daterange">
                     <input type="text" class="form-control" name="from" value="<?php echo date_format($from, "m-d-Y"); ?>">
                     <span class="input-group-addon">-</span>
                     <input type="text" class="form-control" name="to" value="<?php echo date_format($to, "m-d-Y"); ?>">
@@ -52,16 +52,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th>A001-1</th>
-                            <td><span class="fg-red">1124</span></td>
-                            <td>1234</td>
-                            <td>1234</td>
-                            <td>1124</td>
-                            <td>1234</td>
-                            <td>1234</td>
-                            <td>1124</td>
-                            <td>1234</td>
-                            <td>1234</td>
+                            <th class="device-id"></th>
+                            <td class="co2-max"></td>
+                            <td class="co2-min"></td>
+                            <td class="co2-avg"></td>
+                            <td class="temp-max"></td>
+                            <td class="temp-min"></td>
+                            <td class="temp-avg"></td>
+                            <td class="rh-max"></td>
+                            <td class="rh-min"></td>
+                            <td class="rh-avg"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -80,7 +80,7 @@
                 <div class="col-sm-2 pt-6">
                     <span class="label label-default f-m">選擇時間範圍</span>
                 </div>
-                <div class="col-sm-6 input-group input-daterange">
+                <div id="history-daterange" class="col-sm-6 input-group input-daterange">
                     <input type="text" class="form-control" name="from" value="<?php echo date_format($from, "m-d-Y"); ?>">
                     <span class="input-group-addon">-</span>
                     <input type="text" class="form-control" name="to" value="<?php echo date_format($to, "m-d-Y"); ?>">
@@ -113,10 +113,10 @@
 @endsection
 
 @section('scripts')
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="/client/lib/highcharts/highcharts.js"></script>
+<script src="/client/lib/highcharts/modules/exporting.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/locales/bootstrap-datepicker.zh-TW.min.js"></script>
 <scirpt src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"/>
-
+<script data-main="/js/history.js" src="/client/lib/requirejs/require.js"></script>
 @endsection
