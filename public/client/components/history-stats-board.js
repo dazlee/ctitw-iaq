@@ -1,7 +1,8 @@
 define(["underscore",
         "fetch-utils",
         "device-utils",
-        "utils"], function (_, fetchUtils, deviceUtils, utils) {
+        "date-utils",
+        "utils"], function (_, fetchUtils, deviceUtils, dateUtils, utils) {
 
     var _tableElement;
     var _deviceId;
@@ -17,7 +18,13 @@ define(["underscore",
         })
         .on("changeDate", function (e) {
             _period[e.target.name] = e.date;
-            console.log(_period);
+        });
+    }
+
+    function initializeActions() {
+        $("#refreshTable").click(function (e) {
+            e.preventDefault();
+            refreshTable();
         });
     }
 
@@ -27,6 +34,23 @@ define(["underscore",
         if (typeof _deviceId === "undefined") return;
 
         fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
+            Accept: "application/json"
+        })
+        .then(function (json) {
+            var deviceData = deviceUtils.parseData(json.data);
+            var deviceDataStats = deviceUtils.getDeviceDataStatistics(deviceData);
+            drawTable(deviceDataStats);
+        });
+    }
+    function refreshTable() {
+        if (typeof _deviceId === "undefined") return;
+
+        var query = {
+            fromDate: dateUtils.formatYMD(_period.from),
+            toDate: dateUtils.formatYMD(_period.to),
+        };
+        var queryString = fetchUtils.queryStringify(query);
+        fetchUtils.fetchJSON("/api/devices/" + _deviceId + "?" + queryString, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -54,6 +78,7 @@ define(["underscore",
         initialize: function () {
             initializeDateRangePicker();
             initializeTable();
+            initializeActions();
         }
     };
 });
