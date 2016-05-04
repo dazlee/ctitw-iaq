@@ -3,7 +3,15 @@ define(["client/components/realtime-info-board",
         "chartConfigs",
         "underscore",
         "fetch-utils",
-        "device-utils"], function (RealtimeInfoBoard, HistoryStatsBoard, chartConfigs, _, fetchUtils, deviceUtils) {
+        "device-utils",
+        "date-utils"], function (
+                RealtimeInfoBoard,
+                HistoryStatsBoard,
+                chartConfigs,
+                _,
+                fetchUtils,
+                deviceUtils,
+                dateUtils) {
 
     var _deviceId;
     var _deviceData = {};
@@ -20,7 +28,6 @@ define(["client/components/realtime-info-board",
         })
         .on("changeDate", function (e) {
             _period[e.target.name] = e.date;
-            console.log(_period);
         });
     }
 
@@ -69,7 +76,12 @@ define(["client/components/realtime-info-board",
     function refreshChart() {
         if (typeof _deviceId === "undefined") return;
 
-        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
+        var query = {
+            fromDate: dateUtils.formatYMD(_period.from),
+            toDate: dateUtils.formatYMD(_period.to),
+        };
+        var queryString = fetchUtils.queryStringify(query);
+        fetchUtils.fetchJSON("/api/devices/" + _deviceId + "?" + queryString, {
             Accept: "application/json"
         })
         .then(function (json) {

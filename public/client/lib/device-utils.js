@@ -3,14 +3,17 @@ define(["chartConfigs",
         "moment",
         "curry"], function (chartConfigs, utils, moment, curry) {
 
+    function gteMinutes (ms, minutes) {
+        return moment.duration(ms).asMinutes() >= minutes;
+    }
+    function gteHours (ms, hours) {
+        return moment.duration(ms).asHours() >= hours;
+    }
     function gteDays (ms, days) {
         return moment.duration(ms).asDays() >= days;
     }
     function gteMonths (ms, months) {
         return moment.duration(ms).asMonths() >= months;
-    }
-    function gteHours (ms, hours) {
-        return moment.duration(ms).asHours() >= hours;
     }
 
     var filterDeviceData = curry(function (checker, benchmark, data) {
@@ -24,9 +27,10 @@ define(["chartConfigs",
         }, []);
     });
 
+    var filterDeviceDataByMinutes = filterDeviceData(gteMinutes);
+    var filterDeviceDataByHours = filterDeviceData(gteHours);
     var filterDeviceDataByDays = filterDeviceData(gteDays);
     var filterDeviceDataByMonths = filterDeviceData(gteMonths);
-    var filterDeviceDataByHours = filterDeviceData(gteHours);
 
     var getDeviceDataStatistics = function (data) {
         var result = {max: -Infinity, min: Infinity, avg: 0};
@@ -88,6 +92,8 @@ define(["chartConfigs",
         filterDeviceData: function (deviceData, filter) {
             var previousTimestamp = 0;
             switch (filter) {
+                case "10mins":
+                    return utils.mapObject(deviceData, filterDeviceDataByMinutes(10));
                 case "hr":
                     return utils.mapObject(deviceData, filterDeviceDataByHours(1));
                 case "8hrs":

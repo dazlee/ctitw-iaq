@@ -75,10 +75,12 @@ class DeviceHistoryController extends Controller
         if (isset($fromDate) && isset($toDate)) {
             $fromDate = date_create($fromDate)->setTime(00, 00, 00);
             $toDate = date_create($toDate)->setTime(23, 59, 59);
-            return DeviceHistory::where('device_id', $deivceId)
-                        ->whereBetween('record_at', array($fromDate, $toDate))
-                        ->orderBy('record_at', 'asc')
-                        ->paginate($this->limit);
+            return array(
+                'data' => DeviceHistory::where('device_id', $deivceId)
+                            ->whereBetween('record_at', array($fromDate, $toDate))
+                            ->orderBy('record_at', 'asc')
+                            ->get(),
+            );
         } else {
             $date = new \DateTime();
             $datetime = $date->modify('-6 day')->format('Y-m-d');
