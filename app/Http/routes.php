@@ -12,19 +12,20 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
 Route::get('/dashboard/{id}', 'DashboardController@index');
-
-Route::post('/devices/file', 'DeviceHistoryController@upload');
+Route::get('/stats', 'StatsController@index');
+Route::get('/history', 'StatsController@history');
+Route::get('/all', 'StatsController@all');
 
 /**
  * APIs
  */
 Route::group(['prefix'=>'api'], function () {
+    Route::post('devices/file', 'DeviceHistoryController@upload');
     Route::resource('devices', 'DeviceHistoryController');
 });

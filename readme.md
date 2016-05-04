@@ -12,6 +12,11 @@
 
     php artisan migrate # generate database table
 
+### ps. execute these commands if you are going to reconstruct DB
+    composer dump-autoload
+    php artisan migrate:refresh
+    php artisan db:seed
+
 ## References
 
 [Homestead](https://laravel.tw/docs/5.0/homestead)

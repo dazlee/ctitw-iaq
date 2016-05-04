@@ -72,58 +72,6 @@
                 @endif
             </ul>
         </div>
-
-
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/stats">即時圖表</a>
-                            </li>
-                            <li>
-                                <a href="/history">歷史圖表</a>
-                            </li>
-                            <li>
-                                <a href="/all">各部門資訊</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 部門<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/dashboard/1">部門1</a>
-                            </li>
-                            <li>
-                                <a href="/dashboard/2">部門2</a>
-                            </li>
-                            <li>
-                                <a href="/dashboard/3">部門3</a>
-                            </li>
-                            <li>
-                                <a href="/dashboard/4">部門4</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
         <!-- /.navbar-static-side -->
     </nav>
 
@@ -133,8 +81,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-    <script src="/client/components/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="/js/sb-admin-2.js"></script>
-    @yield('scripts')
 </body>
 </html>
