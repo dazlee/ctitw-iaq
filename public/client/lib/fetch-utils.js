@@ -39,9 +39,20 @@ define(["utils"], function (utils) {
         .then(statusCheckerJSONParser);
     }
 
+    function queryStringify(query) {
+        var queryString = utils.reduceObject(query, function (reduced, value, key) {
+            return reduced + (key + "=" + value + "&");
+        }, "");
+        if (queryString.length > 0) {
+            queryString = queryString.slice(0, -1);
+        }
+        return queryString;
+    }
+
     return {
         checkStatus: checkStatus,
         parseJSON: parseJSON,
         fetchJSON: fetchJSON,
+        queryStringify: queryStringify,
     };
 });

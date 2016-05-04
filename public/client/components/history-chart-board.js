@@ -80,7 +80,7 @@ define(["client/components/realtime-info-board",
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
         };
-        var queryString = "fromDate=" + query.fromDate + "&toDate=" + query.toDate;
+        var queryString = fetchUtils.queryStringify(query);
         fetchUtils.fetchJSON("/api/devices/" + _deviceId + "?" + queryString, {
             Accept: "application/json"
         })
