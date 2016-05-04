@@ -7,6 +7,7 @@ require.config({
         "moment": "../client/lib/moment/moment.min",
         "curry": "../client/lib/curry/curry.min",
         "fetch-utils": "../client/lib/fetch-utils",
+        "date-utils": "../client/lib/date-utils",
         "device-utils": "../client/lib/device-utils",
         "utils": "../client/lib/utils",
     }
