@@ -120,6 +120,9 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    <li>
+                        <a href="/accounts"><i class="fa fa-users fa-fw"></i> 帳號管理</span></a>
+                    </li>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->

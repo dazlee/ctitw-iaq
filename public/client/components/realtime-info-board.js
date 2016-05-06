@@ -25,6 +25,8 @@ define(["chartConfigs",
         })
         .then(function (json) {
             var currentData = json.data[json.data.length - 1];
+            if (typeof currentData === "undefined") return;
+
             if (currentData.co2 > 50) {
                 co2Value.classList.add('fg-red');
             } else {

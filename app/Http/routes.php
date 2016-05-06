@@ -21,6 +21,7 @@ Route::get('/dashboard/{id}', 'DashboardController@index');
 Route::get('/stats', 'StatsController@index');
 Route::get('/history', 'StatsController@history');
 Route::get('/all', 'StatsController@all');
+Route::get('/accounts', 'AccountsController@index');
 
 /**
  * APIs
