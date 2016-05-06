@@ -120,6 +120,18 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    <li>
+                        <a href="/accounts/agent"><i class="fa fa-users fa-fw"></i> 經銷商管理</span></a>
+                    </li>
+                    <li>
+                        <a href="/accounts/client"><i class="fa fa-users fa-fw"></i> 客戶管理</span></a>
+                    </li>
+                    <li>
+                        <a href="/accounts/department"><i class="fa fa-users fa-fw"></i> 部門管理</span></a>
+                    </li>
+                    <li>
+                        <a href="/accounts/device"><i class="fa fa-users fa-fw"></i> 儀器管理</span></a>
+                    </li>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
