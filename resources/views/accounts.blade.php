@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    @include('partials.' . $type . '-form')
+    @include('partials.forms.' . $type . '-form')
 
 </div>
 @endsection
