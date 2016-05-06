@@ -65,10 +65,23 @@ class DeviceHistoryController extends Controller
         $fromDate = $request->query('fromDate');
         $toDate = $request->query('toDate');
         $row = $request->query('row');
-        
+        $action = $request->query('action');       
 
         if (isset($fromDate) && isset($toDate)) {
-            return ['data' => DeviceHistory::betweenDatesByDeviceId($deviceId, $fromDate, $toDate)->get()];
+            $query = DeviceHistory::betweenDatesByDeviceId($deviceId, $fromDate, $toDate);
+
+            if (isset($action) && $action == 'summary') {
+                return [
+                    'summary' => [
+                        'co2' => ['max' => $query->max('co2'), 'avg' => $query->avg('co2'), 'min' => $query->min('co2')],
+                        'temp' => ['max' => $query->max('temp'), 'avg' => $query->avg('temp'), 'min' => $query->min('temp')],
+                        'rh' => ['max' => $query->max('rh'), 'avg' => $query->avg('rh'), 'min' => $query->min('rh')]
+                    ],
+                    'data' => $query->get()
+                ];
+            }
+
+            return ['data' => $query->get()];
         }
         
         if (isset($row) && $row == -1) {
