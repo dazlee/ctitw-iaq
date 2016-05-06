@@ -129,6 +129,9 @@
                     <li>
                         <a href="/accounts/department"><i class="fa fa-users fa-fw"></i> 部門管理</span></a>
                     </li>
+                    <li>
+                        <a href="/accounts/device"><i class="fa fa-users fa-fw"></i> 儀器管理</span></a>
+                    </li>
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->

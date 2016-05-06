@@ -24,6 +24,7 @@ Route::get('/all', 'StatsController@all');
 Route::get('/accounts/agent', 'AccountsController@agent');
 Route::get('/accounts/client', 'AccountsController@client');
 Route::get('/accounts/department', 'AccountsController@department');
+Route::get('/accounts/device', 'AccountsController@device');
 
 /**
  * APIs

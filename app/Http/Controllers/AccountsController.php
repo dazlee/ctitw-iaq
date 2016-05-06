@@ -33,4 +33,11 @@ class AccountsController extends Controller
             "type"      => "department",
         ));
     }
+
+    public function device () {
+        return view('accounts', array(
+            "name"      => "儀器",
+            "type"      => "device",
+        ));
+    }
 }
