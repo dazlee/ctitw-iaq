@@ -38,63 +38,23 @@ class DeviceHistory extends Model
 	    return $rows;
     }
 
-    public static function doSummary($query) {
-        return [
-            'co2' => ['max' => $query->max('co2'), 'avg' => $query->avg('co2'), 'min' => $query->min('co2')],
-            'temp' => ['max' => $query->max('temp'), 'avg' => $query->avg('temp'), 'min' => $query->min('temp')],
-            'rh' => ['max' => $query->max('rh'), 'avg' => $query->avg('rh'), 'min' => $query->min('rh')]
-        ];
-    }
-
-    public static function doAvg($query) {
-        return ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')];
-    }
-
-    public function scopeBetweenDatesOfDeviceId($query, $deviceId, $fromDate, $toDate) {
-        $fromDate = date_create($fromDate)->setTime(00, 00, 00);
-        $toDate = date_create($toDate)->setTime(23, 59, 59);
-        return $query->where('device_id', $deviceId)->whereBetween('record_at', array($fromDate, $toDate))->orderBy('record_at', 'asc');
-    }
-
     public function scopeBetweenDates($query, $fromDate, $toDate) {
         $fromDate = date_create($fromDate)->setTime(00, 00, 00);
         $toDate = date_create($toDate)->setTime(23, 59, 59);
-        return $query->whereBetween('record_at', array($fromDate, $toDate))->orderBy('record_at', 'asc');
+        return $query->whereBetween('record_at', array($fromDate, $toDate));
     }
 
-    public function scopeDescOrder($query) {
-        return $query->orderBy('record_at', 'desc');
-    }
-
-    public function scopeDescOrderOfDeviceId($query, $deviceId) {
-        return $query->where('device_id', $deviceId)->orderBy('record_at', 'desc');
-    }
-
-    public function scopeOneWeek($query) {
+    public function scopeOfDays($query, $days) {
         $date = new \DateTime();
-        $datetime = $date->modify('-6 day')->format('Y-m-d');
-        return $query->whereDate('record_at', '>', $datetime)->orderBy('record_at', 'asc');
+        $datetime = $date->modify("-$days day")->format('Y-m-d');
+        return $query->whereDate('record_at', '>', $datetime);
     }
 
-    public function scopeOneWeekOfDeviceId($query, $deviceId) {
-        $date = new \DateTime();
-        $datetime = $date->modify('-6 day')->format('Y-m-d');
-        return $query->where('device_id', $deviceId)->whereDate('record_at', '>', $datetime)->orderBy('record_at', 'asc');
+    public function scopeSortRecord($query, $order) {
+        return $query->orderBy('record_at', $order);
     }
 
-    public function scopeOneWeekSummary($query) {
-        $date = new \DateTime();
-        $datetime = $date->modify('-6 day')->format('Y-m-d');
-        return $query->selectRaw('record_at, avg(co2) as co2, avg(temp) as temp, avg(rh) as rh')
-                    ->whereDate('record_at', '>', $datetime)
-                    ->orderBy('record_at', 'asc');
-    }
-
-    public function scopeBetweenDatesSummary($query, $fromDate, $toDate) {
-        $fromDate = date_create($fromDate)->setTime(00, 00, 00);
-        $toDate = date_create($toDate)->setTime(23, 59, 59);
-        return $query->selectRaw('record_at, avg(co2) as co2, avg(temp) as temp, avg(rh) as rh')
-                    ->whereBetween('record_at', array($fromDate, $toDate))
-                    ->orderBy('record_at', 'asc');
+    public function scopeOfDevice($query, $deviceId) {
+        return $query->where('device_id', $deviceId);
     }
 }
