@@ -6,10 +6,10 @@ define(["client/components/realtime-info-board",
             HistoryChartBoard) {
 
     return {
-        initialize: function () {
-            RealtimeInfoBoard.initialize();
-            HistoryStatsBoard.initialize();
-            HistoryChartBoard.initialize();
+        initialize: function (deviceId) {
+            RealtimeInfoBoard.initialize(deviceId);
+            HistoryStatsBoard.initialize(deviceId);
+            HistoryChartBoard.initialize(deviceId);
         }
     };
 });

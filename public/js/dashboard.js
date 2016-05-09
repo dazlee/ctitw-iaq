@@ -14,5 +14,6 @@ require.config({
 });
 
 require(["client/dashboard"], function (Dashboard) {
-    Dashboard.initialize();
+    var deviceId = document.querySelector(".dashboard").dataset.deviceId;
+    Dashboard.initialize(deviceId);
 });
