@@ -44,11 +44,22 @@ class StatsController extends Controller
     }
 
     public function summary(Request $request) {
-        $row = $request->query('row');
         $avg = $request->query('avg');
-        $query = DeviceHistory::oneWeekSummary();
+        $fromDate = $request->query('fromDate');
+        $toDate = $request->query('toDate');
+        $query;
+        $avgData;
+        $data;
+        $result = [];
 
-        if (isset($avg)  && $avg == "1") {
+        if (isset($fromDate) && isset($toDate)) {
+            $query = DeviceHistory::betweenDatesSummary($request->query('fromDate'), $request->query('toDate'));
+        } else {
+            $query = DeviceHistory::oneWeekSummary();
+        }
+
+        if (isset($avg) && $avg == "1") {
+            $avgData = ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')];
             return [
                 'avg' => ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')],
                 'data' => $query->groupBy('record_at')->get(),

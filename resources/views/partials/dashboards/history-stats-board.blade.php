@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="row pt-6">
-            <table data-device-id="<?php echo $id;?>" id="historytable" class="table table-bordered">
+            <table id="historytable" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>設備</th>
@@ -37,7 +37,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th class="device-id"><?php echo $id;?></th>
+                        <th class="device-id"></th>
                         <td class="co2-max"></td>
                         <td class="co2-min"></td>
                         <td class="co2-avg"></td>

@@ -5,6 +5,7 @@ define(["lodash",
         "utils"], function (_, fetchUtils, deviceUtils, dateUtils, utils) {
 
     var _endpoint;
+    var _queries;
     var _tableElement;
     var _period = {};
 
@@ -32,7 +33,8 @@ define(["lodash",
         });
     }
     function initializeTable() {
-        fetchUtils.fetchJSON(_endpoint + "?action=summary", {
+        var queryString = fetchUtils.queryStringify(_queries);
+        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -41,17 +43,19 @@ define(["lodash",
         });
     }
     function refreshTable() {
-        var query = {
+        var query = _.extend({
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
-            summary: 1,
-        };
+        }, _queries);
         var queryString = fetchUtils.queryStringify(query);
         fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
             Accept: "application/json"
         })
         .then(function (json) {
-            drawTable(json.summary);
+            // drawTable(json.summary);
+            // TODO should put summary in summary
+            var data = deviceUtils.parseData(json.data);
+            drawTable(deviceUtils.getDeviceDataStatistics(data));
         });
     }
 
@@ -72,8 +76,9 @@ define(["lodash",
     }
 
     return {
-        initialize: function (endpoint) {
+        initialize: function (endpoint, queries) {
             _endpoint = endpoint;
+            _queries = queries;
 
             initializeViews();
             initializeData();
