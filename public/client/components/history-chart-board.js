@@ -1,28 +1,26 @@
-define(["client/components/realtime-info-board",
-        "client/components/history-stats-board",
-        "chartConfigs",
-        "underscore",
+define(["chartConfigs",
+        "lodash",
         "fetch-utils",
         "device-utils",
         "date-utils"], function (
-                RealtimeInfoBoard,
-                HistoryStatsBoard,
                 chartConfigs,
                 _,
                 fetchUtils,
                 deviceUtils,
                 dateUtils) {
 
-    var _deviceId;
+    var _deviceId = -1;
     var _deviceData = {};
     var _filter = "hr";
     var _period = {};
 
-    function initializeDateRangePicker() {
-        // initialize date range checker
+    function initializeData() {
         _period.from = new Date();
         _period.to = new Date();
         _period.from.setDate(_period.from.getDate() - 30);
+    }
+
+    function initializeDateRangePicker() {
         $("#history-daterange").datepicker({
             endDate: new Date(),
         })
@@ -30,13 +28,10 @@ define(["client/components/realtime-info-board",
             _period[e.target.name] = e.date;
         });
     }
-
     function initializeUnitSelector() {
         $('#unit-selector a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
-
-            if (typeof _deviceId === "undefined") return;
 
             var filter = e.target.dataset.filter;
             if (filter !== _filter) {
@@ -45,7 +40,6 @@ define(["client/components/realtime-info-board",
             }
         });
     }
-
     function initializeActions() {
         $("#refreshHistory").click(function (e) {
             e.preventDefault();
@@ -54,28 +48,20 @@ define(["client/components/realtime-info-board",
 
         $("#download").click(function (e) {
             e.preventDefault();
-
             console.log("should download");
         });
     }
 
     function initializeChart() {
-        _deviceId = document.querySelector('#historychart').dataset.deviceId;
-        if (typeof _deviceId === "undefined") return;
-
         fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
             Accept: "application/json"
         })
         .then(function (json) {
-            var deviceData = deviceUtils.parseData(json.data);
-            drawChart(deviceUtils.filterDeviceData(deviceData, _filter), chartConfigs.outline);
-
-            _deviceData = deviceData;
+            _deviceData = deviceUtils.parseData(json.data);
+            drawChart(deviceUtils.filterDeviceData(_deviceData, _filter), chartConfigs.outline);
         });
     }
     function refreshChart() {
-        if (typeof _deviceId === "undefined") return;
-
         var query = {
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
@@ -86,11 +72,8 @@ define(["client/components/realtime-info-board",
         })
         .then(function (json) {
             $('#historychart').highcharts().destroy();
-
-            var deviceData = deviceUtils.parseData(json.data);
+            _deviceData = deviceUtils.parseData(json.data);
             drawChart(deviceUtils.filterDeviceData(deviceData, _filter), chartConfigs.outline);
-
-            _deviceData = deviceData;
         });
     }
     function drawChart(deviceData, chartOptions) {
@@ -103,7 +86,10 @@ define(["client/components/realtime-info-board",
     }
 
     return {
-        initialize: function () {
+        initialize: function (deviceId) {
+            _deviceId = deviceId;
+
+            initializeData();
             initializeDateRangePicker();
             initializeUnitSelector();
             initializeActions();

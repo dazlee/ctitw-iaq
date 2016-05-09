@@ -4,6 +4,8 @@ require.config({
         "lib": "../client/lib",
         "chartConfigs": "../client/constants/chart",
         "underscore": "../client/lib/underscore/underscore.min",
+        "lodash": "../client/lib/lodash/lodash.min",
+        "ramda": "../client/lib/ramda/ramda.min",
         "moment": "../client/lib/moment/moment.min",
         "curry": "../client/lib/curry/curry.min",
         "fetch-utils": "../client/lib/fetch-utils",

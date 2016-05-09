@@ -17,7 +17,6 @@ define(["underscore",
         _period.from.setDate(_period.from.getDate() - 30);
     }
 
-
     function initializeDateRangePicker() {
         $("#average-daterange").datepicker({
             endDate: new Date(),
