@@ -3,7 +3,6 @@
 namespace App\Builders;
 
 use App\DeviceHistory;
-use App\Device;
 
 class BaseBuilder {
 
@@ -14,11 +13,6 @@ class BaseBuilder {
     }
 
     protected function createQuery($request) {
-        if ($request->query('latest') == 1) {
-            $count = Device::count();
-            return DeviceHistory::sortRecord('desc')->take($count);
-        }
-
         return DeviceHistory::ofDays(6)->sortRecord('asc');
     }
 
@@ -28,10 +22,6 @@ class BaseBuilder {
 
         if (isset($fromDate) && isset($toDate)) {
             return DeviceHistory::ofDevice($deviceId)->betweenDates($fromDate, $toDate)->sortRecord('asc');
-        }
-
-        if ($request->query('latest') == 1) {
-            return DeviceHistory::ofDevice($deviceId)->sortRecord('desc')->take(1);
         }
 
         return DeviceHistory::ofDevice($deviceId)->ofDays(6)->sortRecord('asc');

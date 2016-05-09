@@ -3,6 +3,7 @@
 namespace App\Builders;
 
 use App\Builders\DataBuilder;
+use App\Builders\LatestBuilder;
 use App\Builders\SummaryBuilder;
 use App\Builders\AverageBuilder;
 use App\Builders\MinAvgMaxBuilder;
@@ -14,6 +15,7 @@ class QueryBuilder {
         $results = [];
         $builders = [
             new DataBuilder($request, $deviceId),
+            new LatestBuilder($request, $deviceId),
             new SummaryBuilder($request, $deviceId),
             new AverageBuilder($request, $deviceId),
             new MinAvgMaxBuilder($request, $deviceId)
