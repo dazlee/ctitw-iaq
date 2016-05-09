@@ -53,12 +53,31 @@ class DeviceHistoryController extends Controller
 
     public function index(Request $request) {
         $row = $request->query('row');
+        $action = $request->query('action');
 
         if (isset($row) && $row == -1) {
-            return ['data' => DeviceHistory::latest()->take(Device::count())->get()];
+            $query = DeviceHistory::latest()->take(Device::count());
+
+            if (isset($action) && $action == 'avg') {
+                return [
+                    'avg' => ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')],
+                    'data' => $query->get()
+                ];
+            }
+
+            return ['data' => $query->get()];
+        }
+        
+        $query = DeviceHistory::oneWeek();
+
+        if (isset($action) && $action == 'avg') {
+            return [
+                'avg' => ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')],
+                'data' => $query->get()
+            ];
         }
 
-        return ['data' => DeviceHistory::oneWeek()->get()];
+        return ['data' => $query->get()];
     }
 
     public function show(Request $request, $deviceId) {
