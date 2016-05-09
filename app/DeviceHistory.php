@@ -80,6 +80,15 @@ class DeviceHistory extends Model
         $date = new \DateTime();
         $datetime = $date->modify('-6 day')->format('Y-m-d');
         return $query->selectRaw('record_at, avg(co2) as co2, avg(temp) as temp, avg(rh) as rh')
-                    ->whereDate('record_at', '>', $datetime);
+                    ->whereDate('record_at', '>', $datetime)
+                    ->orderBy('record_at', 'asc');
+    }
+
+    public function scopeBetweenDatesSummary($query, $fromDate, $toDate) {
+        $fromDate = date_create($fromDate)->setTime(00, 00, 00);
+        $toDate = date_create($toDate)->setTime(23, 59, 59);
+        return $query->selectRaw('record_at, avg(co2) as co2, avg(temp) as temp, avg(rh) as rh')
+                    ->whereBetween('record_at', array($fromDate, $toDate))
+                    ->orderBy('record_at', 'asc');
     }
 }

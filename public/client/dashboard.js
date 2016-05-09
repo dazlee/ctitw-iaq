@@ -14,7 +14,11 @@ define(["client/components/realtime-info-board",
                 latest: 1,
             };
             RealtimeInfoBoard.initialize(endpoint, queries);
-            HistoryStatsBoard.initialize(endpoint);
+
+            queries = {
+                summary: 1,
+            };
+            HistoryStatsBoard.initialize(endpoint, queries);
             HistoryChartBoard.initialize(endpoint);
         }
     };
