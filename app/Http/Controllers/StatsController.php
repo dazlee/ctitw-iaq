@@ -45,18 +45,16 @@ class StatsController extends Controller
 
     public function summary(Request $request) {
         $row = $request->query('row');
-        $action = $request->query('action');
+        $avg = $request->query('avg');
         $query = DeviceHistory::oneWeekSummary();
 
-        if (isset($action) && $action == 'avg') {
+        if (isset($avg)  && $avg == "1") {
             return [
                 'avg' => ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')],
-                'data' => $query->get()
+                'data' => $query->groupBy('record_at')->get(),
             ];
         }
 
-        return ['data' => $query
-                            ->groupBy('record_at')
-                            ->lists('co2sum', 'record_at')];
+        return ['data' => $query->groupBy('record_at')->get()];
     }
 }

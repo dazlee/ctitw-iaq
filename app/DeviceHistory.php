@@ -12,7 +12,7 @@ class DeviceHistory extends Model
     public static $co2Pattern = '/CO2\(([0-9]+) ppm\)/';
     public static $tempPattern = '/temp\(([0-9]+)\)/';
     public static $rhPattern = '/rh\(([0-9]+) %\)/';
-    
+
     public static function parseContent($content) {
         $rows = [];
 	    $lines = explode("\n", $content);
@@ -20,7 +20,7 @@ class DeviceHistory extends Model
 
 	    foreach ($lines as $line) {
 	        $fields = explode('/', $line);
-	
+
 	        if (count($fields) !== 9)
 		        continue;
 
@@ -34,7 +34,7 @@ class DeviceHistory extends Model
                 'updated_at' => $updated_at
 	        ];
 	    }
-	
+
 	    return $rows;
     }
 
@@ -74,5 +74,12 @@ class DeviceHistory extends Model
         $date = new \DateTime();
         $datetime = $date->modify('-6 day')->format('Y-m-d');
         return $query->where('device_id', $deviceId)->whereDate('record_at', '>', $datetime)->orderBy('record_at', 'asc');
+    }
+
+    public function scopeOneWeekSummary($query) {
+        $date = new \DateTime();
+        $datetime = $date->modify('-6 day')->format('Y-m-d');
+        return $query->selectRaw('record_at, avg(co2) as co2, avg(temp) as temp, avg(rh) as rh')
+                    ->whereDate('record_at', '>', $datetime);
     }
 }

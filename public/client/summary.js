@@ -4,10 +4,9 @@ define(["client/components/realtime-info-board",
 
     return {
         initialize: function () {
-            var endpoint = apiConfigs.endpoints.devices;
+            var endpoint = apiConfigs.endpoints.statsSummary;
             var queries = {
-                action: "avg",
-                row: -1,
+                avg: 1,
             };
             RealtimeInfoBoard.initialize(endpoint, queries);
         }

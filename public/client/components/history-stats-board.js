@@ -44,7 +44,7 @@ define(["lodash",
         var query = {
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
-            action: "summary",
+            summary: 1,
         };
         var queryString = fetchUtils.queryStringify(query);
         fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
