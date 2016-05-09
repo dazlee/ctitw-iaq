@@ -36,6 +36,7 @@ define(["chartConfigs",
 
         // [TODO] should update every 10 mins
         setInterval(function () {
+            initializePanels();
             refreshChart();
         }, 2000);
     }
