@@ -9,24 +9,31 @@ use App\Http\Requests;
 use App\DeviceHistory;
 use App\Device;
 
+define('ENUM_DATES_WITH_SUMMARY', '00');
+define('ENUM_DATES', '01');
+define('ENUM_LATEST', '10');
+define('ENUM_LATEST_WITH_AVG', '11');
+define('ENUM_ONEWEEK_WITH_SUMMARY', '20');
+define('ENUM_ONEWEEK', '21');
+define('ENUM_ONEWEEK_WITH_AVG', '22');
+
 class DeviceHistoryController extends Controller
 {
 
     private $formDataKey = 'file';
-    private $limit = 1008;
-    private $rules = [
-        'device_id'     => 'required',
-        'co2'           => 'required|numeric',
-        'temp'          => 'required|numeric',
-        'rh'            => 'required|numeric',
-        'record_at'    => 'required|date_format:Y-m-d h:i:s',
-        'created_at'    => 'date_format:Y-m-d h:i:s',
-        'updated_at'    => 'date_format:Y-m-d h:i:s',
+    private $queryRulesOfIndex = [
+        ENUM_LATEST_WITH_AVG => ['latest' => 'required|accepted', 'avg' => 'required|accepted'],
+        ENUM_LATEST => ['latest' => 'required|accepted'],
+        ENUM_ONEWEEK_WITH_AVG => ['avg' => 'required|accepted'],
+        ENUM_ONEWEEK => []
     ];
-
-    private function validator(array $data) {
-        return Validator::make($data, $this->rules);
-    }
+    private $queryRulesOfShow = [
+        ENUM_DATES_WITH_SUMMARY => ['fromDate' => 'required', 'toDate' => 'required', 'summary' => 'required|accepted'],
+        ENUM_DATES => ['fromDate' => 'required', 'toDate' => 'required'],
+        ENUM_LATEST => ['latest' => 'required|accepted'],
+        ENUM_ONEWEEK_WITH_SUMMARY => ['summary' => 'required|accepted'],
+        ENUM_ONEWEEK => []
+    ];
 
     public function upload(Request $request) {
         if (!$request->hasFile($this->formDataKey)) {
@@ -52,61 +59,69 @@ class DeviceHistoryController extends Controller
 
 
     public function index(Request $request) {
-        $row = $request->query('row');
-        $action = $request->query('action');
+        $result = ['avg' => [], 'data' => []];
+        $data = $request->query();
 
-        if (isset($row) && $row == -1) {
-            $query = DeviceHistory::latest()->take(Device::count());
-
-            if (isset($action) && $action == 'avg') {
-                return [
-                    'avg' => ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')],
-                    'data' => $query->get()
-                ];
+        foreach ($this->queryRulesOfIndex as $key => $queryRule) {
+            if (Validator::make($data, $queryRule)->passes()) {
+                break;
             }
-
-            return ['data' => $query->get()];
-        }
-        
-        $query = DeviceHistory::oneWeek();
-
-        if (isset($action) && $action == 'avg') {
-            return [
-                'avg' => ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')],
-                'data' => $query->get()
-            ];
         }
 
-        return ['data' => $query->get()];
+        switch($key) {
+            case ENUM_LATEST_WITH_AVG:
+                $query = DeviceHistory::descOrder()->take(Device::count());
+                $result['avg'] = DeviceHistory::doAvg($query);
+                $result['data'] = $query->get();
+                break;
+            case ENUM_LATEST:
+                $result['data'] = DeviceHistory::descOrder()->take(Device::count())->get();
+                break;
+            case ENUM_ONEWEEK_WITH_AVG:
+                $query = DeviceHistory::oneWeek();
+                $result['avg'] = DeviceHistory::doAvg($query);
+                $result['data'] = $query->get();
+                break;
+            default:
+                $result['data'] = DeviceHistory::oneWeek()->get();
+                break;        
+        }
+
+        return $result;
     }
 
     public function show(Request $request, $deviceId) {
-        $fromDate = $request->query('fromDate');
-        $toDate = $request->query('toDate');
-        $row = $request->query('row');
-        $action = $request->query('action');       
+        $result = ['summary' => [], 'data' => []];
+        $data = $request->query();
 
-        if (isset($fromDate) && isset($toDate)) {
-            $query = DeviceHistory::betweenDatesByDeviceId($deviceId, $fromDate, $toDate);
-
-            if (isset($action) && $action == 'summary') {
-                return [
-                    'summary' => [
-                        'co2' => ['max' => $query->max('co2'), 'avg' => $query->avg('co2'), 'min' => $query->min('co2')],
-                        'temp' => ['max' => $query->max('temp'), 'avg' => $query->avg('temp'), 'min' => $query->min('temp')],
-                        'rh' => ['max' => $query->max('rh'), 'avg' => $query->avg('rh'), 'min' => $query->min('rh')]
-                    ],
-                    'data' => $query->get()
-                ];
+        foreach ($this->queryRulesOfShow as $key => $queryRule) {
+            if (Validator::make($data, $queryRule)->passes()) { 
+                break;
             }
-
-            return ['data' => $query->get()];
         }
-        
-        if (isset($row) && $row == -1) {
-            return ['data' => DeviceHistory::latestByDeviceId($deviceId)->first()];
-        } 
 
-        return ['data' => DeviceHistory::oneWeekByDeviceId($deviceId)->get()];
+        switch($key) {
+            case ENUM_DATES_WITH_SUMMARY:
+                $query = DeviceHistory::betweenDatesOfDeviceId($deviceId, $request->query('fromDate'), $request->query('toDate'));
+                $result['summary'] = DeviceHistory::doSummary($query);
+                $result['data'] = $query->get();
+                break;
+            case ENUM_DATES:
+                $result['data'] = DeviceHistory::betweenDatesOfDeviceId($deviceId, $request->query('fromDate'), $request->query('toDate'))->get();
+                break;
+            case ENUM_LATEST:
+                $result['data'] = DeviceHistory::descOrderOfDeviceId($deviceId)->first();
+                break;
+            case ENUM_ONEWEEK_WITH_SUMMARY:
+                $query = DeviceHistory::oneWeekOfDeviceId($deviceId);
+                $result['summary'] = DeviceHistory::doSummary($query);
+                $result['data'] = $query->get();
+                break;
+            default:
+                $result['data'] = DeviceHistory::oneWeekOfDeviceId($deviceId)->get();
+                break;
+        }
+
+        return $result;
     }
 }
