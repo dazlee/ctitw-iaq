@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\DeviceHistory;
+use App\Device;
 
 class StatsController extends Controller
 {
@@ -39,5 +41,20 @@ class StatsController extends Controller
             'name'  => "各部門資訊",
             'type'  => "all-departments",
         ));
+    }
+
+    public function summary(Request $request) {
+        $row = $request->query('row');
+        $avg = $request->query('avg');
+        $query = DeviceHistory::oneWeekSummary();
+
+        if (isset($avg)  && $avg == "1") {
+            return [
+                'avg' => ['co2' => $query->avg('co2'), 'temp' => $query->avg('temp'), 'rh' => $query->avg('rh')],
+                'data' => $query->groupBy('record_at')->get(),
+            ];
+        }
+
+        return ['data' => $query->groupBy('record_at')->get()];
     }
 }

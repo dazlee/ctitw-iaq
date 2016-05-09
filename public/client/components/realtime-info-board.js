@@ -1,58 +1,34 @@
 define(["chartConfigs",
-        "underscore",
+        "lodash",
         "fetch-utils",
         "device-utils"], function (chartConfigs, _, fetchUtils, deviceUtils) {
 
-    var _deviceId;
+    var _endpoint, _queries;
+    var _co2Value, _co2Number;
+    var _tempValue, _tempNumber;
+    var _rhValue, _rhNumber;
 
+    function initializeViews() {
+        _co2Value = document.querySelector("#co2-panel .value");
+        _co2Number = _co2Value.querySelector(".number");
+
+        _tempValue = document.querySelector("#temp-panel .value");
+        _tempNumber = _tempValue.querySelector(".number");
+
+        _rhValue = document.querySelector("#rh-panel .value");
+        _rhNumber = _rhValue.querySelector(".number");
+    }
     function initializePanels() {
-        _deviceId = document.querySelector('#realtimechart').dataset.deviceId;
-        if (typeof _deviceId === "undefined") return;
-
-        var co2Panel = document.querySelector('#co2-panel');
-        var co2Value = co2Panel.querySelector(".value");
-        var co2Number = co2Value.querySelector(".number");
-
-        var tempPanel = document.querySelector('#temp-panel');
-        var tempValue = tempPanel.querySelector(".value");
-        var tempNumber = tempValue.querySelector(".number");
-
-        var rhPanel = document.querySelector('#rh-panel');
-        var rhValue = rhPanel.querySelector(".value");
-        var rhNumber = rhValue.querySelector(".number");
-        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
+        var queryString = fetchUtils.queryStringify(_queries);
+        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
             Accept: "application/json"
         })
         .then(function (json) {
-            var currentData = json.data[json.data.length - 1];
-            if (typeof currentData === "undefined") return;
-
-            if (currentData.co2 > 50) {
-                co2Value.classList.add('fg-red');
-            } else {
-                co2Value.classList.remove('fg-red');
-            }
-            if (currentData.temp > 20) {
-                tempValue.classList.add('fg-red');
-            } else {
-                tempValue.classList.remove('fg-red');
-            }
-            if (currentData.rh > 20) {
-                rhValue.classList.add('fg-red');
-            } else {
-                rhValue.classList.remove('fg-red');
-            }
-
-            co2Number.innerHTML = currentData.co2;
-            tempNumber.innerHTML = currentData.temp;
-            rhNumber.innerHTML = currentData.rh;
+            refreshTableLayout(json.avg || json.data);
         });
     }
     function initializeChart() {
-        _deviceId = document.querySelector('#realtimechart').dataset.deviceId;
-        if (typeof _deviceId === "undefined") return;
-
-        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
+        fetchUtils.fetchJSON(_endpoint, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -61,18 +37,37 @@ define(["chartConfigs",
 
         // [TODO] should update every 10 mins
         setInterval(function () {
+            initializePanels();
             refreshChart();
         }, 2000);
     }
-    function refreshChart() {
-        if (typeof _deviceId === "undefined") return;
+    function refreshTableLayout (currentData) {
+        if (currentData.co2 > 50) {
+            _co2Value.classList.add('fg-red');
+        } else {
+            _co2Value.classList.remove('fg-red');
+        }
+        if (currentData.temp > 20) {
+            _tempValue.classList.add('fg-red');
+        } else {
+            _tempValue.classList.remove('fg-red');
+        }
+        if (currentData.rh > 20) {
+            _rhValue.classList.add('fg-red');
+        } else {
+            _rhValue.classList.remove('fg-red');
+        }
 
-        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
+        _co2Number.innerHTML = currentData.co2.toFixed(2);
+        _tempNumber.innerHTML = currentData.temp.toFixed(2);
+        _rhNumber.innerHTML = currentData.rh.toFixed(2);
+    }
+    function refreshChart() {
+        fetchUtils.fetchJSON(_endpoint, {
             Accept: "application/json"
         })
         .then(function (json) {
             $('#realtimechart').highcharts().destroy();
-
             drawChart(json.data, chartConfigs.outline);
         });
     }
@@ -91,7 +86,11 @@ define(["chartConfigs",
     }
 
     return {
-        initialize: function () {
+        initialize: function (endpoint, queries) {
+            _endpoint = endpoint;
+            _queries = queries;
+
+            initializeViews();
             initializeChart();
             initializePanels();
         }

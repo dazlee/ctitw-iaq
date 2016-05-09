@@ -1,7 +1,7 @@
 define(["chartConfigs",
         "utils",
         "moment",
-        "curry"], function (chartConfigs, utils, moment, curry) {
+        "ramda"], function (chartConfigs, utils, moment, R) {
 
     function gteMinutes (ms, minutes) {
         return moment.duration(ms).asMinutes() >= minutes;
@@ -16,7 +16,7 @@ define(["chartConfigs",
         return moment.duration(ms).asMonths() >= months;
     }
 
-    var filterDeviceData = curry(function (checker, benchmark, data) {
+    var filterDeviceData = R.curry(function (checker, benchmark, data) {
         var previousTimestamp = 0;
         return data.reduce(function (reduced, v) {
             if (checker(v[0] - previousTimestamp, benchmark)) {

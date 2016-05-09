@@ -3,9 +3,10 @@ require.config({
         "client": "/client",
         "lib": "/client/lib",
         "chartConfigs": "/client/constants/chart",
-        "underscore": "/client/lib/underscore/underscore.min",
+        "api-configs": "/client/constants/api-configs",
+        "lodash": "/client/lib/lodash/lodash.min",
+        "ramda": "/client/lib/ramda/ramda.min",
         "moment": "/client/lib/moment/moment.min",
-        "curry": "/client/lib/curry/curry.min",
         "date-utils": "/client/lib/date-utils",
         "fetch-utils": "/client/lib/fetch-utils",
         "device-utils": "/client/lib/device-utils",
@@ -13,6 +14,6 @@ require.config({
     }
 });
 
-require(["client/current-summary"], function (CurrentSummary) {
-    CurrentSummary.initialize();
+require(["client/summary"], function (Summary) {
+    Summary.initialize();
 });

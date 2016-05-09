@@ -3,9 +3,10 @@ require.config({
         "client": "../client",
         "lib": "../client/lib",
         "chartConfigs": "../client/constants/chart",
-        "underscore": "../client/lib/underscore/underscore.min",
+        "api-configs": "../client/constants/api-configs",
+        "lodash": "../client/lib/lodash/lodash.min",
+        "ramda": "../client/lib/ramda/ramda.min",
         "moment": "../client/lib/moment/moment.min",
-        "curry": "../client/lib/curry/curry.min",
         "fetch-utils": "../client/lib/fetch-utils",
         "date-utils": "../client/lib/date-utils",
         "device-utils": "../client/lib/device-utils",
@@ -14,5 +15,6 @@ require.config({
 });
 
 require(["client/dashboard"], function (Dashboard) {
-    Dashboard.initialize();
+    var deviceId = document.querySelector(".dashboard").dataset.deviceId;
+    Dashboard.initialize(deviceId);
 });
