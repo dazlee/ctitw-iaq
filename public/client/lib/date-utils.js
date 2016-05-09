@@ -1,6 +1,6 @@
-define(['moment', 'curry'], function (moment, curry) {
+define(['moment', 'ramda'], function (moment, R) {
 
-    var format = curry(function (format, date) {
+    var format = R.curry(function (format, date) {
         return moment(date).format(format);
     });
 

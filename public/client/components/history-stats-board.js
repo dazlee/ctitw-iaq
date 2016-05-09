@@ -1,4 +1,4 @@
-define(["underscore",
+define(["lodash",
         "fetch-utils",
         "device-utils",
         "date-utils",

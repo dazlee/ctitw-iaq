@@ -73,7 +73,7 @@ define(["chartConfigs",
         .then(function (json) {
             $('#historychart').highcharts().destroy();
             _deviceData = deviceUtils.parseData(json.data);
-            drawChart(deviceUtils.filterDeviceData(deviceData, _filter), chartConfigs.outline);
+            drawChart(deviceUtils.filterDeviceData(_deviceData, _filter), chartConfigs.outline);
         });
     }
     function drawChart(deviceData, chartOptions) {
