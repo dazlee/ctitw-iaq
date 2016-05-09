@@ -10,7 +10,10 @@ define(["client/components/realtime-info-board",
     return {
         initialize: function (deviceId) {
             var endpoint = apiConfigs.endpoints.devices + deviceId;
-            RealtimeInfoBoard.initialize(endpoint);
+            var queries = {
+                row: -1,
+            };
+            RealtimeInfoBoard.initialize(endpoint, queries);
             HistoryStatsBoard.initialize(endpoint);
             HistoryChartBoard.initialize(endpoint);
         }

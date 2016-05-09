@@ -3,7 +3,7 @@ define(["chartConfigs",
         "fetch-utils",
         "device-utils"], function (chartConfigs, _, fetchUtils, deviceUtils) {
 
-    var _endpoint;
+    var _endpoint, _queries;
     var _co2Value, _co2Number;
     var _tempValue, _tempNumber;
     var _rhValue, _rhNumber;
@@ -19,11 +19,12 @@ define(["chartConfigs",
         _rhNumber = _rhValue.querySelector(".number");
     }
     function initializePanels() {
-        fetchUtils.fetchJSON(_endpoint + "?row=-1", {
+        var queryString = fetchUtils.queryStringify(_queries);
+        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
             Accept: "application/json"
         })
         .then(function (json) {
-            refreshTableLayout(json.data);
+            refreshTableLayout(json.avg || json.data);
         });
     }
     function initializeChart() {
@@ -57,9 +58,9 @@ define(["chartConfigs",
             _rhValue.classList.remove('fg-red');
         }
 
-        _co2Number.innerHTML = currentData.co2;
-        _tempNumber.innerHTML = currentData.temp;
-        _rhNumber.innerHTML = currentData.rh;
+        _co2Number.innerHTML = currentData.co2.toFixed(2);
+        _tempNumber.innerHTML = currentData.temp.toFixed(2);
+        _rhNumber.innerHTML = currentData.rh.toFixed(2);
     }
     function refreshChart() {
         fetchUtils.fetchJSON(_endpoint, {
@@ -85,8 +86,9 @@ define(["chartConfigs",
     }
 
     return {
-        initialize: function (endpoint) {
+        initialize: function (endpoint, queries) {
             _endpoint = endpoint;
+            _queries = queries;
 
             initializeViews();
             initializeChart();

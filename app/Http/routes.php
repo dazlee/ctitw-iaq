@@ -32,4 +32,6 @@ Route::get('/accounts/device', 'AccountsController@device');
 Route::group(['prefix'=>'api'], function () {
     Route::post('devices/file', 'DeviceHistoryController@upload');
     Route::resource('devices', 'DeviceHistoryController');
+
+    Route::resource('stats/summary', 'StatsController@summary');
 });
