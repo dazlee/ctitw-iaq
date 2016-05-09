@@ -1,15 +1,18 @@
 define(["client/components/realtime-info-board",
         "client/components/history-stats-board",
-        "client/components/history-chart-board"], function (
+        "client/components/history-chart-board",
+        "api-configs"], function (
             RealtimeInfoBoard,
             HistoryStatsBoard,
-            HistoryChartBoard) {
+            HistoryChartBoard,
+            apiConfigs) {
 
     return {
         initialize: function (deviceId) {
-            RealtimeInfoBoard.initialize(deviceId);
-            HistoryStatsBoard.initialize(deviceId);
-            HistoryChartBoard.initialize(deviceId);
+            var endpoint = apiConfigs.endpoints.devices + deviceId;
+            RealtimeInfoBoard.initialize(endpoint);
+            HistoryStatsBoard.initialize(endpoint);
+            HistoryChartBoard.initialize(endpoint);
         }
     };
 });

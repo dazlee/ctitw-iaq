@@ -9,7 +9,7 @@ define(["chartConfigs",
                 deviceUtils,
                 dateUtils) {
 
-    var _deviceId = -1;
+    var _endpoint;
     var _deviceData = {};
     var _filter = "hr";
     var _period = {};
@@ -53,7 +53,7 @@ define(["chartConfigs",
     }
 
     function initializeChart() {
-        fetchUtils.fetchJSON("/api/devices/" + _deviceId, {
+        fetchUtils.fetchJSON(_endpoint, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -67,7 +67,7 @@ define(["chartConfigs",
             toDate: dateUtils.formatYMD(_period.to),
         };
         var queryString = fetchUtils.queryStringify(query);
-        fetchUtils.fetchJSON("/api/devices/" + _deviceId + "?" + queryString, {
+        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -86,8 +86,8 @@ define(["chartConfigs",
     }
 
     return {
-        initialize: function (deviceId) {
-            _deviceId = deviceId;
+        initialize: function (endpoint) {
+            _endpoint = endpoint;
 
             initializeData();
             initializeDateRangePicker();

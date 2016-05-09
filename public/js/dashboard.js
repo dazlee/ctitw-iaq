@@ -3,6 +3,7 @@ require.config({
         "client": "../client",
         "lib": "../client/lib",
         "chartConfigs": "../client/constants/chart",
+        "api-configs": "../client/constants/api-configs",
         "lodash": "../client/lib/lodash/lodash.min",
         "ramda": "../client/lib/ramda/ramda.min",
         "moment": "../client/lib/moment/moment.min",

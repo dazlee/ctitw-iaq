@@ -4,7 +4,7 @@ define(["lodash",
         "date-utils",
         "utils"], function (_, fetchUtils, deviceUtils, dateUtils, utils) {
 
-    var _deviceId = -1;
+    var _endpoint;
     var _tableElement;
     var _period = {};
 
@@ -32,11 +32,12 @@ define(["lodash",
         });
     }
     function initializeTable() {
-        fetchUtils.fetchJSON("/api/devices/" + _deviceId + "?action=summary", {
+        fetchUtils.fetchJSON(_endpoint + "?action=summary", {
             Accept: "application/json"
         })
         .then(function (json) {
-            drawTable(json.summary);
+            var data = deviceUtils.parseData(json.data);
+            drawTable(deviceUtils.getDeviceDataStatistics(data));
         });
     }
     function refreshTable() {
@@ -46,7 +47,7 @@ define(["lodash",
             action: "summary",
         };
         var queryString = fetchUtils.queryStringify(query);
-        fetchUtils.fetchJSON("/api/devices/" + _deviceId + "?" + queryString, {
+        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -71,8 +72,8 @@ define(["lodash",
     }
 
     return {
-        initialize: function (deviceId) {
-            _deviceId = deviceId;
+        initialize: function (endpoint) {
+            _endpoint = endpoint;
 
             initializeViews();
             initializeData();
