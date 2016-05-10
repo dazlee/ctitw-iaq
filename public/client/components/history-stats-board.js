@@ -33,8 +33,7 @@ define(["lodash",
         });
     }
     function initializeTable() {
-        var queryString = fetchUtils.queryStringify(_queries);
-        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
+        fetchUtils.fetchJSON(fetchUtils.formUrl(_endpoint, _queries), {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -47,8 +46,7 @@ define(["lodash",
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
         }, _queries);
-        var queryString = fetchUtils.queryStringify(query);
-        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
+        fetchUtils.fetchJSON(fetchUtils.formUrl(_endpoint, query), {
             Accept: "application/json"
         })
         .then(function (json) {

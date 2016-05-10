@@ -9,14 +9,7 @@ define(["chartConfigs",
         fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
-        .then(function (json) {
-            drawChart(json.data, chartConfigs.outline);
-        });
-
-        // [TODO] should update every 10 mins
-        setInterval(function () {
-            refreshChart();
-        }, 2000);
+        .then(drawChart);
     }
     function refreshChart() {
         fetchUtils.fetchJSON(_api, {
@@ -24,11 +17,13 @@ define(["chartConfigs",
         })
         .then(function (json) {
             $('#realtimechart').highcharts().destroy();
-            drawChart(json.data, chartConfigs.outline);
-        });
+            return Promise.resolve(json);
+        })
+        .then(drawChart);
     }
-    function drawChart(data, chartOptions) {
-        var deviceData = deviceUtils.parseData(data);
+    function drawChart(json) {
+        var deviceData = deviceUtils.parseData(json.data);
+        var chartOptions = chartConfigs.outline;
 
         var series = deviceUtils.generateChartSeries(deviceData);
         var options = {};
@@ -46,6 +41,10 @@ define(["chartConfigs",
             _api = fetchUtils.formUrl(endpoint, queries);
 
             initializeChart();
+            // [TODO] should update every 10 mins
+            setInterval(function () {
+                refreshChart();
+            }, 10000);
         }
     };
 });

@@ -25,10 +25,6 @@ define(["chartConfigs",
         .then(function (json) {
             refreshTableLayout(json.avg || json.data);
         });
-
-        setInterval(function () {
-            initializePanels();
-        }, 2000);
     }
     function refreshTableLayout (currentData) {
         if (currentData.co2 > 50) {
@@ -58,6 +54,9 @@ define(["chartConfigs",
 
             initializeViews();
             initializePanels();
+            setInterval(function () {
+                initializePanels();
+            }, 10000);
         }
     };
 });
