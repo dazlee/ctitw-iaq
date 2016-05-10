@@ -17,7 +17,7 @@ define(["chartConfigs",
         })
         .then(function (json) {
             $('#realtimechart').highcharts().destroy();
-            return Promise.resolve(json);
+            return json;
         })
         .then(drawChart);
     }

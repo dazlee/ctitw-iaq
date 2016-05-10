@@ -22,11 +22,12 @@ define(["chartConfigs",
         fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
-        .then(function (json) {
-            refreshTableLayout(json.avg || json.data);
-        });
+        .then(refreshTableLayout);
     }
-    function refreshTableLayout (currentData) {
+    function refreshTableLayout (json) {
+        // [TODO] should just only use avg
+        var currentData = json.avg || json.data;
+
         if (currentData.co2 > 50) {
             _co2Value.classList.add('fg-red');
         } else {

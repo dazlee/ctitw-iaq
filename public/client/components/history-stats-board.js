@@ -7,10 +7,12 @@ define(["lodash",
     var _endpoint;
     var _queries;
     var _tableElement;
+    var _tableBodyElement;
     var _period = {};
 
     function initializeViews () {
         _tableElement = document.querySelector('#historytable');
+        _tableBodyElement = _tableElement.querySelector("tbody");
     }
     function initializeData () {
         _period.from = new Date();
@@ -36,10 +38,7 @@ define(["lodash",
         fetchUtils.fetchJSON(fetchUtils.formUrl(_endpoint, _queries), {
             Accept: "application/json"
         })
-        .then(function (json) {
-            var data = deviceUtils.parseData(json.data);
-            drawTable(deviceUtils.getDeviceDataStatistics(data));
-        });
+        .then(drawTable);
     }
     function refreshTable() {
         var query = _.extend({
@@ -49,17 +48,17 @@ define(["lodash",
         fetchUtils.fetchJSON(fetchUtils.formUrl(_endpoint, query), {
             Accept: "application/json"
         })
-        .then(function (json) {
-            // drawTable(json.summary);
-            // TODO should put summary in summary
-            var data = deviceUtils.parseData(json.data);
-            drawTable(deviceUtils.getDeviceDataStatistics(data));
-        });
+        .then(drawTable);
     }
 
 
-    function drawTable (deviceDataStats) {
-        var body = _tableElement.querySelector("tbody");
+    function drawTable (json) {
+        // drawTable(json.summary);
+        // TODO should put summary in summary
+        var data = deviceUtils.parseData(json.data);
+        var deviceDataStats = deviceUtils.getDeviceDataStatistics(data);
+
+        var body = _tableBodyElement;
         utils.mapObject(deviceDataStats, function (data, key) {
             // class name is restricted to
             // '.co2-max', 'co2-min', 'co2-avg'
