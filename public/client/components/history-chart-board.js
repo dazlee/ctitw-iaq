@@ -78,7 +78,7 @@ define(["chartConfigs",
         _deviceData = deviceUtils.parseData(json.data);
     }
     function drawChart() {
-        var deviceData = deviceUtils.filterDeviceData(_deviceData, _filter);
+        var deviceData = deviceUtils.filterDeviceData(_filter, _deviceData);
         var chartOptions = chartConfigs.outline;
 
         var series = deviceUtils.generateChartSeries(deviceData);

@@ -16,7 +16,7 @@ define(["chartConfigs",
         return moment.duration(ms).asMonths() >= months;
     }
 
-    var filterDeviceData = R.curry(function (checker, benchmark, data) {
+    var filterData = R.curry(function (checker, benchmark, data) {
         var previousTimestamp = 0;
         return data.reduce(function (reduced, v) {
             if (checker(v[0] - previousTimestamp, benchmark)) {
@@ -27,10 +27,10 @@ define(["chartConfigs",
         }, []);
     });
 
-    var filterDeviceDataByMinutes = filterDeviceData(gteMinutes);
-    var filterDeviceDataByHours = filterDeviceData(gteHours);
-    var filterDeviceDataByDays = filterDeviceData(gteDays);
-    var filterDeviceDataByMonths = filterDeviceData(gteMonths);
+    var filterDataByMinutes = filterData(gteMinutes);
+    var filterDataByHours = filterData(gteHours);
+    var filterDataByDays = filterData(gteDays);
+    var filterDataByMonths = filterData(gteMonths);
 
     var getDeviceDataStatistics = function (data) {
         var result = {max: -Infinity, min: Infinity, avg: 0};
@@ -45,6 +45,59 @@ define(["chartConfigs",
         return result;
     };
 
+    var filterDeviceData = R.curry(function (filter, deviceData) {
+        var previousTimestamp = 0;
+        switch (filter) {
+            case "10mins":
+                return utils.mapObject(deviceData, filterDataByMinutes(10));
+            case "hr":
+                return utils.mapObject(deviceData, filterDataByHours(1));
+            case "8hrs":
+                return utils.mapObject(deviceData, filterDataByHours(8));
+            case "day":
+                return utils.mapObject(deviceData, filterDataByDays(1));
+            case "week":
+                return utils.mapObject(deviceData, filterDataByDays(7));
+            case "month":
+                return utils.mapObject(deviceData, filterDataByMonths(1));
+            default:
+                return deviceData;
+        }
+    });
+    var filterMultipleDeviceData = function (filter, multipleDeviceData) {
+        return R.map(filterDeviceData(filter))(multipleDeviceData);
+    };
+
+    var generateChartSeries = function (deviceData) {
+        return [
+            _.extend({}, chartConfigs.series0, {
+                name: '二氧化碳',
+                data: deviceData.co2,
+                tooltip: {
+                    valueDecimals: 2,
+                    valueSuffix: ' ppm'
+                },
+            }),
+            _.extend({}, chartConfigs.series1, {
+                name: '溫度',
+                data: deviceData.temp,
+                tooltip: {
+                    valueDecimals: 2,
+                    valueSuffix: ' °C'
+                },
+            }),
+            _.extend({}, chartConfigs.series2, {
+                name: '濕度',
+                data: deviceData.rh,
+                tooltip: {
+                    valueDecimals: 2,
+                    valueSuffix: ' %'
+                },
+            })
+        ];
+    };
+    var generateChartSeriesForMultipleDevice = R.map(generateChartSeries);
+
     return {
         parseData: function (dataList) {
             var parsedData = {
@@ -53,7 +106,6 @@ define(["chartConfigs",
                 rh: [],
             };
             return dataList.reduce(function (reduced, data) {
-                // [TODO] should change to record_at
                 var timestamp = new Date(data.record_at).getTime();
                 reduced.co2.push([timestamp, data.co2]);
                 reduced.temp.push([timestamp, data.temp]);
@@ -61,53 +113,30 @@ define(["chartConfigs",
                 return reduced;
             }, parsedData);
         },
-        generateChartSeries: function (deviceData) {
-            return [
-                _.extend({}, chartConfigs.series0, {
-                    name: '二氧化碳',
-                    data: deviceData.co2,
-                    tooltip: {
-                        valueDecimals: 2,
-                        valueSuffix: ' ppm'
-                    },
-                }),
-                _.extend({}, chartConfigs.series1, {
-                    name: '溫度',
-                    data: deviceData.temp,
-                    tooltip: {
-                        valueDecimals: 2,
-                        valueSuffix: ' °C'
-                    },
-                }),
-                _.extend({}, chartConfigs.series2, {
-                    name: '濕度',
-                    data: deviceData.rh,
-                    tooltip: {
-                        valueDecimals: 2,
-                        valueSuffix: ' %'
-                    },
-                })
-            ];
+        parseDataForMultipleDevice: function (dataList) {
+            var parsedData = {};
+
+            return dataList.reduce(function (reduced, data) {
+                var key = data.device_id;
+                if (typeof reduced[key] === "undefined") {
+                    reduced[key] = {
+                        co2: [],
+                        temp: [],
+                        rh: [],
+                    };
+                }
+                var tempData = {};
+                var timestamp = new Date(data.record_at).getTime();
+                reduced[key].co2.push([timestamp, data.co2]);
+                reduced[key].temp.push([timestamp, data.temp]);
+                reduced[key].rh.push([timestamp, data.rh]);
+                return reduced;
+            }, parsedData);
         },
-        filterDeviceData: function (deviceData, filter) {
-            var previousTimestamp = 0;
-            switch (filter) {
-                case "10mins":
-                    return utils.mapObject(deviceData, filterDeviceDataByMinutes(10));
-                case "hr":
-                    return utils.mapObject(deviceData, filterDeviceDataByHours(1));
-                case "8hrs":
-                    return utils.mapObject(deviceData, filterDeviceDataByHours(8));
-                case "day":
-                    return utils.mapObject(deviceData, filterDeviceDataByDays(1));
-                case "week":
-                    return utils.mapObject(deviceData, filterDeviceDataByDays(7));
-                case "month":
-                    return utils.mapObject(deviceData, filterDeviceDataByMonths(1));
-                default:
-                    return deviceData;
-            }
-        },
+        generateChartSeries: generateChartSeries,
+        generateChartSeriesForMultipleDevice: generateChartSeriesForMultipleDevice,
+        filterDeviceData: filterDeviceData,
+        filterMultipleDeviceData: filterMultipleDeviceData,
         getDeviceDataStatistics: function (deviceData) {
             return utils.mapObject(deviceData, getDeviceDataStatistics);
         },

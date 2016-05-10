@@ -112,5 +112,13 @@ define(function() {
             },
             color: Highcharts.getOptions().colors[2]
         },
+        seriesX: {
+            name: 'seriesX',
+            data: [],
+            tooltip: {
+                valueDecimals: 2,
+                valueSuffix: ''
+            },
+        },
     };
 });

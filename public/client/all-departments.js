@@ -1,14 +1,16 @@
-define(["client/components/multiple-stats-board",
+define(["client/components/multiple-stats-table",
+        "client/components/multiple-stats-chart",
         "api-configs"], function (
-            MultipleStatsBoard, apiConfigs) {
+            MultipleStatsTable, MultipleStatsChart, apiConfigs) {
 
     return {
         initialize: function () {
             var endpoint = apiConfigs.endpoints.devices;
-            MultipleStatsBoard.initialize(endpoint, {
+            MultipleStatsTable.initialize(endpoint, {
                 min_max_avg: 1,
                 device_level: 1,
             });
+            MultipleStatsChart.initialize(endpoint, {});
         }
     };
 });
