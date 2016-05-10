@@ -15,11 +15,11 @@
                 <input type="text" class="form-control" name="to" value="<?php echo date_format($to, "m-d-Y"); ?>">
             </div>
             <div class="col-sm-1">
-                <button id="refreshTable" class="btn btn-success btn-sm">刷新</button>
+                <button id="refresh-table" class="btn btn-success btn-sm">刷新</button>
             </div>
         </div>
         <div class="row pt-6">
-            <table class="table table-bordered">
+            <table id="multiple-stats-table" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>部門</th>
