@@ -1,9 +1,4 @@
 <div class="row">
-    <div class="col-lg-12">
-        <h3 class="page-header">{{ $name }}</h3>
-    </div>
-</div>
-<div class="row">
     <div class="col-md-10 col-md-offset-1">
         <div class="row">
             <div class="col-sm-2 pt-6">
@@ -15,11 +10,11 @@
                 <input type="text" class="form-control" name="to" value="<?php echo date_format($to, "m-d-Y"); ?>">
             </div>
             <div class="col-sm-1">
-                <button id="refreshTable" class="btn btn-success btn-sm">刷新</button>
+                <button id="refresh-table" class="btn btn-success btn-sm">刷新</button>
             </div>
         </div>
         <div class="row pt-6">
-            <table class="table table-bordered">
+            <table id="multiple-stats-table" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>部門</th>
@@ -41,31 +36,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- should render by controller -->
-                    <tr>
-                        <th class="department-id">部門一</th>
-                        <td class="co2-max"></td>
-                        <td class="co2-min"></td>
-                        <td class="co2-avg"></td>
-                        <td class="temp-max"></td>
-                        <td class="temp-min"></td>
-                        <td class="temp-avg"></td>
-                        <td class="rh-max"></td>
-                        <td class="rh-min"></td>
-                        <td class="rh-avg"></td>
-                    </tr>
-                    <tr>
-                        <th class="department-id">部門二</th>
-                        <td class="co2-max"></td>
-                        <td class="co2-min"></td>
-                        <td class="co2-avg"></td>
-                        <td class="temp-max"></td>
-                        <td class="temp-min"></td>
-                        <td class="temp-avg"></td>
-                        <td class="rh-max"></td>
-                        <td class="rh-min"></td>
-                        <td class="rh-avg"></td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -79,6 +50,13 @@
 </div>
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
+        <div class="row">
+            <div class="col-sm-2 pt-6">
+                <span class="label label-default f-m">選擇部門</span>
+            </div>
+            <div id="device-selector" class="col-sm-10">
+            </div>
+        </div>
         <div class="highchart-content" id="departmentchart" style="width: 100%; height: 500px;"></div>
     </div>
 </div>

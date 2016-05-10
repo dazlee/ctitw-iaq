@@ -3,7 +3,7 @@ define(["chartConfigs",
         "fetch-utils",
         "device-utils"], function (chartConfigs, _, fetchUtils, deviceUtils) {
 
-    var _endpoint, _queries;
+    var _api;
     var _co2Value, _co2Number;
     var _tempValue, _tempNumber;
     var _rhValue, _rhNumber;
@@ -19,19 +19,15 @@ define(["chartConfigs",
         _rhNumber = _rhValue.querySelector(".number");
     }
     function initializePanels() {
-        var queryString = fetchUtils.queryStringify(_queries);
-        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
+        fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
-        .then(function (json) {
-            refreshTableLayout(json.avg || json.data);
-        });
-
-        setInterval(function () {
-            initializePanels();
-        }, 2000);
+        .then(refreshTableLayout);
     }
-    function refreshTableLayout (currentData) {
+    function refreshTableLayout (json) {
+        // [TODO] should just only use avg
+        var currentData = json.avg || json.data;
+
         if (currentData.co2 > 50) {
             _co2Value.classList.add('fg-red');
         } else {
@@ -55,11 +51,13 @@ define(["chartConfigs",
 
     return {
         initialize: function (endpoint, queries) {
-            _endpoint = endpoint;
-            _queries = queries;
+            _api = fetchUtils.formUrl(endpoint, queries);
 
             initializeViews();
             initializePanels();
+            setInterval(function () {
+                initializePanels();
+            }, 10000);
         }
     };
 });

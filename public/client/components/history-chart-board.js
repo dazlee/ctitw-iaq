@@ -35,8 +35,8 @@ define(["chartConfigs",
 
             var filter = e.target.dataset.filter;
             if (filter !== _filter) {
-                drawChart(deviceUtils.filterDeviceData(_deviceData, filter), chartConfigs.outline);
                 _filter = filter;
+                drawChart();
             }
         });
     }
@@ -56,27 +56,31 @@ define(["chartConfigs",
         fetchUtils.fetchJSON(_endpoint, {
             Accept: "application/json"
         })
-        .then(function (json) {
-            _deviceData = deviceUtils.parseData(json.data);
-            drawChart(deviceUtils.filterDeviceData(_deviceData, _filter), chartConfigs.outline);
-        });
+        .then(parseAndSaveDeviceData)
+        .then(drawChart);
     }
     function refreshChart() {
-        var query = {
+        var api = fetchUtils.formUrl(_endpoint, {
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
-        };
-        var queryString = fetchUtils.queryStringify(query);
-        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
+        });
+        fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
         .then(function (json) {
             $('#historychart').highcharts().destroy();
-            _deviceData = deviceUtils.parseData(json.data);
-            drawChart(deviceUtils.filterDeviceData(_deviceData, _filter), chartConfigs.outline);
-        });
+            return json;
+        })
+        .then(parseAndSaveDeviceData)
+        .then(drawChart);
     }
-    function drawChart(deviceData, chartOptions) {
+    function parseAndSaveDeviceData (json) {
+        _deviceData = deviceUtils.parseData(json.data);
+    }
+    function drawChart() {
+        var deviceData = deviceUtils.filterDeviceData(_filter, _deviceData);
+        var chartOptions = chartConfigs.outline;
+
         var series = deviceUtils.generateChartSeries(deviceData);
         var options = {};
         _.extend(options, chartOptions, {
