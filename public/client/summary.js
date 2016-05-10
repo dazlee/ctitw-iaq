@@ -1,14 +1,20 @@
 define(["client/components/realtime-info-board",
+        "client/components/realtime-info-panel",
         "api-configs"], function (
-            RealtimeInfoBoard, apiConfigs) {
+            RealtimeInfoBoard, RealtimeInfoPanel, apiConfigs) {
 
     return {
         initialize: function () {
-            var endpoint = apiConfigs.endpoints.statsSummary;
+            var endpoint = apiConfigs.endpoints.devices;
             var queries = {
                 avg: 1,
             };
-            RealtimeInfoBoard.initialize(endpoint, queries);
+            RealtimeInfoPanel.initialize(endpoint, queries);
+            queries = {
+                avg: 1,
+                timestamp: 1,
+            };
+            // RealtimeInfoBoard.initialize(endpoint, queries);
         }
     };
 });

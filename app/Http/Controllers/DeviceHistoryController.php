@@ -91,7 +91,7 @@ class DeviceHistoryController extends Controller
                 break;
             case ENUM_ONEWEEK_AVG_AND_TIMESTAMP:
                 $result['data'] = DeviceHistory::oneWeek()
-                    ->selectRaw('record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh)')
+                    ->selectRaw('record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')
                     ->groupBy('record_at')
                     ->get();
                 break;
@@ -103,7 +103,7 @@ class DeviceHistoryController extends Controller
                 break;
             default:
                 $result['data'] = DeviceHistory::oneWeek()->get();
-                break;        
+                break;
         }
 
         return $result;
