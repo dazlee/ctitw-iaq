@@ -49,10 +49,16 @@ define(["utils"], function (utils) {
         return queryString;
     }
 
+    function formUrl (endpoint, queries) {
+        var queryString = queryStringify(queries);
+        return endpoint + "?" + queryString;
+    }
+
     return {
         checkStatus: checkStatus,
         parseJSON: parseJSON,
         fetchJSON: fetchJSON,
         queryStringify: queryStringify,
+        formUrl: formUrl,
     };
 });

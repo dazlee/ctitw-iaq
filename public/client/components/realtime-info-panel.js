@@ -3,7 +3,7 @@ define(["chartConfigs",
         "fetch-utils",
         "device-utils"], function (chartConfigs, _, fetchUtils, deviceUtils) {
 
-    var _endpoint, _queries;
+    var _api;
     var _co2Value, _co2Number;
     var _tempValue, _tempNumber;
     var _rhValue, _rhNumber;
@@ -19,8 +19,7 @@ define(["chartConfigs",
         _rhNumber = _rhValue.querySelector(".number");
     }
     function initializePanels() {
-        var queryString = fetchUtils.queryStringify(_queries);
-        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
+        fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -55,8 +54,7 @@ define(["chartConfigs",
 
     return {
         initialize: function (endpoint, queries) {
-            _endpoint = endpoint;
-            _queries = queries;
+            _api = fetchUtils.formUrl(endpoint, queries);
 
             initializeViews();
             initializePanels();

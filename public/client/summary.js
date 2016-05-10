@@ -1,7 +1,7 @@
-define(["client/components/realtime-info-board",
-        "client/components/realtime-info-panel",
+define(["client/components/realtime-info-panel",
+        "client/components/realtime-info-chart",
         "api-configs"], function (
-            RealtimeInfoBoard, RealtimeInfoPanel, apiConfigs) {
+            RealtimeInfoPanel, RealtimeInfoChart, apiConfigs) {
 
     return {
         initialize: function () {
@@ -9,12 +9,11 @@ define(["client/components/realtime-info-board",
             var queries = {
                 avg: 1,
             };
-            RealtimeInfoPanel.initialize(endpoint, queries);
-            queries = {
+            // RealtimeInfoPanel.initialize(endpoint, queries);
+            RealtimeInfoChart.initialize(endpoint, {
                 avg: 1,
                 timestamp: 1,
-            };
-            // RealtimeInfoBoard.initialize(endpoint, queries);
+            });
         }
     };
 });
