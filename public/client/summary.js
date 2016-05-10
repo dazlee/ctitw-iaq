@@ -6,10 +6,10 @@ define(["client/components/realtime-info-panel",
     return {
         initialize: function () {
             var endpoint = apiConfigs.endpoints.devices;
-            var queries = {
+            RealtimeInfoPanel.initialize(endpoint, {
                 avg: 1,
-            };
-            // RealtimeInfoPanel.initialize(endpoint, queries);
+                nodata: 1,
+            });
             RealtimeInfoChart.initialize(endpoint, {
                 avg: 1,
                 timestamp: 1,

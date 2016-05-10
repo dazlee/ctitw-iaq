@@ -60,12 +60,11 @@ define(["chartConfigs",
         .then(drawChart);
     }
     function refreshChart() {
-        var query = {
+        var api = fetchUtils.formUrl(_endpoint, {
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
-        };
-        var queryString = fetchUtils.queryStringify(query);
-        fetchUtils.fetchJSON(_endpoint + "?" + queryString, {
+        });
+        fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
         .then(function (json) {
@@ -76,8 +75,7 @@ define(["chartConfigs",
         .then(drawChart);
     }
     function parseAndSaveDeviceData (json) {
-        var deviceData = deviceUtils.parseData(json.data);
-        _deviceData = deviceUtils.filterDeviceData(deviceData, _filter);
+        _deviceData = deviceUtils.parseData(json.data);
     }
     function drawChart() {
         var deviceData = deviceUtils.filterDeviceData(_deviceData, _filter);
