@@ -13,15 +13,21 @@
             <h3 class="page-header">即時統計</h3>
         </div>
     </div>
-    @include('partials.dashboards.realtime-info-board')
+    @include('partials.dashboards.realtime-info-panel')
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">即時圖表</h3>
+        </div>
+    </div>
+    @include('partials.dashboards.realtime-info-chart')
 
     <div class="row">
         <div class="col-lg-12">
             <h3 class="page-header">歷史資訊</h3>
         </div>
     </div>
-    @include('partials.dashboards.history-stats-board')
-    @include('partials.dashboards.history-chart-board')
+    @include('partials.dashboards.single-stats-table')
+    @include('partials.dashboards.single-stats-chart')
 
 </div>
 @endsection

@@ -11,7 +11,7 @@ define(["lodash",
     var _period = {};
 
     function initializeViews () {
-        _tableElement = document.querySelector('#historytable');
+        _tableElement = document.querySelector('#single-stats-table');
         _tableBodyElement = _tableElement.querySelector("tbody");
     }
     function initializeData () {
@@ -21,7 +21,7 @@ define(["lodash",
     }
 
     function initializeDateRangePicker() {
-        $("#average-daterange").datepicker({
+        $("#average-daterange-single-stats-table").datepicker({
             endDate: new Date(),
         })
         .on("changeDate", function (e) {
@@ -29,7 +29,7 @@ define(["lodash",
         });
     }
     function initializeActions() {
-        $("#refreshTable").click(function (e) {
+        $("#refresh-single-stats-table").click(function (e) {
             e.preventDefault();
             refreshTable();
         });

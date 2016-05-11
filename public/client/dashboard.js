@@ -1,10 +1,10 @@
 define(["client/components/realtime-info-panel",
         "client/components/realtime-info-chart",
-        "client/components/history-stats-board",
-        "client/components/history-chart-board",
+        "client/components/single-stats-table",
+        "client/components/single-stats-chart",
         "api-configs"], function (
             RealtimeInfoPanel, RealtimeInfoChart,
-            HistoryStatsBoard, HistoryChartBoard,
+            SingleStatsTable, SingleStatsChart,
             apiConfigs) {
 
     return {
@@ -14,10 +14,10 @@ define(["client/components/realtime-info-panel",
                 latest: 1,
             });
             RealtimeInfoChart.initialize(endpoint, {});
-            HistoryStatsBoard.initialize(endpoint, {
+            SingleStatsTable.initialize(endpoint, {
                 summary: 1,
             });
-            HistoryChartBoard.initialize(endpoint);
+            SingleStatsChart.initialize(endpoint);
         }
     };
 });

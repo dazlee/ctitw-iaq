@@ -16,7 +16,7 @@ define(["chartConfigs",
             Accept: "application/json"
         })
         .then(function (json) {
-            $('#realtimechart').highcharts().destroy();
+            $('#realtime-info-chart').highcharts().destroy();
             return json;
         })
         .then(drawChart);
@@ -33,7 +33,7 @@ define(["chartConfigs",
                 text: "即時資訊"
             }
         });
-        $('#realtimechart').highcharts(options);
+        $('#realtime-info-chart').highcharts(options);
     }
 
     return {
