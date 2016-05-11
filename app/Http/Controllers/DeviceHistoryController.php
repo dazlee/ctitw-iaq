@@ -19,6 +19,7 @@ define('ENUM_ONEWEEK_AND_AVG', 6);
 define('ENUM_ONEWEEK_AVG_AND_TIMESTAMP', 7);
 define('ENUM_ONEWEEK_AVG_AND_DEVICELEVEL', 8);
 define('ENUM_ONEWEEK_MIN_MAX_AVG_AND_DEVICELEVEL', 9);
+define('ENUM_BETWEEN_DATES_MIN_MAX_AVG_AND_DEVICELEVEL', 10);
 
 class DeviceHistoryController extends Controller
 {
@@ -27,11 +28,12 @@ class DeviceHistoryController extends Controller
     private $rulesOfIndex = [
         ENUM_LATEST_AND_AVG => ['latest' => 'required|accepted', 'avg' => 'required|accepted'],
         ENUM_LATEST => ['latest' => 'required|accepted'],
+        ENUM_BETWEEN_DATES_MIN_MAX_AVG_AND_DEVICELEVEL => ['fromDate' => 'required', 'toDate' => 'required', 'min_max_avg' => 'required|accepted', 'device_level' => 'required|accepted'],
+        ENUM_BETWEEN_DATES => ['fromDate' => 'required', 'toDate' => 'required'],
         ENUM_ONEWEEK_AVG_AND_TIMESTAMP => ['avg' => 'required|accepted', 'timestamp' => 'required|accepted'],
         ENUM_ONEWEEK_AVG_AND_DEVICELEVEL => ['avg' => 'required|accepted', 'device_level' => 'required|accepted'],
         ENUM_ONEWEEK_MIN_MAX_AVG_AND_DEVICELEVEL => ['min_max_avg' => 'required|accepted', 'device_level' => 'required|accepted'],
         ENUM_ONEWEEK_AND_AVG => ['avg' => 'required|accepted'],
-        ENUM_BETWEEN_DATES => ['fromDate' => 'required', 'toDate' => 'required'],
         ENUM_ONEWEEK => []
     ];
     private $rulesOfShow = [
@@ -102,6 +104,15 @@ class DeviceHistoryController extends Controller
                 $result['data'] = DeviceHistory::oneWeek()
                     ->selectRaw('device_id, avg(co2) as co2, avg(temp) as temp, avg(rh) as rh')
                     ->groupBy('device_id')
+                    ->get();
+                break;
+            case ENUM_BETWEEN_DATES_MIN_MAX_AVG_AND_DEVICELEVEL:
+                $result['data'] = DeviceHistory::betweenDates($request->query('fromDate'), $request->query('toDate'))
+                    ->selectRaw('device_id, MIN(co2) as "co2-min", MAX(co2) as "co2-max", AVG(co2) as "co2-avg",
+                                            MIN(temp) as "temp-min", MAX(temp) as "temp-max", AVG(temp) as "temp-avg",
+                                            MIN(rh) as "rh-min", MAX(rh) as "rh-max", AVG(rh) as "rh-avg"')
+                    ->groupBy('device_id')
+                    ->orderBy('device_id', 'asc')
                     ->get();
                 break;
             case ENUM_ONEWEEK_MIN_MAX_AVG_AND_DEVICELEVEL:

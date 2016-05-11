@@ -25,6 +25,8 @@ define(["chartConfigs",
         _deviceSelector = document.querySelector("#device-selector");
         _deviceSelector.addEventListener("click", function (e) {
             var deviceId = e.target.dataset.deviceId;
+            if (typeof deviceId === "undefined") return;
+
             _isDrawDeviceChart[deviceId] = !_isDrawDeviceChart[deviceId];
 
             if (_isDrawDeviceChart[deviceId]) {
@@ -89,14 +91,9 @@ define(["chartConfigs",
         });
     }
     function initializeActions() {
-        $("#refresh-all-department-chart").click(function (e) {
+        $("#refresh-multiple-stats-chart").click(function (e) {
             e.preventDefault();
             refreshChart();
-        });
-
-        $("#download").click(function (e) {
-            e.preventDefault();
-            console.log("should download");
         });
 
         _appendToDeviceSelector = appendChild(_deviceSelector);
