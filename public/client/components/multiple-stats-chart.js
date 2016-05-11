@@ -44,7 +44,7 @@ define(["chartConfigs",
         _period.from.setDate(_period.from.getDate() - 30);
     }
     function initializeDateRangePicker() {
-        $("#average-daterange-all-department-chart").datepicker({
+        $("#average-daterange-multiple-stats-chart").datepicker({
             endDate: new Date(),
         })
         .on("changeDate", function (e) {
