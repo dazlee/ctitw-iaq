@@ -5,7 +5,7 @@ define(["lodash",
         "ramda",
         "utils"], function (_, fetchUtils, deviceUtils, dateUtils, R, utils) {
 
-    var _api;
+    var _api, _endpoint, _queries;
     var _tableElement;
     var _tableBodyElement;
     var _period = {};
@@ -54,7 +54,7 @@ define(["lodash",
         _period.from.setDate(_period.from.getDate() - 30);
     }
     function initializeDateRangePicker() {
-        $("#average-daterange").datepicker({
+        $("#average-daterange-multiple-stats-table").datepicker({
             endDate: new Date(),
         })
         .on("changeDate", function (e) {
@@ -62,7 +62,7 @@ define(["lodash",
         });
     }
     function initializeActions() {
-        $("#refresh-table").click(function (e) {
+        $("#refresh-multiple-stats-table").click(function (e) {
             e.preventDefault();
             refreshTable();
         });
@@ -75,7 +75,18 @@ define(["lodash",
             drawTable(json);
         });
     }
-
+    function refreshTable() {
+        console.log("refreshTable");
+        var api = fetchUtils.formUrl(_endpoint, _.extend({}, _queries, {
+            fromDate: dateUtils.formatYMD(_period.from),
+            toDate: dateUtils.formatYMD(_period.to),
+        }));
+        console.log(api);
+        fetchUtils.fetchJSON(api, {
+            Accept: "application/json"
+        })
+        .then(drawTable);
+    }
     function drawTable (json) {
         // drawTable(json.avg);
         // TODO should put avg in avg
@@ -87,6 +98,8 @@ define(["lodash",
     return {
         initialize: function (endpoint, queries) {
             _api = fetchUtils.formUrl(endpoint, queries);
+            _endpoint = endpoint;
+            _queries = queries;
 
             initializeViews();
             initializeFunctions();
