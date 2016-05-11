@@ -9,13 +9,13 @@ define(["chartConfigs",
     var _rhValue, _rhNumber;
 
     function initializeViews() {
-        _co2Value = document.querySelector("#co2-panel .value");
+        _co2Value = document.querySelector("#realtime-info-co2-panel .value");
         _co2Number = _co2Value.querySelector(".number");
 
-        _tempValue = document.querySelector("#temp-panel .value");
+        _tempValue = document.querySelector("#realtime-info-temp-panel .value");
         _tempNumber = _tempValue.querySelector(".number");
 
-        _rhValue = document.querySelector("#rh-panel .value");
+        _rhValue = document.querySelector("#realtime-info-rh-panel .value");
         _rhNumber = _rhValue.querySelector(".number");
     }
     function initializePanels() {
