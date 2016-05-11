@@ -1,4 +1,4 @@
-@include('partials.dashboards.history-stats-board')
+@include('partials.dashboards.single-stats-table')
 
 <div class="row">
     <div class="col-lg-12">

@@ -20,7 +20,7 @@
             <h3 class="page-header">歷史資訊</h3>
         </div>
     </div>
-    @include('partials.dashboards.history-stats-board')
+    @include('partials.dashboards.single-stats-table')
     @include('partials.dashboards.history-chart-board')
 
 </div>

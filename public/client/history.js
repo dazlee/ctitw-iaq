@@ -1,7 +1,7 @@
-define(["client/components/history-stats-board",
+define(["client/components/single-stats-table",
         "client/components/history-chart-board",
         "api-configs"], function (
-            HistoryStatsBoard,
+            SingleStatsTable,
             HistoryChartBoard,
             apiConfigs) {
 
@@ -11,7 +11,7 @@ define(["client/components/history-stats-board",
             var queries = {
                 summary: 1,
             };
-            HistoryStatsBoard.initialize(endpoint, queries);
+            SingleStatsTable.initialize(endpoint, queries);
             HistoryChartBoard.initialize(endpoint);
         }
     };
