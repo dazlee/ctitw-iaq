@@ -64,7 +64,7 @@ define(["chartConfigs",
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
         });
-        fetchUtils.fetchJSON(_api, {
+        fetchUtils.fetchJSON(api, {
             Accept: "application/json"
         })
         .then(function (json) {
