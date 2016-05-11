@@ -10,21 +10,29 @@ define(["chartConfigs",
     var _multipleDeviceData = {};
     var _filter = "hr";
     var _dataTypeFilter = "co2";
-    var _deviceChartSwitcher = {};
+    var _isDrawDeviceChart = {};
     var _period = {};
     var _deviceSelector;
 
     var _parseAndFillMinMaxAvgs;
 
-    function initializeFunctions() {
-
-    }
+    var appendChild = R.curry(function(parent, child) {
+        parent.appendChild(child);
+    });
+    var _appendToDeviceSelector;
 
     function initializeViews () {
         _deviceSelector = document.querySelector("#device-selector");
         _deviceSelector.addEventListener("click", function (e) {
             var deviceId = e.target.dataset.deviceId;
-            _deviceChartSwitcher[deviceId] = !_deviceChartSwitcher[deviceId];
+            _isDrawDeviceChart[deviceId] = !_isDrawDeviceChart[deviceId];
+
+            if (_isDrawDeviceChart[deviceId]) {
+                $(e.target).addClass('active');
+            } else {
+                $(e.target).removeClass('active');
+            }
+
             drawChart();
         });
     }
@@ -41,21 +49,20 @@ define(["chartConfigs",
             _period[e.target.name] = e.date;
         });
     }
+
+    function generateDeviceSwitchButton(isOn, key) {
+        var button = document.createElement("button");
+        var className = isOn ? "btn btn-device btn-sm mr-5 active" : "btn btn-device btn-sm mr-5";
+        button.className = className;
+        button.dataset.deviceId = key;
+        button.innerHTML = key;
+        return button;
+    }
     function updateDeviceSelector() {
-
-        var buttons = R.map(function (key) {
-            var button = document.createElement("button");
-            button.className = "btn btn-success btn-sm";
-            button.dataset.deviceId = key;
-            button.innerHTML = key;
-            return button;
-        }, R.keys(_deviceChartSwitcher));
-
         _deviceSelector.innerHTML = "";
-        R.map(function (button) {
-            _deviceSelector.appendChild(button);
-        }, buttons);
-
+        R.map(_appendToDeviceSelector,
+            R.mapObjIndexed(generateDeviceSwitchButton, _isDrawDeviceChart)
+        );
     }
     function initializeUnitSelector() {
         $('#unit-selector a').click(function (e) {
@@ -91,20 +98,24 @@ define(["chartConfigs",
             e.preventDefault();
             console.log("should download");
         });
+
+        _appendToDeviceSelector = appendChild(_deviceSelector);
     }
 
     function parseAndSaveDeviceData (json) {
         _multipleDeviceData = deviceUtils.parseDataForMultipleDevice(json.data);
     }
-    function updateDeviceChartSwitcher() {
-        R.forEach(function (key) {_deviceChartSwitcher[key] = false;}, R.keys(_multipleDeviceData));
+    function updateIsDrawDeviceChart() {
+        R.forEach(function (key) {
+            _isDrawDeviceChart[key] = false;
+        }, R.keys(_multipleDeviceData));
     }
     function initializeChart() {
         fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
         .then(parseAndSaveDeviceData)
-        .then(updateDeviceChartSwitcher)
+        .then(updateIsDrawDeviceChart)
         .then(updateDeviceSelector)
         .then(drawChart);
     }
@@ -114,11 +125,11 @@ define(["chartConfigs",
 
         var multipleDeviceSeries = deviceUtils.generateChartSeriesListForMultiDeviceWithDataTypeFilter(_dataTypeFilter, multipleDeviceData);
         var series = R.reduce(function (reduced, key) {
-            if (_deviceChartSwitcher[key]) {
+            if (_isDrawDeviceChart[key]) {
                 reduced.push(multipleDeviceSeries[key]);
             }
             return reduced;
-        }, [], R.keys(_deviceChartSwitcher));
+        }, [], R.keys(_isDrawDeviceChart));
 
         var options = {};
         _.extend(options, chartOptions, {
@@ -131,7 +142,6 @@ define(["chartConfigs",
         initialize: function (endpoint, queries) {
             _api = fetchUtils.formUrl(endpoint, queries);
 
-            initializeFunctions();
             initializeViews();
             initializeData();
             initializeDateRangePicker();
