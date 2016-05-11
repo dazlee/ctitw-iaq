@@ -6,7 +6,7 @@ define(["chartConfigs",
         "ramda",
         "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, dateUtils, R, utils) {
 
-    var _api;
+    var _api, _endpoint, _queries;
     var _multipleDeviceData = {};
     var _filter = "hr";
     var _dataTypeFilter = "co2";
@@ -42,7 +42,7 @@ define(["chartConfigs",
         _period.from.setDate(_period.from.getDate() - 30);
     }
     function initializeDateRangePicker() {
-        $("#average-daterange").datepicker({
+        $("#average-daterange-all-department-chart").datepicker({
             endDate: new Date(),
         })
         .on("changeDate", function (e) {
@@ -89,7 +89,7 @@ define(["chartConfigs",
         });
     }
     function initializeActions() {
-        $("#refreshHistory").click(function (e) {
+        $("#refresh-all-department-chart").click(function (e) {
             e.preventDefault();
             refreshChart();
         });
@@ -119,6 +119,17 @@ define(["chartConfigs",
         .then(updateDeviceSelector)
         .then(drawChart);
     }
+    function refreshChart() {
+        var api = fetchUtils.formUrl(_endpoint, _.extend({}, _queries, {
+            fromDate: dateUtils.formatYMD(_period.from),
+            toDate: dateUtils.formatYMD(_period.to),
+        }));
+        fetchUtils.fetchJSON(api, {
+            Accept: "application/json"
+        })
+        .then(parseAndSaveDeviceData)
+        .then(drawChart);
+    }
     function drawChart() {
         var multipleDeviceData = deviceUtils.filterDeviceDataForMultiDeviceByPeriod(_filter, _multipleDeviceData);
         var chartOptions = chartConfigs.outline;
@@ -141,6 +152,8 @@ define(["chartConfigs",
     return {
         initialize: function (endpoint, queries) {
             _api = fetchUtils.formUrl(endpoint, queries);
+            _endpoint = endpoint;
+            _queries = queries;
 
             initializeViews();
             initializeData();

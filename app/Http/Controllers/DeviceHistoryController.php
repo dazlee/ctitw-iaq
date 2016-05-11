@@ -31,6 +31,7 @@ class DeviceHistoryController extends Controller
         ENUM_ONEWEEK_AVG_AND_DEVICELEVEL => ['avg' => 'required|accepted', 'device_level' => 'required|accepted'],
         ENUM_ONEWEEK_MIN_MAX_AVG_AND_DEVICELEVEL => ['min_max_avg' => 'required|accepted', 'device_level' => 'required|accepted'],
         ENUM_ONEWEEK_AND_AVG => ['avg' => 'required|accepted'],
+        ENUM_BETWEEN_DATES => ['fromDate' => 'required', 'toDate' => 'required'],
         ENUM_ONEWEEK => []
     ];
     private $rulesOfShow = [
@@ -112,12 +113,15 @@ class DeviceHistoryController extends Controller
                     ->orderBy('device_id', 'asc')
                     ->get();
                 break;
+            case ENUM_BETWEEN_DATES:
+                $result['data'] = DeviceHistory::betweenDates($request->query('fromDate'), $request->query('toDate'))->get();
+                break;
             default:
                 $result['data'] = DeviceHistory::oneWeek()->get();
                 break;
         }
 
-        return $result;
+        return response()->json($result)->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     public function show(Request $request, $deviceId) {
@@ -146,6 +150,6 @@ class DeviceHistoryController extends Controller
                 break;
         }
 
-        return $result;
+        return response()->json($result)->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 }

@@ -56,6 +56,12 @@ class DeviceHistory extends Model
         return $query->where('device_id', $deviceId)->whereBetween('record_at', array($fromDate, $toDate))->orderBy('record_at', 'asc');
     }
 
+    public function scopeBetweenDates($query, $fromDate, $toDate) {
+        $fromDate = date_create($fromDate)->setTime(00, 00, 00);
+        $toDate = date_create($toDate)->setTime(23, 59, 59);
+        return $query->whereBetween('record_at', array($fromDate, $toDate))->orderBy('record_at', 'asc');
+    }
+
     public function scopeDescOrder($query) {
         return $query->orderBy('record_at', 'desc');
     }
