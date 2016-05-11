@@ -6,25 +6,33 @@ define(["chartConfigs",
         "ramda",
         "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, dateUtils, R, utils) {
 
-    var _api;
+    var _api, _endpoint, _queries;
     var _multipleDeviceData = {};
     var _filter = "hr";
     var _dataTypeFilter = "co2";
-    var _deviceChartSwitcher = {};
+    var _isDrawDeviceChart = {};
     var _period = {};
     var _deviceSelector;
 
     var _parseAndFillMinMaxAvgs;
 
-    function initializeFunctions() {
-
-    }
+    var appendChild = R.curry(function(parent, child) {
+        parent.appendChild(child);
+    });
+    var _appendToDeviceSelector;
 
     function initializeViews () {
         _deviceSelector = document.querySelector("#device-selector");
         _deviceSelector.addEventListener("click", function (e) {
             var deviceId = e.target.dataset.deviceId;
-            _deviceChartSwitcher[deviceId] = !_deviceChartSwitcher[deviceId];
+            _isDrawDeviceChart[deviceId] = !_isDrawDeviceChart[deviceId];
+
+            if (_isDrawDeviceChart[deviceId]) {
+                $(e.target).addClass('active');
+            } else {
+                $(e.target).removeClass('active');
+            }
+
             drawChart();
         });
     }
@@ -34,28 +42,27 @@ define(["chartConfigs",
         _period.from.setDate(_period.from.getDate() - 30);
     }
     function initializeDateRangePicker() {
-        $("#average-daterange").datepicker({
+        $("#average-daterange-all-department-chart").datepicker({
             endDate: new Date(),
         })
         .on("changeDate", function (e) {
             _period[e.target.name] = e.date;
         });
     }
+
+    function generateDeviceSwitchButton(isOn, key) {
+        var button = document.createElement("button");
+        var className = isOn ? "btn btn-device btn-sm mr-5 active" : "btn btn-device btn-sm mr-5";
+        button.className = className;
+        button.dataset.deviceId = key;
+        button.innerHTML = key;
+        return button;
+    }
     function updateDeviceSelector() {
-
-        var buttons = R.map(function (key) {
-            var button = document.createElement("button");
-            button.className = "btn btn-success btn-sm";
-            button.dataset.deviceId = key;
-            button.innerHTML = key;
-            return button;
-        }, R.keys(_deviceChartSwitcher));
-
         _deviceSelector.innerHTML = "";
-        R.map(function (button) {
-            _deviceSelector.appendChild(button);
-        }, buttons);
-
+        R.map(_appendToDeviceSelector,
+            R.mapObjIndexed(generateDeviceSwitchButton, _isDrawDeviceChart)
+        );
     }
     function initializeUnitSelector() {
         $('#unit-selector a').click(function (e) {
@@ -82,7 +89,7 @@ define(["chartConfigs",
         });
     }
     function initializeActions() {
-        $("#refreshHistory").click(function (e) {
+        $("#refresh-all-department-chart").click(function (e) {
             e.preventDefault();
             refreshChart();
         });
@@ -91,21 +98,36 @@ define(["chartConfigs",
             e.preventDefault();
             console.log("should download");
         });
+
+        _appendToDeviceSelector = appendChild(_deviceSelector);
     }
 
     function parseAndSaveDeviceData (json) {
         _multipleDeviceData = deviceUtils.parseDataForMultipleDevice(json.data);
     }
-    function updateDeviceChartSwitcher() {
-        R.forEach(function (key) {_deviceChartSwitcher[key] = false;}, R.keys(_multipleDeviceData));
+    function updateIsDrawDeviceChart() {
+        R.forEach(function (key) {
+            _isDrawDeviceChart[key] = false;
+        }, R.keys(_multipleDeviceData));
     }
     function initializeChart() {
         fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
         .then(parseAndSaveDeviceData)
-        .then(updateDeviceChartSwitcher)
+        .then(updateIsDrawDeviceChart)
         .then(updateDeviceSelector)
+        .then(drawChart);
+    }
+    function refreshChart() {
+        var api = fetchUtils.formUrl(_endpoint, _.extend({}, _queries, {
+            fromDate: dateUtils.formatYMD(_period.from),
+            toDate: dateUtils.formatYMD(_period.to),
+        }));
+        fetchUtils.fetchJSON(api, {
+            Accept: "application/json"
+        })
+        .then(parseAndSaveDeviceData)
         .then(drawChart);
     }
     function drawChart() {
@@ -114,11 +136,11 @@ define(["chartConfigs",
 
         var multipleDeviceSeries = deviceUtils.generateChartSeriesListForMultiDeviceWithDataTypeFilter(_dataTypeFilter, multipleDeviceData);
         var series = R.reduce(function (reduced, key) {
-            if (_deviceChartSwitcher[key]) {
+            if (_isDrawDeviceChart[key]) {
                 reduced.push(multipleDeviceSeries[key]);
             }
             return reduced;
-        }, [], R.keys(_deviceChartSwitcher));
+        }, [], R.keys(_isDrawDeviceChart));
 
         var options = {};
         _.extend(options, chartOptions, {
@@ -130,8 +152,9 @@ define(["chartConfigs",
     return {
         initialize: function (endpoint, queries) {
             _api = fetchUtils.formUrl(endpoint, queries);
+            _endpoint = endpoint;
+            _queries = queries;
 
-            initializeFunctions();
             initializeViews();
             initializeData();
             initializeDateRangePicker();

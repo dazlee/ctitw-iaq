@@ -69,6 +69,19 @@
                 </ul>
             </div>
         </div>
+        <div class="row mt-10">
+            <div class="col-sm-2 pt-6">
+                <span class="label label-default f-m">選擇時間範圍</span>
+            </div>
+            <div id="average-daterange-all-department-chart" class="col-sm-6 input-group input-daterange">
+                <input type="text" class="form-control" name="from" value="<?php echo date_format($from, "m-d-Y"); ?>">
+                <span class="input-group-addon">-</span>
+                <input type="text" class="form-control" name="to" value="<?php echo date_format($to, "m-d-Y"); ?>">
+            </div>
+            <div class="col-sm-1">
+                <button id="refresh-all-department-chart" class="btn btn-success btn-sm">刷新</button>
+            </div>
+        </div>
         <div class="highchart-content" id="departmentchart" style="width: 100%; height: 500px;"></div>
     </div>
 </div>

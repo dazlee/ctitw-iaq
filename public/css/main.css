@@ -15,6 +15,9 @@
 .mb-10 {
     margin-bottom: 10px;
 }
+.mr-5 {
+    margin-right: 5px;
+}
 
 .f-m {
     font-size: 14px;
@@ -88,4 +91,16 @@
     width: 100%;
     justify-content: center;
     border-top: 1px solid #a8a8a8;
+}
+
+
+.btn.btn-device {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+.btn.btn-device:hover, .btn.btn-device.active {
+    color: #fff;
+    background-color: #449d44;
+    border-color: #398439;
 }

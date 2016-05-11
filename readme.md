@@ -1,6 +1,10 @@
 # IAQ
 ## Setup process
 ### 1. Command for auto build
+    sudo apt-get install mysql-server php5-mysql nginx php5-fpm php5-cli php5-mcrypt git
+    curl -sS https://getcomposer.org/installer | php
+    cp composer.phar /usr/bin
+
     composer install
     composer dump-autoload
     cp .env.example .env
