@@ -57,6 +57,18 @@
             <div id="device-selector" class="col-sm-10">
             </div>
         </div>
+        <div class="row mt-10">
+            <div class="col-sm-2 pt-6">
+                <span class="label label-default f-m">選擇資料種類</span>
+            </div>
+            <div id="datatype-selector" class="col-sm-10">
+                <ul class="nav nav-pills">
+                  <li role="presentation" class="active btn-default"><a data-filter="co2" href="#">二氧化碳</a></li>
+                  <li role="presentation"><a data-filter="temp" href="#">溫度</a></li>
+                  <li role="presentation"><a data-filter="rh" href="#">濕度</a></li>
+                </ul>
+            </div>
+        </div>
         <div class="highchart-content" id="departmentchart" style="width: 100%; height: 500px;"></div>
     </div>
 </div>

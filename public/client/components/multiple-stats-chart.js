@@ -9,6 +9,7 @@ define(["chartConfigs",
     var _api;
     var _multipleDeviceData = {};
     var _filter = "hr";
+    var _dataTypeFilter = "co2";
     var _deviceChartSwitcher = {};
     var _period = {};
     var _deviceSelector;
@@ -18,7 +19,6 @@ define(["chartConfigs",
     function initializeFunctions() {
 
     }
-
 
     function initializeViews () {
         _deviceSelector = document.querySelector("#device-selector");
@@ -69,6 +69,18 @@ define(["chartConfigs",
             }
         });
     }
+    function initializeDatatypeSelector() {
+        $('#datatype-selector a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+
+            var filter = e.target.dataset.filter;
+            if (filter !== _dataTypeFilter) {
+                _dataTypeFilter = filter;
+                drawChart();
+            }
+        });
+    }
     function initializeActions() {
         $("#refreshHistory").click(function (e) {
             e.preventDefault();
@@ -96,17 +108,14 @@ define(["chartConfigs",
         .then(updateDeviceSelector)
         .then(drawChart);
     }
-    function filterDeviceSeries(multipleDeviceSeries) {
-
-    }
     function drawChart() {
-        var multipleDeviceData = deviceUtils.filterMultipleDeviceData(_filter, _multipleDeviceData);
+        var multipleDeviceData = deviceUtils.filterDeviceDataForMultiDeviceByPeriod(_filter, _multipleDeviceData);
         var chartOptions = chartConfigs.outline;
 
-        var multipleDeviceSeries = deviceUtils.generateChartSeriesForMultipleDevice(multipleDeviceData);
+        var multipleDeviceSeries = deviceUtils.generateChartSeriesListForMultiDeviceWithDataTypeFilter(_dataTypeFilter, multipleDeviceData);
         var series = R.reduce(function (reduced, key) {
             if (_deviceChartSwitcher[key]) {
-                reduced = R.concat(reduced, multipleDeviceSeries[key]);
+                reduced.push(multipleDeviceSeries[key]);
             }
             return reduced;
         }, [], R.keys(_deviceChartSwitcher));
@@ -126,6 +135,7 @@ define(["chartConfigs",
             initializeViews();
             initializeData();
             initializeDateRangePicker();
+            initializeDatatypeSelector();
             initializeActions();
             initializeChart();
         }

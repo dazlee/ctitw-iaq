@@ -45,8 +45,7 @@ define(["chartConfigs",
         return result;
     };
 
-    var filterDeviceData = R.curry(function (filter, deviceData) {
-        var previousTimestamp = 0;
+    var filterDeviceDataByPeriod = R.curry(function (filter, deviceData) {
         switch (filter) {
             case "10mins":
                 return utils.mapObject(deviceData, filterDataByMinutes(10));
@@ -64,39 +63,58 @@ define(["chartConfigs",
                 return deviceData;
         }
     });
-    var filterMultipleDeviceData = function (filter, multipleDeviceData) {
-        return R.map(filterDeviceData(filter))(multipleDeviceData);
+    var filterDeviceDataForMultiDeviceByPeriod = function (filter, multipleDeviceData) {
+        return R.map(filterDeviceDataByPeriod(filter), multipleDeviceData);
     };
 
-    var generateChartSeries = function (deviceData) {
+    var generateChartSeries = R.curry(function (yAxis, color, unit, name, data) {
+        return _.extend({}, chartConfigs.seriesX, {
+            name: name,
+            data: data,
+            yAxis: yAxis,
+            tooltip: {
+                valueDecimals: 2,
+                valueSuffix: unit
+            },
+            color: color,
+        });
+    });
+    var generateChartSeriesForCo2 = generateChartSeries(0, Highcharts.getOptions().colors[0], " ppm");
+    var generateChartSeriesForTemp = generateChartSeries(1, Highcharts.getOptions().colors[3], " °C");
+    var generateChartSeriesForRh = generateChartSeries(2, Highcharts.getOptions().colors[2], " %");
+    var generateChartSeriesList = function (deviceData) {
         return [
-            _.extend({}, chartConfigs.series0, {
-                name: '二氧化碳',
-                data: deviceData.co2,
-                tooltip: {
-                    valueDecimals: 2,
-                    valueSuffix: ' ppm'
-                },
-            }),
-            _.extend({}, chartConfigs.series1, {
-                name: '溫度',
-                data: deviceData.temp,
-                tooltip: {
-                    valueDecimals: 2,
-                    valueSuffix: ' °C'
-                },
-            }),
-            _.extend({}, chartConfigs.series2, {
-                name: '濕度',
-                data: deviceData.rh,
-                tooltip: {
-                    valueDecimals: 2,
-                    valueSuffix: ' %'
-                },
-            })
+            generateChartSeriesForCo2("二氧化碳", deviceData.co2),
+            generateChartSeriesForTemp("溫度", deviceData.temp),
+            generateChartSeriesForRh("濕度", deviceData.rh),
         ];
     };
-    var generateChartSeriesForMultipleDevice = R.map(generateChartSeries);
+
+    var generateChartSeriesForCo2WithKey = function (data, key, obj) {
+        return generateChartSeriesForCo2(key + " 二氧化碳", data.co2);
+    };
+    var generateChartSeriesForTempWithKey = function (data, key, obj) {
+        return generateChartSeriesForTemp(key + " 溫度", data.temp);
+    };
+    var generateChartSeriesForRhWithKey = function (data, key, obj) {
+        return generateChartSeriesForRh(key + " 濕度", data.rh);
+    };
+    var generateChartSeriesListForMultiDeviceWithDataTypeFilter = function (dataTypeFilter, multipleDeviceData) {
+        var keys = R.keys(multipleDeviceData);
+        var _generateChartSeriesForCo2 = function (value, key, obj) {
+            return generateChartSeriesForCo2(key + " 二氧化碳", value.co2);
+        };
+        switch (dataTypeFilter) {
+            case "co2":
+                return R.mapObjIndexed(generateChartSeriesForCo2WithKey, multipleDeviceData);
+            case "temp":
+                return R.mapObjIndexed(generateChartSeriesForTempWithKey, multipleDeviceData);
+            case "rh":
+                return R.mapObjIndexed(generateChartSeriesForRhWithKey, multipleDeviceData);
+            default:
+                return [];
+        }
+    };
 
     return {
         parseData: function (dataList) {
@@ -133,10 +151,13 @@ define(["chartConfigs",
                 return reduced;
             }, parsedData);
         },
-        generateChartSeries: generateChartSeries,
-        generateChartSeriesForMultipleDevice: generateChartSeriesForMultipleDevice,
-        filterDeviceData: filterDeviceData,
-        filterMultipleDeviceData: filterMultipleDeviceData,
+
+        generateChartSeriesList: generateChartSeriesList,
+        generateChartSeriesListForMultiDeviceWithDataTypeFilter: generateChartSeriesListForMultiDeviceWithDataTypeFilter,
+
+        filterDeviceDataByPeriod: filterDeviceDataByPeriod,
+        filterDeviceDataForMultiDeviceByPeriod: filterDeviceDataForMultiDeviceByPeriod,
+
         getDeviceDataStatistics: function (deviceData) {
             return utils.mapObject(deviceData, getDeviceDataStatistics);
         },

@@ -25,7 +25,7 @@ define(["chartConfigs",
         var deviceData = deviceUtils.parseData(json.data);
         var chartOptions = chartConfigs.outline;
 
-        var series = deviceUtils.generateChartSeries(deviceData);
+        var series = deviceUtils.generateChartSeriesList(deviceData);
         var options = {};
         _.extend(options, chartOptions, {
             series: series,
