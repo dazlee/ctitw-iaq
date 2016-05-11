@@ -65,7 +65,7 @@ class StatsController extends Controller
                 'data' => $query->groupBy('record_at')->get(),
             ];
         }
-
-        return ['data' => $query->groupBy('record_at')->get()];
+        $result = ['data' => $query->groupBy('record_at')->get()];
+        return response()->json($result)->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 }
