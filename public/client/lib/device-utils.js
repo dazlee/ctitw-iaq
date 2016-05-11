@@ -67,7 +67,7 @@ define(["chartConfigs",
         return R.map(filterDeviceDataByPeriod(filter), multipleDeviceData);
     };
 
-    var generateChartSeries = R.curry(function (name, unit, yAxis, color, data) {
+    var generateChartSeries = R.curry(function (yAxis, color, unit, name, data) {
         return _.extend({}, chartConfigs.seriesX, {
             name: name,
             data: data,
@@ -79,24 +79,38 @@ define(["chartConfigs",
             color: color,
         });
     });
-    var generateChartSeriesForCo2 = generateChartSeries("二氧化碳", " ppm", 0, Highcharts.getOptions().colors[0]);
-    var generateChartSeriesForTemp = generateChartSeries("溫度", " °C", 1, Highcharts.getOptions().colors[3]);
-    var generateChartSeriesForRh = generateChartSeries("濕度", " %", 2, Highcharts.getOptions().colors[2]);
+    var generateChartSeriesForCo2 = generateChartSeries(0, Highcharts.getOptions().colors[0], " ppm");
+    var generateChartSeriesForTemp = generateChartSeries(1, Highcharts.getOptions().colors[3], " °C");
+    var generateChartSeriesForRh = generateChartSeries(2, Highcharts.getOptions().colors[2], " %");
     var generateChartSeriesList = function (deviceData) {
         return [
-            generateChartSeriesForCo2(deviceData.co2),
-            generateChartSeriesForTemp(deviceData.temp),
-            generateChartSeriesForRh(deviceData.rh),
+            generateChartSeriesForCo2("二氧化碳", deviceData.co2),
+            generateChartSeriesForTemp("溫度", deviceData.temp),
+            generateChartSeriesForRh("濕度", deviceData.rh),
         ];
     };
+
+    var generateChartSeriesForCo2WithKey = function (data, key, obj) {
+        return generateChartSeriesForCo2(key + " 二氧化碳", data.co2);
+    };
+    var generateChartSeriesForTempWithKey = function (data, key, obj) {
+        return generateChartSeriesForTemp(key + " 溫度", data.temp);
+    };
+    var generateChartSeriesForRhWithKey = function (data, key, obj) {
+        return generateChartSeriesForRh(key + " 濕度", data.rh);
+    };
     var generateChartSeriesListForMultiDeviceWithDataTypeFilter = function (dataTypeFilter, multipleDeviceData) {
+        var keys = R.keys(multipleDeviceData);
+        var _generateChartSeriesForCo2 = function (value, key, obj) {
+            return generateChartSeriesForCo2(key + " 二氧化碳", value.co2);
+        };
         switch (dataTypeFilter) {
             case "co2":
-                return R.map(R.compose(generateChartSeriesForCo2, R.prop("co2")), multipleDeviceData);
+                return R.mapObjIndexed(generateChartSeriesForCo2WithKey, multipleDeviceData);
             case "temp":
-                return R.map(R.compose(generateChartSeriesForTemp, R.prop("temp")), multipleDeviceData);
+                return R.mapObjIndexed(generateChartSeriesForTempWithKey, multipleDeviceData);
             case "rh":
-                return R.map(R.compose(generateChartSeriesForRh, R.prop("rh")), multipleDeviceData);
+                return R.mapObjIndexed(generateChartSeriesForRhWithKey, multipleDeviceData);
             default:
                 return [];
         }
