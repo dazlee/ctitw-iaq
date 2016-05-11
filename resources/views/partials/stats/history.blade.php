@@ -5,7 +5,7 @@
         <h3 class="page-header">歷史圖表</h3>
     </div>
 </div>
-@include('partials.dashboards.history-chart-board')
+@include('partials.dashboards.single-stats-chart')
 
 @section('scripts')
 <script src="/client/lib/highcharts/highcharts.js"></script>

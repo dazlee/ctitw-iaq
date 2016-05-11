@@ -21,7 +21,7 @@
         </div>
     </div>
     @include('partials.dashboards.single-stats-table')
-    @include('partials.dashboards.history-chart-board')
+    @include('partials.dashboards.single-stats-chart')
 
 </div>
 @endsection
