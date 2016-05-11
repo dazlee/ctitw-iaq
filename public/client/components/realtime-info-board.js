@@ -74,7 +74,7 @@ define(["chartConfigs",
     function drawChart(data, chartOptions) {
         var deviceData = deviceUtils.parseData(data);
 
-        var series = deviceUtils.generateChartSeries(deviceData);
+        var series = deviceUtils.generateChartSeriesList(deviceData);
         var options = {};
         _.extend(options, chartOptions, {
             series: series,

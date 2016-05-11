@@ -45,8 +45,7 @@ define(["chartConfigs",
         return result;
     };
 
-    var filterDeviceData = R.curry(function (filter, deviceData) {
-        var previousTimestamp = 0;
+    var filterDeviceDataByPeriod = R.curry(function (filter, deviceData) {
         switch (filter) {
             case "10mins":
                 return utils.mapObject(deviceData, filterDataByMinutes(10));
@@ -64,39 +63,44 @@ define(["chartConfigs",
                 return deviceData;
         }
     });
-    var filterMultipleDeviceData = function (filter, multipleDeviceData) {
-        return R.map(filterDeviceData(filter))(multipleDeviceData);
+    var filterDeviceDataForMultiDeviceByPeriod = function (filter, multipleDeviceData) {
+        return R.map(filterDeviceDataByPeriod(filter), multipleDeviceData);
     };
 
-    var generateChartSeries = function (deviceData) {
+    var generateChartSeries = R.curry(function (name, unit, yAxis, color, data) {
+        return _.extend({}, chartConfigs.seriesX, {
+            name: name,
+            data: data,
+            yAxis: yAxis,
+            tooltip: {
+                valueDecimals: 2,
+                valueSuffix: unit
+            },
+            color: color,
+        });
+    });
+    var generateChartSeriesForCo2 = generateChartSeries("二氧化碳", " ppm", 0, Highcharts.getOptions().colors[0]);
+    var generateChartSeriesForTemp = generateChartSeries("溫度", " °C", 1, Highcharts.getOptions().colors[3]);
+    var generateChartSeriesForRh = generateChartSeries("濕度", " %", 2, Highcharts.getOptions().colors[2]);
+    var generateChartSeriesList = function (deviceData) {
         return [
-            _.extend({}, chartConfigs.series0, {
-                name: '二氧化碳',
-                data: deviceData.co2,
-                tooltip: {
-                    valueDecimals: 2,
-                    valueSuffix: ' ppm'
-                },
-            }),
-            _.extend({}, chartConfigs.series1, {
-                name: '溫度',
-                data: deviceData.temp,
-                tooltip: {
-                    valueDecimals: 2,
-                    valueSuffix: ' °C'
-                },
-            }),
-            _.extend({}, chartConfigs.series2, {
-                name: '濕度',
-                data: deviceData.rh,
-                tooltip: {
-                    valueDecimals: 2,
-                    valueSuffix: ' %'
-                },
-            })
+            generateChartSeriesForCo2(deviceData.co2),
+            generateChartSeriesForTemp(deviceData.temp),
+            generateChartSeriesForRh(deviceData.rh),
         ];
     };
-    var generateChartSeriesForMultipleDevice = R.map(generateChartSeries);
+    var generateChartSeriesListForMultiDeviceWithDataTypeFilter = function (dataTypeFilter, multipleDeviceData) {
+        switch (dataTypeFilter) {
+            case "co2":
+                return R.map(R.compose(generateChartSeriesForCo2, R.prop("co2")), multipleDeviceData);
+            case "temp":
+                return R.map(R.compose(generateChartSeriesForTemp, R.prop("temp")), multipleDeviceData);
+            case "rh":
+                return R.map(R.compose(generateChartSeriesForRh, R.prop("rh")), multipleDeviceData);
+            default:
+                return [];
+        }
+    };
 
     return {
         parseData: function (dataList) {
@@ -133,10 +137,13 @@ define(["chartConfigs",
                 return reduced;
             }, parsedData);
         },
-        generateChartSeries: generateChartSeries,
-        generateChartSeriesForMultipleDevice: generateChartSeriesForMultipleDevice,
-        filterDeviceData: filterDeviceData,
-        filterMultipleDeviceData: filterMultipleDeviceData,
+
+        generateChartSeriesList: generateChartSeriesList,
+        generateChartSeriesListForMultiDeviceWithDataTypeFilter: generateChartSeriesListForMultiDeviceWithDataTypeFilter,
+
+        filterDeviceDataByPeriod: filterDeviceDataByPeriod,
+        filterDeviceDataForMultiDeviceByPeriod: filterDeviceDataForMultiDeviceByPeriod,
+
         getDeviceDataStatistics: function (deviceData) {
             return utils.mapObject(deviceData, getDeviceDataStatistics);
         },
