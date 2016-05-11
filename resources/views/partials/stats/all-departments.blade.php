@@ -79,7 +79,7 @@
                 <input type="text" class="form-control" name="to" value="<?php echo date_format($to, "m-d-Y"); ?>">
             </div>
             <div class="col-sm-1">
-                <button id="refresh-all-department-chart" class="btn btn-success btn-sm">刷新</button>
+                <button id="refresh-multiple-stats-chart" class="btn btn-success btn-sm">刷新</button>
             </div>
         </div>
         <div class="highchart-content" id="departmentchart" style="width: 100%; height: 500px;"></div>

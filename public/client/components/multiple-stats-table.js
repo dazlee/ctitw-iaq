@@ -76,12 +76,10 @@ define(["lodash",
         });
     }
     function refreshTable() {
-        console.log("refreshTable");
         var api = fetchUtils.formUrl(_endpoint, _.extend({}, _queries, {
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
         }));
-        console.log(api);
         fetchUtils.fetchJSON(api, {
             Accept: "application/json"
         })
