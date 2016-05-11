@@ -54,7 +54,7 @@ define(["lodash",
         _period.from.setDate(_period.from.getDate() - 30);
     }
     function initializeDateRangePicker() {
-        $("#average-daterange-multiple-stats-table").datepicker({
+        $("#daterange-multiple-stats-table").datepicker({
             endDate: new Date(),
         })
         .on("changeDate", function (e) {

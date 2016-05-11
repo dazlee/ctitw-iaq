@@ -22,7 +22,7 @@ define(["chartConfigs",
     var _appendToDeviceSelector;
 
     function initializeViews () {
-        _deviceSelector = document.querySelector("#device-selector");
+        _deviceSelector = document.querySelector("#device-selector-multiple-stats-chart");
         _deviceSelector.addEventListener("click", function (e) {
             var deviceId = e.target.dataset.deviceId;
             if (typeof deviceId === "undefined") return;
@@ -44,7 +44,7 @@ define(["chartConfigs",
         _period.from.setDate(_period.from.getDate() - 30);
     }
     function initializeDateRangePicker() {
-        $("#average-daterange-multiple-stats-chart").datepicker({
+        $("#daterange-multiple-stats-chart").datepicker({
             endDate: new Date(),
         })
         .on("changeDate", function (e) {
@@ -67,7 +67,7 @@ define(["chartConfigs",
         );
     }
     function initializeUnitSelector() {
-        $('#unit-selector a').click(function (e) {
+        $('#unit-selector-multiple-stats-chart a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
@@ -79,7 +79,7 @@ define(["chartConfigs",
         });
     }
     function initializeDatatypeSelector() {
-        $('#datatype-selector a').click(function (e) {
+        $('#datatype-selector-multiple-stats-chart a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
 
@@ -125,6 +125,10 @@ define(["chartConfigs",
             Accept: "application/json"
         })
         .then(parseAndSaveDeviceData)
+        .then(function (json) {
+            $('#multiple-stats-chart').highcharts().destroy();
+            return json;
+        })
         .then(drawChart);
     }
     function drawChart() {
@@ -143,7 +147,7 @@ define(["chartConfigs",
         _.extend(options, chartOptions, {
             series: series,
         });
-        $('#departmentchart').highcharts(options);
+        $('#multiple-stats-chart').highcharts(options);
     }
 
     return {
