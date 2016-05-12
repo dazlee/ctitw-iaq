@@ -33,6 +33,8 @@
 According to [Cache](https://laravel.com/docs/5.2/cache#cache-tags), file and database drivers do not support cache tags. Need to change following in .env
     CACHE_DRIVER=memcached
 
+## Installing Entrust
+User.php can use Authenticatable just fine, no need to change the extension to Eloquent. (Maybe that's the settings from previous version of Laravel.)
 
 ## References
 

@@ -21,7 +21,7 @@ Route::get('/dashboard/{id}',       ['middleware' => 'auth', 'uses' => 'Dashboar
 Route::get('/stats',                ['middleware' => 'auth', 'uses' => 'StatsController@index']);
 Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsController@history']);
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
-Route::get('/accounts/agent',       ['middleware' => 'auth', 'uses' => 'AccountsController@agent']);
+Route::get('/accounts/agent',       ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
 Route::get('/accounts/client',      ['middleware' => 'auth', 'uses' => 'AccountsController@client']);
 Route::get('/accounts/department',  ['middleware' => 'auth', 'uses' => 'AccountsController@department']);
 Route::get('/accounts/device',      ['middleware' => 'auth', 'uses' => 'AccountsController@device']);
