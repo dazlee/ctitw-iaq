@@ -3,7 +3,7 @@ define(["chartConfigs",
         "fetch-utils",
         "device-utils"], function (chartConfigs, _, fetchUtils, deviceUtils) {
 
-    var _api;
+    var _api, _endpoint, _queries, _responseKey;
 
     function initializeChart() {
         fetchUtils.fetchJSON(_api, {
@@ -22,9 +22,10 @@ define(["chartConfigs",
         .then(drawChart);
     }
     function drawChart(json) {
-        var deviceData = deviceUtils.parseData(json.data);
+        var deviceData = deviceUtils.parseData(json[_responseKey]);
         var chartOptions = chartConfigs.outline;
 
+        deviceData = deviceUtils.filterDeviceDataByPeriod("8hrs", deviceData);
         var series = deviceUtils.generateChartSeriesList(deviceData);
         var options = {};
         _.extend(options, chartOptions, {
@@ -37,8 +38,11 @@ define(["chartConfigs",
     }
 
     return {
-        initialize: function (endpoint, queries) {
-            _api = fetchUtils.formUrl(endpoint, queries);
+        initialize: function (endpoint, queries, responseKey) {
+            _endpoint = endpoint;
+            _queries = queries || {};
+            _responseKey = responseKey || "data";
+            _api = fetchUtils.formUrl(_endpoint, _queries);
 
             initializeChart();
             // [TODO] should update every 10 mins

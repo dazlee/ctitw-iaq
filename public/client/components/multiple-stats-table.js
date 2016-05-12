@@ -5,7 +5,7 @@ define(["lodash",
         "ramda",
         "utils"], function (_, fetchUtils, deviceUtils, dateUtils, R, utils) {
 
-    var _api, _endpoint, _queries;
+    var _api, _endpoint, _queries, _responseKey;
     var _tableElement;
     var _tableBodyElement;
     var _period = {};
@@ -86,18 +86,17 @@ define(["lodash",
         .then(drawTable);
     }
     function drawTable (json) {
-        // drawTable(json.avg);
-        // TODO should put avg in avg
-        var min_max_avgs = json.data;
+        var min_avg_max = json[_responseKey];
         _tableBodyElement.innerHTML = "";
-        _parseAndFillMinMaxAvgs(min_max_avgs);
+        _parseAndFillMinMaxAvgs(min_avg_max);
     }
 
     return {
-        initialize: function (endpoint, queries) {
-            _api = fetchUtils.formUrl(endpoint, queries);
+        initialize: function (endpoint, queries, responseKey) {
             _endpoint = endpoint;
-            _queries = queries;
+            _queries = queries || {};
+            _responseKey = responseKey || "data";
+            _api = fetchUtils.formUrl(_endpoint, _queries);
 
             initializeViews();
             initializeFunctions();

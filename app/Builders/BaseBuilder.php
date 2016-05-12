@@ -6,7 +6,7 @@ use App\DeviceHistory;
 use App\Device;
 
 class BaseBuilder {
-    
+
     protected $query = NULL;
 
     public function __construct($request, $deviceId) {

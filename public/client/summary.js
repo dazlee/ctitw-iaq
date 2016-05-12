@@ -9,11 +9,12 @@ define(["client/components/realtime-info-panel",
             RealtimeInfoPanel.initialize(endpoint, {
                 avg: 1,
                 nodata: 1,
-            });
+            }, "avg");
             RealtimeInfoChart.initialize(endpoint, {
                 avg: 1,
                 timestamp: 1,
-            });
+                nodata: 1,
+            }, "avg");
         }
     };
 });
