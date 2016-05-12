@@ -31,6 +31,7 @@
     [BadMethodCallException]
     This cache store does not support tagging.
 According to [Cache](https://laravel.com/docs/5.2/cache#cache-tags), file and database drivers do not support cache tags. Need to change following in .env
+
     CACHE_DRIVER=memcached
 
 ## Installing Entrust
