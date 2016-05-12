@@ -4,8 +4,7 @@ define(["lodash",
         "date-utils",
         "utils"], function (_, fetchUtils, deviceUtils, dateUtils, utils) {
 
-    var _endpoint;
-    var _queries;
+    var _api, _endpoint, _queries, _responseKey;
     var _tableElement;
     var _tableBodyElement;
     var _period = {};
@@ -53,10 +52,7 @@ define(["lodash",
 
 
     function drawTable (json) {
-        // drawTable(json.summary);
-        // TODO should put summary in summary
-        var data = deviceUtils.parseData(json.data);
-        var deviceDataStats = deviceUtils.getDeviceDataStatistics(data);
+        var deviceDataStats = json[_responseKey];
 
         var body = _tableBodyElement;
         utils.mapObject(deviceDataStats, function (data, key) {
@@ -73,9 +69,11 @@ define(["lodash",
     }
 
     return {
-        initialize: function (endpoint, queries) {
+        initialize: function (endpoint, queries, responseKey) {
             _endpoint = endpoint;
-            _queries = queries;
+            _queries = queries || {};
+            _responseKey = responseKey || "data";
+            _api = fetchUtils.formUrl(_endpoint, _queries);
 
             initializeViews();
             initializeData();

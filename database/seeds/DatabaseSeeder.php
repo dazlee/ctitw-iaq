@@ -13,5 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(DeviceHistoryTableSeeder::class);
         $this->call(DeviceTableSeeder::class);
+        $this->call(UserRolesSeeder::class);
     }
 }

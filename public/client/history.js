@@ -7,11 +7,11 @@ define(["client/components/single-stats-table",
 
     return {
         initialize: function () {
-            var endpoint = apiConfigs.endpoints.statsSummary;
-            var queries = {
+            var endpoint = apiConfigs.endpoints.devices;
+            SingleStatsTable.initialize(endpoint, {
                 summary: 1,
-            };
-            SingleStatsTable.initialize(endpoint, queries);
+                nodata: 1,
+            }, "summary");
             SingleStatsChart.initialize(endpoint);
         }
     };

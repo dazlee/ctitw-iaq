@@ -15,18 +15,17 @@ class MinAvgMaxBuilder extends BaseBuilder{
     }
 
     public function run() {
-        if ($this->request->query($this->key) != 1) {
-            return [$this->key => []];
+        if ($this->request->query($this->key) == 1) {
+            if ($this->request->query('device_level') == 1) {
+                return [$this->key => DeviceHistory::selectRaw('device_id,
+                    MIN(co2) as "co2-min", MIN(temp) as "temp-min", MIN(rh) as "rh-min",
+                    AVG(co2) as "co2-avg", AVG(temp) as "temp-avg", AVG(rh) as "rh-avg",
+                    MAX(co2) as "co2-max", MAX(temp) as "temp-max", MAX(rh) as "rh-max"
+                    ')->ofDays(6)->groupBy('device_id')->get()
+                ];
+            }
         }
- 
-        if ($this->request->query('device_level') == 1) {
-            return [$this->key => DeviceHistory::selectRaw('device_id, 
-                MIN(co2) as min_co2, MIN(temp) as min_temp, MIN(rh) as min_rh, 
-                AVG(co2) as avg_co2, AVG(temp) as avg_temp, AVG(rh) as avg_rh,
-                MAX(co2) as max_co2, MAX(temp) as max_temp, MAX(rh) as max_rh
-                ')->ofDays(6)->groupBy('device_id')->get()
-            ];
 
-        }
+        return [$this->key => []];
     }
 }

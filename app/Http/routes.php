@@ -17,14 +17,14 @@ Route::get('/', function () {
 
 Route::auth();
 
-Route::get('/dashboard/{id}', 'DashboardController@index');
-Route::get('/stats', 'StatsController@index');
-Route::get('/history', 'StatsController@history');
-Route::get('/all', 'StatsController@all');
-Route::get('/accounts/agent', 'AccountsController@agent');
-Route::get('/accounts/client', 'AccountsController@client');
-Route::get('/accounts/department', 'AccountsController@department');
-Route::get('/accounts/device', 'AccountsController@device');
+Route::get('/dashboard/{id}',       ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
+Route::get('/stats',                ['middleware' => 'auth', 'uses' => 'StatsController@index']);
+Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsController@history']);
+Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
+Route::get('/accounts/agent',       ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
+Route::get('/accounts/client',      ['middleware' => 'auth', 'uses' => 'AccountsController@client']);
+Route::get('/accounts/department',  ['middleware' => 'auth', 'uses' => 'AccountsController@department']);
+Route::get('/accounts/device',      ['middleware' => 'auth', 'uses' => 'AccountsController@device']);
 
 /**
  * APIs

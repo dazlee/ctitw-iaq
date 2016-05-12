@@ -120,9 +120,12 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    @role('admin')
                     <li>
                         <a href="/accounts/agent"><i class="fa fa-users fa-fw"></i> 經銷商管理</span></a>
                     </li>
+                    @endrole
+
                     <li>
                         <a href="/accounts/client"><i class="fa fa-users fa-fw"></i> 客戶管理</span></a>
                     </li>

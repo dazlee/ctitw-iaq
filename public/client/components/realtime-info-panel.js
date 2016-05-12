@@ -3,7 +3,7 @@ define(["chartConfigs",
         "fetch-utils",
         "device-utils"], function (chartConfigs, _, fetchUtils, deviceUtils) {
 
-    var _api;
+    var _api, _endpoint, _queries, _responseKey;
     var _co2Value, _co2Number;
     var _tempValue, _tempNumber;
     var _rhValue, _rhNumber;
@@ -25,8 +25,7 @@ define(["chartConfigs",
         .then(refreshTableLayout);
     }
     function refreshTableLayout (json) {
-        // [TODO] should just only use avg
-        var currentData = json.avg || json.data;
+        var currentData = json[_responseKey];
 
         if (currentData.co2 > 50) {
             _co2Value.classList.add('fg-red');
@@ -50,8 +49,11 @@ define(["chartConfigs",
     }
 
     return {
-        initialize: function (endpoint, queries) {
-            _api = fetchUtils.formUrl(endpoint, queries);
+        initialize: function (endpoint, queries, responseKey) {
+            _endpoint = endpoint;
+            _queries = queries || {};
+            _responseKey = responseKey || "data";
+            _api = fetchUtils.formUrl(_endpoint, _queries);
 
             initializeViews();
             initializePanels();

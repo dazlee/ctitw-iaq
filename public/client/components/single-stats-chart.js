@@ -9,7 +9,7 @@ define(["chartConfigs",
                 deviceUtils,
                 dateUtils) {
 
-    var _endpoint;
+    var _api, _endpoint, _queries, _responseKey;
     var _deviceData = {};
     var _filter = "hr";
     var _period = {};
@@ -75,7 +75,7 @@ define(["chartConfigs",
         .then(drawChart);
     }
     function parseAndSaveDeviceData (json) {
-        _deviceData = deviceUtils.parseData(json.data);
+        _deviceData = deviceUtils.parseData(json[_responseKey]);
     }
     function drawChart() {
         var deviceData = deviceUtils.filterDeviceDataByPeriod(_filter, _deviceData);
@@ -90,8 +90,11 @@ define(["chartConfigs",
     }
 
     return {
-        initialize: function (endpoint) {
+        initialize: function (endpoint, queries, responseKey) {
             _endpoint = endpoint;
+            _queries = queries || {};
+            _responseKey = responseKey || "data";
+            _api = fetchUtils.formUrl(_endpoint, _queries);
 
             initializeData();
             initializeDateRangePicker();

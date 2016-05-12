@@ -6,7 +6,7 @@ define(["chartConfigs",
         "ramda",
         "utils"], function (chartConfigs, _, fetchUtils, deviceUtils, dateUtils, R, utils) {
 
-    var _api, _endpoint, _queries;
+    var _api, _endpoint, _queries, _responseKey;
     var _multipleDeviceData = {};
     var _filter = "hr";
     var _dataTypeFilter = "co2";
@@ -100,7 +100,7 @@ define(["chartConfigs",
     }
 
     function parseAndSaveDeviceData (json) {
-        _multipleDeviceData = deviceUtils.parseDataForMultipleDevice(json.data);
+        _multipleDeviceData = deviceUtils.parseDataForMultipleDevice(json[_responseKey]);
     }
     function updateIsDrawDeviceChart() {
         R.forEach(function (key) {
@@ -151,10 +151,11 @@ define(["chartConfigs",
     }
 
     return {
-        initialize: function (endpoint, queries) {
-            _api = fetchUtils.formUrl(endpoint, queries);
+        initialize: function (endpoint, queries, responseKey) {
             _endpoint = endpoint;
-            _queries = queries;
+            _queries = queries || {};
+            _responseKey = responseKey || "data";
+            _api = fetchUtils.formUrl(_endpoint, _queries);
 
             initializeViews();
             initializeData();

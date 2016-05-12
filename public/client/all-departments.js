@@ -7,10 +7,11 @@ define(["client/components/multiple-stats-table",
         initialize: function () {
             var endpoint = apiConfigs.endpoints.devices;
             MultipleStatsTable.initialize(endpoint, {
-                min_max_avg: 1,
+                min_avg_max: 1,
                 device_level: 1,
-            });
-            MultipleStatsChart.initialize(endpoint, {});
+                nodata: 1,
+            }, "min_avg_max");
+            MultipleStatsChart.initialize(endpoint);
         }
     };
 });

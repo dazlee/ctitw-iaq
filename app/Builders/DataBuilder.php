@@ -17,7 +17,7 @@ class DataBuilder extends BaseBuilder{
         if ($this->request->query('nodata') == 1) {
             return [$this->key => []];
         }
- 
+
         return [$this->key => $this->query->get()];
     }
 }
