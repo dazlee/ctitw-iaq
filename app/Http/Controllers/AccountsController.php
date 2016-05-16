@@ -74,7 +74,20 @@ class AccountsController extends Controller
         ));
     }
 
+
     public function department () {
+        return view('accounts', array(
+            "name"      => "部門",
+            "type"      => "department",
+        ));
+    }
+    public function createDepartment (Request $request)
+    {
+        $department = Role::where('name', '=', "department")->first();
+
+        $user = $this->createUser($request);
+        $user->attachRole($department);
+
         return view('accounts', array(
             "name"      => "部門",
             "type"      => "department",
