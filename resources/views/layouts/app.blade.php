@@ -89,7 +89,7 @@
                         <!-- /input-group -->
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境 <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="/stats">即時圖表</a>
@@ -105,18 +105,11 @@
                     <li>
                         <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 部門<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li>
-                                <a href="/dashboard/1">部門1</a>
-                            </li>
-                            <li>
-                                <a href="/dashboard/2">部門2</a>
-                            </li>
-                            <li>
-                                <a href="/dashboard/3">部門3</a>
-                            </li>
-                            <li>
-                                <a href="/dashboard/4">部門4</a>
-                            </li>
+                            @foreach ($departments as $department)
+                                <li>
+                                    <a href="/dashboard/{{ $department['device_id'] }}">{{ $department['name'] }}</a>
+                                </li>
+                            @endforeach
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>

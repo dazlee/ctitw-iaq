@@ -23,8 +23,10 @@ Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsCon
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
 Route::get('/accounts/agent',       ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
 Route::post('/accounts/agent',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createAgent']);
-Route::get('/accounts/client',      ['middleware' => 'auth', 'uses' => 'AccountsController@client']);
-Route::get('/accounts/department',  ['middleware' => 'auth', 'uses' => 'AccountsController@department']);
+Route::get('/accounts/client',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@client']);
+Route::post('/accounts/client',     ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createClient']);
+Route::get('/accounts/department',  ['middleware' => ['role:admin'], 'uses' => 'AccountsController@department']);
+Route::post('/accounts/department', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createDepartment']);
 Route::get('/accounts/device',      ['middleware' => 'auth', 'uses' => 'AccountsController@device']);
 
 /**
