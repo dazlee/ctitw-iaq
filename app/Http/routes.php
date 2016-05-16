@@ -21,13 +21,17 @@ Route::get('/dashboard/{id}',       ['middleware' => 'auth', 'uses' => 'Dashboar
 Route::get('/stats',                ['middleware' => 'auth', 'uses' => 'StatsController@index']);
 Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsController@history']);
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
-Route::get('/accounts/agent',       ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
-Route::post('/accounts/agent',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createAgent']);
-Route::get('/accounts/client',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@client']);
-Route::post('/accounts/client',     ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createClient']);
-Route::get('/accounts/department',  ['middleware' => ['role:admin'], 'uses' => 'AccountsController@department']);
-Route::post('/accounts/department', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createDepartment']);
-Route::get('/accounts/device',      ['middleware' => 'auth', 'uses' => 'AccountsController@device']);
+
+Route::group(['prefix'=>'accounts'], function () {
+    Route::get('agent',       ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
+    Route::post('agent',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createAgent']);
+
+    Route::get('client',      ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@client']);
+    Route::post('client',     ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@createClient']);
+
+    Route::get('department',  ['middleware' => ['role:admin|client'], 'uses' => 'AccountsController@department']);
+    Route::post('department', ['middleware' => ['role:admin|client'], 'uses' => 'AccountsController@createDepartment']);
+});
 
 /**
  * APIs
