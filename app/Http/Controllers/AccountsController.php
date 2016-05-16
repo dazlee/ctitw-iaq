@@ -14,19 +14,13 @@ class AccountsController extends Controller
         return view('accounts');
     }
 
-    public function agent () {
-        return view('accounts', array(
-            "name"      => "經銷商",
-            "type"      => "agent",
-        ));
-    }
 
-    public function createAgent (Request $request)
+    private function createUser($request)
     {
         $this->validate($request, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'username' => 'required|max:20|unique:users',
+            'username' => 'required|max:31|unique:users',
             'password' => 'required|min:6|confirmed',
         ]);
 
@@ -37,7 +31,21 @@ class AccountsController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
 
+        return $user;
+    }
+
+
+    public function agent () {
+        return view('accounts', array(
+            "name"      => "經銷商",
+            "type"      => "agent",
+        ));
+    }
+    public function createAgent (Request $request)
+    {
         $agent = Role::where('name', '=', "agent")->first();
+
+        $user = $this->createUser($request);
         $user->attachRole($agent);
 
         return view('accounts', array(
@@ -46,7 +54,20 @@ class AccountsController extends Controller
         ));
     }
 
+
     public function client () {
+        return view('accounts', array(
+            "name"      => "客戶",
+            "type"      => "client",
+        ));
+    }
+    public function createClient (Request $request)
+    {
+        $client = Role::where('name', '=', "client")->first();
+
+        $user = $this->createUser($request);
+        $user->attachRole($client);
+
         return view('accounts', array(
             "name"      => "客戶",
             "type"      => "client",
