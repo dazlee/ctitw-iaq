@@ -24,6 +24,7 @@ Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsCon
 Route::get('/accounts/agent',       ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
 Route::get('/accounts/client',      ['middleware' => 'auth', 'uses' => 'AccountsController@client']);
 Route::get('/accounts/department',  ['middleware' => 'auth', 'uses' => 'AccountsController@department']);
+Route::post('/accounts/department', ['middleware' => 'auth', 'uses' => 'AccountsController@createDepartment']);
 Route::get('/accounts/device',      ['middleware' => 'auth', 'uses' => 'AccountsController@device']);
 
 /**
