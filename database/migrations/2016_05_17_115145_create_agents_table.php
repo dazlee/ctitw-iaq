@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClientsTable extends Migration
+class CreateAgentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,9 @@ class CreateClientsTable extends Migration
      */
     public function up()
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('agents', function (Blueprint $table) {
             $table->string('user_id');
-            $table->string('agent_id')->unique();
+            $table->string('admin_id')->unique();
             $table->string('phone')->nullable();
             $table->primary('user_id');
         });
@@ -27,6 +27,6 @@ class CreateClientsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('agents');
     }
 }
