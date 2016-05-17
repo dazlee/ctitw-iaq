@@ -3,9 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+
 use App\Http\Requests;
+use DB;
+use Auth;
 use App\User;
 use App\Role;
+use App\Client;
+use App\Department;
+use App\Device;
 
 class AccountsController extends Controller
 {
@@ -13,7 +21,6 @@ class AccountsController extends Controller
     public function index () {
         return view('accounts');
     }
-
 
     private function createUser($request)
     {
@@ -33,7 +40,6 @@ class AccountsController extends Controller
 
         return $user;
     }
-
 
     public function agent () {
         return view('accounts', array(
@@ -63,10 +69,16 @@ class AccountsController extends Controller
     }
     public function createClient (Request $request)
     {
-        $client = Role::where('name', '=', "client")->first();
+        DB::transaction(function($request) use ($request) {
+            $client = Role::where('name', '=', "client")->first();
+        
+            $user = $this->createUser($request);
+            $user->attachRole($client);
 
-        $user = $this->createUser($request);
-        $user->attachRole($client);
+            $client = new Client;
+            $client->phone = $request->get('phone');
+            $user->client()->save($client);
+        });
 
         return view('accounts', array(
             "name"      => "客戶",
@@ -79,19 +91,29 @@ class AccountsController extends Controller
         return view('accounts', array(
             "name"      => "部門",
             "type"      => "department",
+            "devices"   => Device::all(),
         ));
     }
-    public function createDepartment (Request $request)
-    {
-        $department = Role::where('name', '=', "department")->first();
+    
+    public function createDepartment(Request $request) {
+        $this->validate($request, [
+            'device_id' => 'required|unique:departments'
+        ]);
 
-        $user = $this->createUser($request);
-        $user->attachRole($department);
+        DB::transaction(function($request) use ($request) {
+            $department = Role::where('name', '=', 'department')->first();
 
-        return view('accounts', array(
-            "name"      => "部門",
-            "type"      => "department",
-        ));
+            $user = $this->createUser($request);
+            $user->attachRole($department);
+
+            $department = new Department();       
+            $department->client_id = Auth::id();
+            $department->device_id = $request->get('device_id');
+            $department->phone = $request->get('phone');
+            $user->department()->save($department);
+        });
+
+        return Redirect::back();
     }
 
     public function device () {

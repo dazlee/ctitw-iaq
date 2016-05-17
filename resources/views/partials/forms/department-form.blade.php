@@ -77,6 +77,18 @@
                     @endif
                 </div>
             </div>
+
+
+            <div class="form-group{{ $errors->has('device_id') ? ' has-error' : '' }} form-inline">
+                <label class="col-md-4 control-label">儀器總表</label>
+                    @foreach($devices as $device)
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="device_id" value={{$device->id}} checked>{{$device->id}}
+                        </label>
+                    </div>
+                    @endforeach
+            </div>
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-4">
                     <button type="submit" class="btn btn-primary">送出</button>

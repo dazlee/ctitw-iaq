@@ -3,12 +3,14 @@
 namespace App\ViewComposers;
 
 use Illuminate\Contracts\View\View;
+use Auth;
 use App\Device;
+use App\Department;
 
 class LayoutComposer
 {
 
-    protected $departments;
+    protected $departments = [];
     /**
      * Create a new profile composer.
      *
@@ -18,7 +20,25 @@ class LayoutComposer
     public function __construct()
     {
         // [TODO] should load all departments here
-        $this->departments = Device::all();
+        $user = Auth::user();
+        
+        if ($user) {
+            if ($user->hasRole('admin')) { 
+                $departments = Department::all();
+
+                foreach ($departments as $department) {
+                    $this->departments[] = $department->user;
+                }
+            } else if ($user->hasRole('client')) {
+                $departments = Department::where('client_id', '=', $user->id)->get();
+
+                foreach ($departments as $department) {
+                    $this->departments[] = $department->user;
+                }
+            } else if ($user->hasRole('department')) {
+                $this->departments[] = $user;
+            }
+        }
     }
 
     /**

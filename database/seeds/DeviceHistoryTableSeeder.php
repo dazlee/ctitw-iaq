@@ -12,7 +12,7 @@ class DeviceHistoryTableSeeder extends Seeder
      */
     public function run()
     {
-        $begin = new DateTime( '2016-03-01' );
+        $begin = new DateTime( '2016-05-10' );
         $end = new DateTime();
         $interval = new DateInterval('PT10M');
         $daterange = new DatePeriod($begin, $interval ,$end);
