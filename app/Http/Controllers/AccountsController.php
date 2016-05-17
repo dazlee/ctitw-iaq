@@ -11,6 +11,7 @@ use DB;
 use Auth;
 use App\User;
 use App\Role;
+use App\Agent;
 use App\Client;
 use App\Department;
 use App\Device;
@@ -49,10 +50,17 @@ class AccountsController extends Controller
     }
     public function createAgent (Request $request)
     {
-        $agent = Role::where('name', '=', "agent")->first();
+        DB::transaction(function($request) use ($request) {
+            $agent = Role::where('name', '=', "agent")->first();
 
-        $user = $this->createUser($request);
-        $user->attachRole($agent);
+            $user = $this->createUser($request);
+            $user->attachRole($agent);
+        
+            $agent = new Agent;
+            $agent->admin_id = Auth::id();
+            $agent->phone = $request->get('phone');
+            $user->agent()->save($agent);
+        });
 
         return view('accounts', array(
             "name"      => "經銷商",
@@ -76,6 +84,7 @@ class AccountsController extends Controller
             $user->attachRole($client);
 
             $client = new Client;
+            $client->agent_id = Auth::id();
             $client->phone = $request->get('phone');
             $user->client()->save($client);
         });

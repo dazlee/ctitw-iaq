@@ -91,7 +91,7 @@
                         <ul class="nav nav-second-level">
                             @foreach ($departments as $department)
                                 <li>
-                                    <a href="/dashboard/{{ $department['id'] }}">{{ $department['name'] }}</a>
+                                    <a href="/dashboard/{{ $department->device_id }}">{{ $department->user->name }}</a>
                                 </li>
                             @endforeach
                         </ul>
