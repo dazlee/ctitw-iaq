@@ -24,13 +24,19 @@ class LayoutComposer
         
         if ($user) {
             if ($user->hasRole('admin')) { 
-                $this->departments = Device::all();
+                $departments = Department::all();
+
+                foreach ($departments as $department) {
+                    $this->departments[] = $department->user;
+                }
             } else if ($user->hasRole('client')) {
                 $departments = Department::where('client_id', '=', $user->id)->get();
 
                 foreach ($departments as $department) {
                     $this->departments[] = $department->user;
                 }
+            } else if ($user->hasRole('department')) {
+                $this->departments[] = $user;
             }
         }
     }
