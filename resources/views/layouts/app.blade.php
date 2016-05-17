@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>濟耀國際</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
@@ -43,16 +43,11 @@
 
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ url('/') }}">
-                Laravel
+                濟耀國際
             </a>
         </div>
 
         <div class="collapse navbar-collapse" id="app-navbar-collapse" style="float:right">
-            <!-- Left Side Of Navbar -->
-            <ul class="nav navbar-nav">
-                <li><a href="{{ url('/home') }}">Home</a></li>
-            </ul>
-
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
@@ -77,17 +72,6 @@
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
-                    <li class="sidebar-search">
-                        <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                        </div>
-                        <!-- /input-group -->
-                    </li>
                     <li>
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境 <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -107,7 +91,7 @@
                         <ul class="nav nav-second-level">
                             @foreach ($departments as $department)
                                 <li>
-                                    <a href="/dashboard/{{ $department['device_id'] }}">{{ $department['name'] }}</a>
+                                    <a href="/dashboard/{{ $department['id'] }}">{{ '部門' . $department['id'] }}</a>
                                 </li>
                             @endforeach
                         </ul>
