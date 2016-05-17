@@ -16,8 +16,6 @@ class DeviceTableSeeder extends Seeder
         for ($i = 1; $i <= 16; $i++) {
             Device::insert([
                 'id' => $i,
-                'consumer_id' => NULL,
-                'department_id' => NULL,
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
             ]);
