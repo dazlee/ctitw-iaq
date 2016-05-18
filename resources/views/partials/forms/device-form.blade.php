@@ -1,9 +1,4 @@
 <div class="row">
-    <div class="col-lg-12">
-        <h3 class="page-header">儀器管理</h3>
-    </div>
-</div>
-<div class="row">
     <div class="col-lg-6">
         <form role="form">
             <div class="form-group">

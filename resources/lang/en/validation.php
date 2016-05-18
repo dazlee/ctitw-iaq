@@ -95,6 +95,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'device_id' => [
+            'unique'        => 'The :attribute has been selected.',
+        ]
     ],
 
     /*

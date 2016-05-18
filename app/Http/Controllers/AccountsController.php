@@ -17,11 +17,9 @@ use App\Device;
 
 class AccountsController extends Controller
 {
-    //
     public function index () {
         return view('accounts');
     }
-
     private function createUser($request)
     {
         $this->validate($request, [
@@ -41,10 +39,21 @@ class AccountsController extends Controller
         return $user;
     }
 
+    /**
+     * agent handlers
+     */
     public function agent () {
         return view('accounts', array(
             "name"      => "經銷商",
             "type"      => "agent",
+        ));
+    }
+    public function agentDetails (Request $request, $agentId) {
+        $agent = User::find($agentId);
+        return view('account-details', array(
+            "name"      => "經銷商",
+            "type"      => "agent",
+            "agent"     => $agent,
         ));
     }
     public function createAgent (Request $request)
@@ -59,19 +68,44 @@ class AccountsController extends Controller
             "type"      => "agent",
         ));
     }
+    public function updateAgent (Request $request, $agentId)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            // 'email' => 'required|email|max:255|unique:users',
+        ]);
+
+        $agent = User::find($agentId);
+        $agent->name = $request->input('name');
+        // $agent->email = $request->input('email');
+        $agent->save();
+
+        return Redirect::route('agents');
+    }
 
 
+    /**
+     * client handlers
+     */
     public function client () {
         return view('accounts', array(
             "name"      => "客戶",
             "type"      => "client",
         ));
     }
+    public function clientDetails (Request $request, $clientId) {
+        $client = User::find($clientId);
+        return view('account-details', array(
+            "name"      => "經銷商",
+            "type"      => "client",
+            "client"     => $client,
+        ));
+    }
     public function createClient (Request $request)
     {
         DB::transaction(function($request) use ($request) {
             $client = Role::where('name', '=', "client")->first();
-        
+
             $user = $this->createUser($request);
             $user->attachRole($client);
 
@@ -85,8 +119,25 @@ class AccountsController extends Controller
             "type"      => "client",
         ));
     }
+    public function updateClient (Request $request, $clientId)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            // 'email' => 'required|email|max:255|unique:users',
+        ]);
+
+        $client = User::find($clientId);
+        $client->name = $request->input('name');
+        // $client->email = $request->input('email');
+        $client->save();
+
+        return Redirect::route('clients');
+    }
 
 
+    /**
+     * department handlers
+     */
     public function department () {
         return view('accounts', array(
             "name"      => "部門",
@@ -94,7 +145,18 @@ class AccountsController extends Controller
             "devices"   => Device::all(),
         ));
     }
-    
+    public function departmentDetails (Request $request, $departmentId) {
+        $department = User::find($departmentId);
+
+        $departmentData = Department::where('user_id', '=', $departmentId)->first();
+        $department['device_id'] = $departmentData->device_id;
+
+        return view('account-details', array(
+            "name"      => "經銷商",
+            "type"      => "department",
+            "department"     => $department,
+        ));
+    }
     public function createDepartment(Request $request) {
         $this->validate($request, [
             'device_id' => 'required|unique:departments'
@@ -106,7 +168,7 @@ class AccountsController extends Controller
             $user = $this->createUser($request);
             $user->attachRole($department);
 
-            $department = new Department();       
+            $department = new Department();
             $department->client_id = Auth::id();
             $department->device_id = $request->get('device_id');
             $department->phone = $request->get('phone');
@@ -115,6 +177,30 @@ class AccountsController extends Controller
 
         return Redirect::back();
     }
+    public function updateDepartment (Request $request, $departmentId)
+    {
+        $departmentData = Department::where('user_id', '=', $departmentId)->first();
+        $device_id = $request->get('device_id');
+
+        $validateRule = [
+            'name' => 'required|max:255',
+        ];
+        if ($departmentData->device_id !== $device_id) {
+            $validateRule['device_id'] = 'required|unique:departments,device_id';
+        }
+        $this->validate($request, $validateRule);
+
+        $department = User::find($departmentId);
+        $department->name = $request->input('name');
+        $department->save();
+
+        Department::where('user_id', '=', $departmentId)->update(
+            array('device_id' => $device_id)
+        );
+
+        return Redirect::route('departments');
+    }
+
 
     public function device () {
         return view('accounts', array(

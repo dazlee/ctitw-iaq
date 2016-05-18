@@ -22,14 +22,20 @@ Route::get('/stats',                ['middleware' => 'auth', 'uses' => 'StatsCon
 Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsController@history']);
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
 Route::group(['prefix'=>'accounts'], function () {
-    Route::get('agent',       ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
+    Route::get('agent',       ['as' => 'agents', 'middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
+    Route::get('agent/{id}',  ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agentDetails']);
     Route::post('agent',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createAgent']);
+    Route::post('agent/{id}', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@updateAgent']);
 
-    Route::get('client',      ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@client']);
+    Route::get('client',      ['as' => 'clients', 'middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@client']);
+    Route::get('client/{id}', ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@clientDetails']);
     Route::post('client',     ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@createClient']);
+    Route::post('client/{id}',['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@updateClient']);
 
-    Route::get('department',  ['middleware' => ['role:admin|client'], 'uses' => 'AccountsController@department']);
-    Route::post('department', ['middleware' => ['role:admin|client'], 'uses' => 'AccountsController@createDepartment']);
+    Route::get('department',        ['as' => 'departments', 'middleware' => ['role:admin|client'], 'uses' => 'AccountsController@department']);
+    Route::get('department/{id}',   ['middleware' => ['role:admin|client'], 'uses' => 'AccountsController@departmentDetails']);
+    Route::post('department',       ['middleware' => ['role:admin|client'], 'uses' => 'AccountsController@createDepartment']);
+    Route::post('department/{id}',  ['middleware' => ['role:admin|client'], 'uses' => 'AccountsController@updateDepartment']);
 });
 
 /**

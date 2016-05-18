@@ -1,9 +1,4 @@
 <div class="row">
-    <div class="col-lg-12">
-        <h3 class="page-header">開新部門</h3>
-    </div>
-</div>
-<div class="row">
     <div class="col-lg-8">
         <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/department') }}">
             {!! csrf_field() !!}
@@ -81,13 +76,22 @@
 
             <div class="form-group{{ $errors->has('device_id') ? ' has-error' : '' }} form-inline">
                 <label class="col-md-4 control-label">儀器總表</label>
-                    @foreach($devices as $device)
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="device_id" value={{$device->id}} checked>{{$device->id}}
-                        </label>
-                    </div>
-                    @endforeach
+                <div class="col-md-8">
+                    <select class="form-control" name="device_id">
+                        @for ($i = 1; $i <= 16; $i++)
+                            @if (old('device_id') !== (string)$i)
+                                <option value="{{$i}}">{{$i}}</option>
+                            @else
+                                <option value="{{$i}}" selected="true">{{$i}}</option>
+                            @endif
+                        @endfor
+                    </select>
+                    @if ($errors->has('device_id'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('device_id') }}</strong>
+                        </span>
+                    @endif
+                </div>
             </div>
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-4">

@@ -8,8 +8,19 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">開新{{$name}}</h3>
+        </div>
+    </div>
     @include('partials.forms.' . $type . '-form')
 
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">{{ $name }} 列表</h3>
+        </div>
+    </div>
+    @include('partials.tables.' . $type . '-account-table')
 </div>
 @endsection
 

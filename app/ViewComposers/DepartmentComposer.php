@@ -4,10 +4,10 @@ namespace App\ViewComposers;
 
 use Illuminate\Contracts\View\View;
 use Auth;
-use App\Device;
+use App\User;
 use App\Department;
 
-class LayoutComposer
+class DepartmentComposer
 {
 
     protected $departments = [];
@@ -25,17 +25,17 @@ class LayoutComposer
             if ($user->hasRole('admin')) {
                 $departments = Department::all();
 
-                foreach ($departments as $department) {
-                    $this->departments[] = $department->user;
+                foreach ($departments as $client) {
+                    $this->departments[] = $client->user;
                 }
             } else if ($user->hasRole('client')) {
                 $departments = Department::where('client_id', '=', $user->id)->get();
 
-                foreach ($departments as $department) {
-                    $this->departments[] = $department->user;
+                foreach ($departments as $client) {
+                    $this->departments[] = $client->user;
                 }
-            } else if ($user->hasRole('department')) {
-                $this->departments[] = $user;
+            } else  {
+                $this->departments = [];
             }
         }
     }
