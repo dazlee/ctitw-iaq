@@ -17,12 +17,17 @@ class DeviceHistoryTableSeeder extends Seeder
         $interval = new DateInterval('PT10M');
         $daterange = new DatePeriod($begin, $interval ,$end);
         $created_at = $updated_at = date('Y-m-d G:i:s');
+        $devices = [];
+
+        for ($i = 1; $i <= 16; $i++) {
+            $devices[] = "A001-{$i}";
+        }
 
         foreach($daterange as $date) {
             $record_at = $date->format("Y-m-d G:i:00");
-            for ($i = 1; $i <= 16; $i++) {
+            foreach ($devices as $device) {
                 DeviceHistory::insert([
-                    'device_id' => $i,
+                    'device_id' => $device,
                     'co2' => rand()%100,
                     'temp' => rand()%50,
                     'rh' => rand()%100,

@@ -22,20 +22,12 @@ class LayoutComposer
         $user = Auth::user();
 
         if ($user) {
-            if ($user->hasRole('admin')) {
-                $departments = Department::all();
-
-                foreach ($departments as $department) {
-                    $this->departments[] = $department->user;
-                }
+            if ($user->hasRole('admin')) { 
+                $this->departments = Department::all();
             } else if ($user->hasRole('client')) {
-                $departments = Department::where('client_id', '=', $user->id)->get();
-
-                foreach ($departments as $department) {
-                    $this->departments[] = $department->user;
-                }
+                $this->departments = Department::where('client_id', '=', $user->id)->get();
             } else if ($user->hasRole('department')) {
-                $this->departments[] = $user;
+                $this->departments = Department::where('user_id', '=', $user->id)->get();
             }
         }
     }
