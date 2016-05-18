@@ -13,9 +13,9 @@
                 <tbody>
                     @foreach ($agents as $agent)
                         <tr>
-                            <td>{{$agent['username']}}</td>
-                            <td>{{$agent['name']}}</td>
-                            <td>{{$agent['email']}}</td>
+                            <td>{{$agent->user['username']}}</td>
+                            <td>{{$agent->user['name']}}</td>
+                            <td>{{$agent->user['email']}}</td>
                             <td>
                                 <a href="{{ url('/accounts/agent', $agent->id) }}" class="btn btn-link">修改</a>
                             </td>
