@@ -71,7 +71,7 @@ class AccountsController extends Controller
     {
         DB::transaction(function($request) use ($request) {
             $client = Role::where('name', '=', "client")->first();
-        
+
             $user = $this->createUser($request);
             $user->attachRole($client);
 
@@ -94,7 +94,7 @@ class AccountsController extends Controller
             "devices"   => Device::all(),
         ));
     }
-    
+
     public function createDepartment(Request $request) {
         $this->validate($request, [
             'device_id' => 'required|unique:departments'
@@ -106,7 +106,7 @@ class AccountsController extends Controller
             $user = $this->createUser($request);
             $user->attachRole($department);
 
-            $department = new Department();       
+            $department = new Department();
             $department->client_id = Auth::id();
             $department->device_id = $request->get('device_id');
             $department->phone = $request->get('phone');
