@@ -50,7 +50,7 @@ class AccountsController extends Controller
         ));
     }
     public function agentDetails (Request $request, $agentId) {
-        $agent = User::find($agentId);
+        $agent = Agent::where("user_id", "=", $agentId)->first();
         return view('account-details', array(
             "name"      => "經銷商",
             "type"      => "agent",
@@ -80,12 +80,10 @@ class AccountsController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
-            // 'email' => 'required|email|max:255|unique:users',
         ]);
 
         $agent = User::find($agentId);
         $agent->name = $request->input('name');
-        // $agent->email = $request->input('email');
         $agent->save();
 
         return Redirect::route('agents');
