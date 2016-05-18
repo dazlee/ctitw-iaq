@@ -21,7 +21,7 @@
                             <td>{{$client['user_limit']}}</td>
                             <th>還沒算</th>
                             <td>
-                                <a href="{{ url('/accounts/client', $client->id) }}" class="btn btn-link">修改</a>
+                                <a href="{{ url('/accounts/client', $client->user->id) }}" class="btn btn-link">修改</a>
                             </td>
                         </tr>
                     @endforeach

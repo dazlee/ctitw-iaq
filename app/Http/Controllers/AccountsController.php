@@ -102,7 +102,7 @@ class AccountsController extends Controller
         ));
     }
     public function clientDetails (Request $request, $clientId) {
-        $client = User::find($clientId);
+        $client = Client::where("user_id", "=", $clientId)->first();
         return view('account-details', array(
             "name"      => "經銷商",
             "type"      => "client",
@@ -137,13 +137,16 @@ class AccountsController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
-            // 'email' => 'required|email|max:255|unique:users',
+            'user_limit' => 'required|numeric|between:0,16',
         ]);
 
         $client = User::find($clientId);
-        $client->name = $request->input('name');
-        // $client->email = $request->input('email');
+        $client->name = $request->get('name');
         $client->save();
+
+        Client::where('user_id', '=', $clientId)->update(
+            array('user_limit' => $request->get('user_limit'))
+        );
 
         return Redirect::route('clients');
     }
