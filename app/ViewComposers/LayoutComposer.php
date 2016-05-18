@@ -19,11 +19,10 @@ class LayoutComposer
      */
     public function __construct()
     {
-        // [TODO] should load all departments here
         $user = Auth::user();
-        
+
         if ($user) {
-            if ($user->hasRole('admin')) { 
+            if ($user->hasRole('admin')) {
                 $departments = Department::all();
 
                 foreach ($departments as $department) {
