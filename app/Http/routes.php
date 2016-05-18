@@ -23,7 +23,9 @@ Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsCon
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
 Route::group(['prefix'=>'accounts'], function () {
     Route::get('agent',       ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
+    Route::get('agent/{id}',  ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agentDetails']);
     Route::post('agent',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createAgent']);
+    Route::post('agent/{id}', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@updateAgent']);
 
     Route::get('client',      ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@client']);
     Route::post('client',     ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@createClient']);

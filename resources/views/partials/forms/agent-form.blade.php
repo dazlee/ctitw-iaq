@@ -1,9 +1,4 @@
 <div class="row">
-    <div class="col-lg-12">
-        <h3 class="page-header">開新經銷商</h3>
-    </div>
-</div>
-<div class="row">
     <div class="col-lg-8">
         <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent') }}">
             {!! csrf_field() !!}

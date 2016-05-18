@@ -7,6 +7,7 @@
                         <th>帳號</th>
                         <th>名稱</th>
                         <th>Eamil</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -15,6 +16,9 @@
                             <td>{{$agent['username']}}</td>
                             <td>{{$agent['name']}}</td>
                             <td>{{$agent['email']}}</td>
+                            <td>
+                                <a href="{{ url('/accounts/agent', $agent->id) }}" class="btn btn-link">修改</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

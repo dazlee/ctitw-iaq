@@ -47,6 +47,14 @@ class AccountsController extends Controller
             "type"      => "agent",
         ));
     }
+    public function agentDetails (Request $request, $agentId) {
+        $agent = User::find($agentId);
+        return view('account-details', array(
+            "name"      => "經銷商",
+            "type"      => "agent",
+            "agent"     => $agent,
+        ));
+    }
     public function createAgent (Request $request)
     {
         $agent = Role::where('name', '=', "agent")->first();
@@ -57,6 +65,24 @@ class AccountsController extends Controller
         return view('accounts', array(
             "name"      => "經銷商",
             "type"      => "agent",
+        ));
+    }
+    public function updateAgent (Request $request, $agentId)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            // 'email' => 'required|email|max:255|unique:users',
+        ]);
+
+        $agent = User::find($agentId);
+        $agent->name = $request->input('name');
+        // $agent->email = $request->input('email');
+        $agent->save();
+
+        return view('account-details', array(
+            "name"      => "經銷商",
+            "type"      => "agent",
+            "agent"     => $agent,
         ));
     }
 
