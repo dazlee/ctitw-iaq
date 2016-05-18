@@ -64,7 +64,7 @@ class AccountsController extends Controller
 
             $user = $this->createUser($request);
             $user->attachRole($agent);
-        
+
             $agent = new Agent;
             $agent->admin_id = Auth::id();
             $agent->phone = $request->get('phone');
@@ -111,6 +111,10 @@ class AccountsController extends Controller
     }
     public function createClient (Request $request)
     {
+        $this->validate($request, [
+            'user_limit' => 'required|numeric|between:0,16',
+        ]);
+
         DB::transaction(function($request) use ($request) {
             $client = Role::where('name', '=', "client")->first();
 
@@ -119,6 +123,7 @@ class AccountsController extends Controller
 
             $client = new Client;
             $client->agent_id = Auth::id();
+            $client->user_limit = $request->get('user_limit');
             $client->phone = $request->get('phone');
             $user->client()->save($client);
         });

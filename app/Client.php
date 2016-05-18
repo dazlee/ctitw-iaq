@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
-    protected $fillable = ['user_id', 'agent_id', 'phone'];
+    protected $fillable = ['user_id', 'agent_id', 'user_limit', 'phone'];
     public $timestamps = false;
 
     public function departments() {
         return $this->hasMany(Department::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }

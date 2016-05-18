@@ -7,15 +7,19 @@
                         <th>帳號</th>
                         <th>名稱</th>
                         <th>Email</th>
+                        <th>帳號上限</th>
+                        <th>儀器數量</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($clients as $client)
                         <tr>
-                            <td>{{$client['username']}}</td>
-                            <td>{{$client['name']}}</td>
-                            <td>{{$client['email']}}</td>
+                            <td>{{$client->user['username']}}</td>
+                            <td>{{$client->user['name']}}</td>
+                            <td>{{$client->user['email']}}</td>
+                            <td>{{$client['user_limit']}}</td>
+                            <th>還沒算</th>
                             <td>
                                 <a href="{{ url('/accounts/client', $client->id) }}" class="btn btn-link">修改</a>
                             </td>
