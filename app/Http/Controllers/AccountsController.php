@@ -149,7 +149,7 @@ class AccountsController extends Controller
         $department = User::find($departmentId);
 
         $departmentData = Department::where('user_id', '=', $departmentId)->first();
-        $department->device_id = $departmentData->device_id;
+        $department['device_id'] = $departmentData->device_id;
 
         return view('account-details', array(
             "name"      => "經銷商",
