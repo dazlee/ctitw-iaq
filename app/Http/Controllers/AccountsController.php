@@ -93,6 +93,14 @@ class AccountsController extends Controller
             "type"      => "client",
         ));
     }
+    public function clientDetails (Request $request, $clientId) {
+        $client = User::find($clientId);
+        return view('account-details', array(
+            "name"      => "經銷商",
+            "type"      => "client",
+            "client"     => $client,
+        ));
+    }
     public function createClient (Request $request)
     {
         DB::transaction(function($request) use ($request) {
@@ -110,6 +118,20 @@ class AccountsController extends Controller
             "name"      => "客戶",
             "type"      => "client",
         ));
+    }
+    public function updateClient (Request $request, $clientId)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            // 'email' => 'required|email|max:255|unique:users',
+        ]);
+
+        $client = User::find($clientId);
+        $client->name = $request->input('name');
+        // $client->email = $request->input('email');
+        $client->save();
+
+        return Redirect::route('clients');
     }
 
 

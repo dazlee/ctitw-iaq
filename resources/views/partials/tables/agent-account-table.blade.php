@@ -6,7 +6,7 @@
                     <tr>
                         <th>帳號</th>
                         <th>名稱</th>
-                        <th>Eamil</th>
+                        <th>Email</th>
                         <th></th>
                     </tr>
                 </thead>
