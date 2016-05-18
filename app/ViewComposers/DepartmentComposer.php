@@ -23,17 +23,9 @@ class DepartmentComposer
 
         if ($user) {
             if ($user->hasRole('admin')) {
-                $departments = Department::all();
-
-                foreach ($departments as $client) {
-                    $this->departments[] = $client->user;
-                }
+                $this->departments = Department::all();
             } else if ($user->hasRole('client')) {
-                $departments = Department::where('client_id', '=', $user->id)->get();
-
-                foreach ($departments as $client) {
-                    $this->departments[] = $client->user;
-                }
+                $this->departments = Department::where('client_id', '=', $user->id)->get();
             } else  {
                 $this->departments = [];
             }

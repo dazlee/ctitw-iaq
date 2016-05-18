@@ -4,8 +4,7 @@ namespace App\ViewComposers;
 
 use Illuminate\Contracts\View\View;
 use Auth;
-use App\Device;
-use App\Department;
+use App\Agent;
 use App\User;
 
 class AgentComposer
@@ -20,7 +19,14 @@ class AgentComposer
      */
     public function __construct()
     {
-        $this->agents = User::all();
+        $user = Auth::user();
+        if ($user) {
+            if ($user->hasRole('admin')) {
+                $this->agents = Agent::all();
+            } else  {
+                $this->agents = [];
+            }
+        }
     }
 
     /**

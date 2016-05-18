@@ -50,7 +50,7 @@ class AccountsController extends Controller
         ));
     }
     public function agentDetails (Request $request, $agentId) {
-        $agent = User::find($agentId);
+        $agent = Agent::where("user_id", "=", $agentId)->first();
         return view('account-details', array(
             "name"      => "經銷商",
             "type"      => "agent",
@@ -64,7 +64,7 @@ class AccountsController extends Controller
 
             $user = $this->createUser($request);
             $user->attachRole($agent);
-        
+
             $agent = new Agent;
             $agent->admin_id = Auth::id();
             $agent->phone = $request->get('phone');
@@ -80,12 +80,10 @@ class AccountsController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
-            // 'email' => 'required|email|max:255|unique:users',
         ]);
 
         $agent = User::find($agentId);
         $agent->name = $request->input('name');
-        // $agent->email = $request->input('email');
         $agent->save();
 
         return Redirect::route('agents');
@@ -102,15 +100,27 @@ class AccountsController extends Controller
         ));
     }
     public function clientDetails (Request $request, $clientId) {
-        $client = User::find($clientId);
+        $client = Client::where("user_id", "=", $clientId)->first();
+        $currentDevices = Device::where("client_id", "=", $clientId)->get();
+
+        $devices = array_fill(0, 16, ['id'=>NULL, 'name'=>NULL]);
+
+        foreach ($currentDevices as $currentDevice) {
+            $devices[$currentDevice->index] = $currentDevice;
+        }
+        $client->devices = $devices;
         return view('account-details', array(
-            "name"      => "經銷商",
+            "name"      => "客戶",
             "type"      => "client",
             "client"     => $client,
         ));
     }
     public function createClient (Request $request)
     {
+        $this->validate($request, [
+            'user_limit' => 'required|numeric|between:0,16',
+        ]);
+
         DB::transaction(function($request) use ($request) {
             $client = Role::where('name', '=', "client")->first();
 
@@ -119,6 +129,7 @@ class AccountsController extends Controller
 
             $client = new Client;
             $client->agent_id = Auth::id();
+            $client->user_limit = $request->get('user_limit');
             $client->phone = $request->get('phone');
             $user->client()->save($client);
         });
@@ -132,13 +143,32 @@ class AccountsController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
-            // 'email' => 'required|email|max:255|unique:users',
+            'user_limit' => 'required|numeric|between:0,16',
         ]);
 
         $client = User::find($clientId);
-        $client->name = $request->input('name');
-        // $client->email = $request->input('email');
+        $client->name = $request->get('name');
         $client->save();
+
+        Client::where('user_id', '=', $clientId)->update(
+            array('user_limit' => $request->get('user_limit'))
+        );
+
+        for ($i = 0; $i < 16; $i++) {
+            if ($request->get('device-id_'.$i)) {
+                $deviceId = $request->get('device-id_'.$i);
+                $deviceName = $request->get('device-name_'.$i);
+                $deviceIndex = $i;
+
+                Device::updateOrCreate([
+                    'id'   => $deviceId,
+                ], [
+                    'name'      => $deviceName,
+                    'client_id' => $clientId,
+                    'index'     => $deviceIndex,
+                ]);
+            }
+        }
 
         return Redirect::route('clients');
     }

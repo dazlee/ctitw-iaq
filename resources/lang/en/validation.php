@@ -97,7 +97,11 @@ return [
         ],
         'device_id' => [
             'unique'        => 'The :attribute has been selected.',
-        ]
+        ],
+        'user_limit' => [
+            'unique'        => 'The :attribute need to be set.',
+            'between'       => 'The :attribute must be between :min - :max.',
+        ],
     ],
 
     /*

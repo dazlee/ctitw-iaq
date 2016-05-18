@@ -72,6 +72,21 @@
                     @endif
                 </div>
             </div>
+
+            <div class="form-group{{ $errors->has('user_limit') ? ' has-error' : '' }}">
+                <label class="col-md-4 control-label">帳號數量</label>
+
+                <div class="col-md-8">
+                    <input type="number" class="form-control" name="user_limit" value="{{ old('user_limit') ? old('user_limit') : 0 }}" min="0" max="16">
+
+                    @if ($errors->has('user_limit'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('user_limit') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-4">
                     <button type="submit" class="btn btn-primary">送出</button>

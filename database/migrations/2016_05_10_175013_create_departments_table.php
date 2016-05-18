@@ -15,7 +15,6 @@ class CreateDepartmentsTable extends Migration
          Schema::create('departments', function (Blueprint $table) {
             $table->string('user_id');
             $table->string('client_id')->index();
-            $table->string('device_id')->index();
             $table->string('phone')->nullable();
             $table->primary('user_id');
          });
