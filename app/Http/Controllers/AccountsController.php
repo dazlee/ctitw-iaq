@@ -17,11 +17,9 @@ use App\Device;
 
 class AccountsController extends Controller
 {
-    //
     public function index () {
         return view('accounts');
     }
-
     private function createUser($request)
     {
         $this->validate($request, [
@@ -41,6 +39,9 @@ class AccountsController extends Controller
         return $user;
     }
 
+    /**
+     * agent handlers
+     */
     public function agent () {
         return view('accounts', array(
             "name"      => "經銷商",
@@ -79,14 +80,13 @@ class AccountsController extends Controller
         // $agent->email = $request->input('email');
         $agent->save();
 
-        return view('account-details', array(
-            "name"      => "經銷商",
-            "type"      => "agent",
-            "agent"     => $agent,
-        ));
+        return Redirect::route('agents');
     }
 
 
+    /**
+     * client handlers
+     */
     public function client () {
         return view('accounts', array(
             "name"      => "客戶",
@@ -113,6 +113,9 @@ class AccountsController extends Controller
     }
 
 
+    /**
+     * department handlers
+     */
     public function department () {
         return view('accounts', array(
             "name"      => "部門",
@@ -141,6 +144,7 @@ class AccountsController extends Controller
 
         return Redirect::back();
     }
+
 
     public function device () {
         return view('accounts', array(
