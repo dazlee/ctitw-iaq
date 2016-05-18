@@ -16,6 +16,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(
             'layouts.app', 'App\ViewComposers\LayoutComposer'
         );
+
+        view()->composer(
+            'partials.tables.agent-account-table', 'App\ViewComposers\AgentComposer'
+        );
     }
 
     /**

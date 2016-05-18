@@ -38,6 +38,10 @@
     color: red;
 }
 
+.dashboard {
+    padding-bottom: 40px !important;
+}
+
 
 .horizontal-panel {
     display: flex;
