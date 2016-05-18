@@ -145,7 +145,18 @@ class AccountsController extends Controller
             "devices"   => Device::all(),
         ));
     }
+    public function departmentDetails (Request $request, $departmentId) {
+        $department = User::find($departmentId);
 
+        $departmentData = Department::where('user_id', '=', $departmentId)->first();
+        $department->device_id = $departmentData->device_id;
+
+        return view('account-details', array(
+            "name"      => "經銷商",
+            "type"      => "department",
+            "department"     => $department,
+        ));
+    }
     public function createDepartment(Request $request) {
         $this->validate($request, [
             'device_id' => 'required|unique:departments'
@@ -165,6 +176,29 @@ class AccountsController extends Controller
         });
 
         return Redirect::back();
+    }
+    public function updateDepartment (Request $request, $departmentId)
+    {
+        $departmentData = Department::where('user_id', '=', $departmentId)->first();
+        $device_id = $request->get('device_id');
+
+        $validateRule = [
+            'name' => 'required|max:255',
+        ];
+        if ($departmentData->device_id !== $device_id) {
+            $validateRule['device_id'] = 'required|unique:departments,device_id';
+        }
+        $this->validate($request, $validateRule);
+
+        $department = User::find($departmentId);
+        $department->name = $request->input('name');
+        $department->save();
+
+        Department::where('user_id', '=', $departmentId)->update(
+            array('device_id' => $device_id)
+        );
+
+        return Redirect::route('departments');
     }
 
 
