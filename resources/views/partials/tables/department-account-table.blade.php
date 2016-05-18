@@ -19,7 +19,7 @@
                             <td>{{$department->user['email']}}</td>
                             <td>{{$department['device_id']}}</td>
                             <td>
-                                <a href="{{ url('/accounts/department', $department->id) }}" class="btn btn-link">修改</a>
+                                <a href="{{ url('/accounts/department', $department->user->id) }}" class="btn btn-link">修改</a>
                             </td>
                         </tr>
                     @endforeach
