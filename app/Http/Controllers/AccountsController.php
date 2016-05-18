@@ -101,8 +101,16 @@ class AccountsController extends Controller
     }
     public function clientDetails (Request $request, $clientId) {
         $client = Client::where("user_id", "=", $clientId)->first();
+        $currentDevices = Device::where("client_id", "=", $clientId)->get();
+
+        $devices = array_fill(0, 16, ['id'=>NULL, 'name'=>NULL]);
+
+        foreach ($currentDevices as $currentDevice) {
+            $devices[$currentDevice->index] = $currentDevice;
+        }
+        $client->devices = $devices;
         return view('account-details', array(
-            "name"      => "經銷商",
+            "name"      => "客戶",
             "type"      => "client",
             "client"     => $client,
         ));
@@ -145,6 +153,22 @@ class AccountsController extends Controller
         Client::where('user_id', '=', $clientId)->update(
             array('user_limit' => $request->get('user_limit'))
         );
+
+        for ($i = 0; $i < 16; $i++) {
+            if ($request->get('device-id_'.$i)) {
+                $deviceId = $request->get('device-id_'.$i);
+                $deviceName = $request->get('device-name_'.$i);
+                $deviceIndex = $i;
+
+                Device::updateOrCreate([
+                    'id'   => $deviceId,
+                ], [
+                    'name'      => $deviceName,
+                    'client_id' => $clientId,
+                    'index'     => $deviceIndex,
+                ]);
+            }
+        }
 
         return Redirect::route('clients');
     }
