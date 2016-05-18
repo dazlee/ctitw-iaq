@@ -82,9 +82,13 @@
             <div class="form-group{{ $errors->has('device_id') ? ' has-error' : '' }} form-inline">
                 <label class="col-md-4 control-label">儀器總表</label>
                 <div class="col-md-8">
-                    <select class="form-control" name="device_id" >
+                    <select class="form-control" name="device_id" value="{{ old('device_id') }}">
                         @for ($i = 1; $i <= 16; $i++)
-                            <option>{{$i}}</option>
+                            @if (old('device_id') !== (string)$i)
+                                <option value="{{$i}}">{{$i}}</option>
+                            @else
+                                <option value="{{$i}}" selected="true">{{$i}}</option>
+                            @endif
                         @endfor
                     </select>
                     @if ($errors->has('device_id'))
