@@ -119,6 +119,7 @@ class AccountsController extends Controller
     {
         $this->validate($request, [
             'user_limit' => 'required|numeric|between:0,16',
+            'device_account' => 'required|unique:clients,device_account',
         ]);
 
         DB::transaction(function($request) use ($request) {
@@ -130,14 +131,12 @@ class AccountsController extends Controller
             $client = new Client;
             $client->agent_id = Auth::id();
             $client->user_limit = $request->get('user_limit');
+            $client->device_account = $request->get('device_account');
             $client->phone = $request->get('phone');
             $user->client()->save($client);
         });
 
-        return view('accounts', array(
-            "name"      => "客戶",
-            "type"      => "client",
-        ));
+        return Redirect::route('clients');
     }
     public function updateClient (Request $request, $clientId)
     {
@@ -150,29 +149,37 @@ class AccountsController extends Controller
         $client->name = $request->get('name');
         $client->save();
 
-        Client::where('user_id', '=', $clientId)->update(
-            array('user_limit' => $request->get('user_limit'))
-        );
+        Client::where('user_id', '=', $clientId)->update([
+            'user_limit' => $request->get('user_limit'),
+            'device_account' => $request->get('device_account'),
+        ]);
 
         for ($i = 0; $i < 16; $i++) {
-            if ($request->get('device-id_'.$i)) {
-                $deviceId = $request->get('device-id_'.$i);
-                $deviceName = $request->get('device-name_'.$i);
-                $deviceIndex = $i;
 
-                $device = Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)->first();
-                if (isset($device) && $device->id != $deviceId) {
-                    Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)
-                        ->delete();
+            $deviceName = $request->get('device-name_'.$i);
+            $deviceIndex = $i;
+
+            $device = Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)->first();
+            if ($device && !$deviceName) {
+                Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)
+                    ->delete();
+            } else if ($deviceName) {
+                if ($device) {
+                    Device::find($device->id)
+                    ->update([
+                        'name'      => $deviceName,
+                        'client_id' => $clientId,
+                        'index'     => $deviceIndex,
+                    ]);
+                } else {
+                    Device::create([
+                        'name'      => $deviceName,
+                        'client_id' => $clientId,
+                        'index'     => $deviceIndex,
+                    ]);
                 }
-                Device::updateOrCreate([
-                    'id'   => $deviceId,
-                ], [
-                    'name'      => $deviceName,
-                    'client_id' => $clientId,
-                    'index'     => $deviceIndex,
-                ]);
             }
+
         }
 
         return Redirect::route('clients');

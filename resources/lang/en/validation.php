@@ -103,6 +103,9 @@ return [
             'between'       => 'The :attribute must be between :min - :max.',
             'max'           => 'You have reach your :attribute, max is :max.',
         ],
+        'device_account' => [
+            'unique' => 'The :attribute is repeated',
+        ]
     ],
 
     /*
