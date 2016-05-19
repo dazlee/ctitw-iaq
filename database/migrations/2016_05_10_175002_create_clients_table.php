@@ -16,6 +16,7 @@ class CreateClientsTable extends Migration
             $table->string('user_id');
             $table->string('agent_id')->unique();
             $table->integer('user_limit');
+            $table->string('device_account');
             $table->string('phone')->nullable();
             $table->primary('user_id');
         });

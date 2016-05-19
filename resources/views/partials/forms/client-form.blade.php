@@ -87,6 +87,20 @@
                 </div>
             </div>
 
+            <div class="form-group{{ $errors->has('device_account') ? ' has-error' : '' }}">
+                <label class="col-md-4 control-label">儀器帳號</label>
+
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="device_account" value="{{ old('device_account') }}">
+
+                    @if ($errors->has('device_account'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('device_account') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-4">
                     <button type="submit" class="btn btn-primary">送出</button>

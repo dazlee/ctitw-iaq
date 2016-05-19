@@ -119,6 +119,7 @@ class AccountsController extends Controller
     {
         $this->validate($request, [
             'user_limit' => 'required|numeric|between:0,16',
+            'device_account' => 'required|unique:clients,device_account',
         ]);
 
         DB::transaction(function($request) use ($request) {
@@ -130,14 +131,12 @@ class AccountsController extends Controller
             $client = new Client;
             $client->agent_id = Auth::id();
             $client->user_limit = $request->get('user_limit');
+            $client->device_account = $request->get('device_account');
             $client->phone = $request->get('phone');
             $user->client()->save($client);
         });
 
-        return view('accounts', array(
-            "name"      => "客戶",
-            "type"      => "client",
-        ));
+        return Redirect::route('clients');
     }
     public function updateClient (Request $request, $clientId)
     {
