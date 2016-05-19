@@ -149,9 +149,10 @@ class AccountsController extends Controller
         $client->name = $request->get('name');
         $client->save();
 
-        Client::where('user_id', '=', $clientId)->update(
-            array('user_limit' => $request->get('user_limit'))
-        );
+        Client::where('user_id', '=', $clientId)->update([
+            'user_limit' => $request->get('user_limit'),
+            'device_account' => $request->get('device_account'),
+        ]);
 
         for ($i = 0; $i < 16; $i++) {
 

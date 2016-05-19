@@ -91,7 +91,7 @@
                         <ul class="nav nav-second-level">
                             @foreach ($devices as $device)
                                 <li>
-                                    <a href="/dashboard/{{ $device->id }}">{{ $device->name }}</a>
+                                    <a href="/dashboard/{{ $device->client->device_account.'-'.$device->index }}">{{ $device->name }}</a>
                                 </li>
                             @endforeach
                         </ul>
