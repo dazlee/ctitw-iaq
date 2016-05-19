@@ -53,6 +53,20 @@
                         @endif
                     </div>
                 </div>
+
+                <div class="form-group{{ $errors->has('device_account') ? ' has-error' : '' }}">
+                    <label class="col-md-4 control-label">儀器帳號</label>
+
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="device_account" value="{{ old('device_account') ? old('device_account') : $client['device_account'] }}">
+
+                        @if ($errors->has('device_account'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('device_account') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
             </div>
             <!-- end of left column -->
 
@@ -60,12 +74,9 @@
                 <div class="form-group">
                     @for($i = 0; $i < 16; $i++)
                         <div class="row pb-6">
-                            <label class="col-md-2 control-label">儀器{{$i + 1}}</label>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control" name="{{ 'device-id_'.$i }}" value="{{ old('device_id_'.$i) ? old('device_id_'.$i) : $client->devices[$i]['id'] }}" placeholder="儀器編號">
-                            </div>
-                            <div class="col-md-7">
-                                <input type="text" class="form-control" name="{{ 'device-name_'.$i }}" value="{{ old('device_name_'.$i) ? old('device_name_'.$i) : $client->devices[$i]['name'] }}" placeholder="儀器位置">
+                            <label class="col-md-2 control-label">儀器{{$i}}</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="{{ 'device-name_'.$i }}" value="{{ old('device_name_'.$i) ? old('device_name_'.$i) : $client->devices[$i]['name'] }}" placeholder="儀器位置，填寫此欄位才會顯示資料。">
                             </div>
                         </div>
                     @endfor

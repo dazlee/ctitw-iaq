@@ -154,24 +154,31 @@ class AccountsController extends Controller
         );
 
         for ($i = 0; $i < 16; $i++) {
-            if ($request->get('device-id_'.$i)) {
-                $deviceId = $request->get('device-id_'.$i);
-                $deviceName = $request->get('device-name_'.$i);
-                $deviceIndex = $i;
 
-                $device = Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)->first();
-                if (isset($device) && $device->id != $deviceId) {
-                    Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)
-                        ->delete();
+            $deviceName = $request->get('device-name_'.$i);
+            $deviceIndex = $i;
+
+            $device = Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)->first();
+            if ($device && !$deviceName) {
+                Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)
+                    ->delete();
+            } else if ($deviceName) {
+                if ($device) {
+                    Device::find($device->id)
+                    ->update([
+                        'name'      => $deviceName,
+                        'client_id' => $clientId,
+                        'index'     => $deviceIndex,
+                    ]);
+                } else {
+                    Device::create([
+                        'name'      => $deviceName,
+                        'client_id' => $clientId,
+                        'index'     => $deviceIndex,
+                    ]);
                 }
-                Device::updateOrCreate([
-                    'id'   => $deviceId,
-                ], [
-                    'name'      => $deviceName,
-                    'client_id' => $clientId,
-                    'index'     => $deviceIndex,
-                ]);
             }
+
         }
 
         return Redirect::route('clients');
