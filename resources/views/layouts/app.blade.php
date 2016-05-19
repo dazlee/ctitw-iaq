@@ -87,11 +87,11 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 部門<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 儀器<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            @foreach ($departments as $department)
+                            @foreach ($devices as $device)
                                 <li>
-                                    <a href="/dashboard/{{ $department->device_id }}">{{ $department->user->name }}</a>
+                                    <a href="/dashboard/{{ $device->id }}">{{ $device->name }}</a>
                                 </li>
                             @endforeach
                         </ul>

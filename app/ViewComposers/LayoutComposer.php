@@ -10,7 +10,7 @@ use App\Department;
 class LayoutComposer
 {
 
-    protected $departments = [];
+    protected $devices = [];
     /**
      * Create a new profile composer.
      *
@@ -22,12 +22,13 @@ class LayoutComposer
         $user = Auth::user();
 
         if ($user) {
-            if ($user->hasRole('admin')) { 
-                $this->departments = Department::all();
+            if ($user->hasRole('admin')) {
+                $this->devices = Device::all();
             } else if ($user->hasRole('client')) {
-                $this->departments = Department::where('client_id', '=', $user->id)->get();
+                $this->devices = Device::where('client_id', '=', $user->id)->get();
             } else if ($user->hasRole('department')) {
-                $this->departments = Department::where('user_id', '=', $user->id)->get();
+                $department = Department::where('user_id', '=', $user->id)->first();
+                $this->devices = Device::where('client_id', '=', $department->client_id)->get();
             }
         }
     }
@@ -40,6 +41,6 @@ class LayoutComposer
      */
     public function compose(View $view)
     {
-        $view->with('departments', $this->departments);
+        $view->with('devices', $this->devices);
     }
 }

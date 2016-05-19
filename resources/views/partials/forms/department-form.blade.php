@@ -4,7 +4,7 @@
             {!! csrf_field() !!}
 
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                <label class="col-md-4 control-label">部門名稱</label>
+                <label class="col-md-4 control-label">客戶管理帳號名稱</label>
 
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="name" value="{{ old('name') }}">
@@ -18,7 +18,7 @@
             </div>
 
             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                <label class="col-md-4 control-label">部門Email</label>
+                <label class="col-md-4 control-label">客戶管理帳號Email</label>
 
                 <div class="col-md-8">
                     <input type="email" class="form-control" name="email" value="{{ old('email') }}">
@@ -32,7 +32,7 @@
             </div>
 
             <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                <label class="col-md-4 control-label">部門帳號</label>
+                <label class="col-md-4 control-label">客戶管理帳號</label>
 
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="username" value="{{ old('username') }}">
@@ -73,26 +73,19 @@
                 </div>
             </div>
 
+            <div class="form-group{{ $errors->has('user_limit') ? ' has-error' : '' }}">
+                <label class="col-md-4 control-label"></label>
 
-            <div class="form-group{{ $errors->has('device_id') ? ' has-error' : '' }} form-inline">
-                <label class="col-md-4 control-label">儀器總表</label>
                 <div class="col-md-8">
-                    <select class="form-control" name="device_id">
-                        @for ($i = 1; $i <= 16; $i++)
-                            @if (old('device_id') !== (string)$i)
-                                <option value="{{$i}}">{{$i}}</option>
-                            @else
-                                <option value="{{$i}}" selected="true">{{$i}}</option>
-                            @endif
-                        @endfor
-                    </select>
-                    @if ($errors->has('device_id'))
+                    @if ($errors->has('user_limit'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('device_id') }}</strong>
+                            <strong>{{ $errors->first('user_limit') }}</strong>
                         </span>
                     @endif
                 </div>
             </div>
+
+
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-4">
                     <button type="submit" class="btn btn-primary">送出</button>

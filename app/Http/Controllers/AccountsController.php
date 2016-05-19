@@ -160,6 +160,11 @@ class AccountsController extends Controller
                 $deviceName = $request->get('device-name_'.$i);
                 $deviceIndex = $i;
 
+                $device = Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)->first();
+                if (isset($device) && $device->id != $deviceId) {
+                    Device::where("client_id", "=", $clientId)->where("index", '=', $deviceIndex)
+                        ->delete();
+                }
                 Device::updateOrCreate([
                     'id'   => $deviceId,
                 ], [
@@ -179,7 +184,7 @@ class AccountsController extends Controller
      */
     public function department () {
         return view('accounts', array(
-            "name"      => "部門",
+            "name"      => "客戶管理帳號",
             "type"      => "department",
             "devices"   => Device::all(),
         ));
@@ -191,15 +196,25 @@ class AccountsController extends Controller
         $department['device_id'] = $departmentData->device_id;
 
         return view('account-details', array(
-            "name"      => "經銷商",
+            "name"      => "客戶管理帳號",
             "type"      => "department",
             "department"     => $department,
         ));
     }
     public function createDepartment(Request $request) {
-        $this->validate($request, [
-            'device_id' => 'required|unique:departments'
-        ]);
+        $departmentCount = Department::where("client_id", "=", Auth::id())->count();
+        $userLimit = Client::where("user_id", "=", Auth::id())->first()->user_limit;
+        $data = [
+            'user_limit' => $departmentCount
+        ];
+        $rule  =  array(
+            'user_limit' => 'required|numeric|max:'.$userLimit,
+        );
+        $validator = Validator::make($data, $rule);
+        if ($validator->fails())
+        {
+            return Redirect::back()->withErrors($validator);
+        }
 
         DB::transaction(function($request) use ($request) {
             $department = Role::where('name', '=', 'department')->first();
@@ -209,7 +224,6 @@ class AccountsController extends Controller
 
             $department = new Department();
             $department->client_id = Auth::id();
-            $department->device_id = $request->get('device_id');
             $department->phone = $request->get('phone');
             $user->department()->save($department);
         });
@@ -219,23 +233,14 @@ class AccountsController extends Controller
     public function updateDepartment (Request $request, $departmentId)
     {
         $departmentData = Department::where('user_id', '=', $departmentId)->first();
-        $device_id = $request->get('device_id');
 
-        $validateRule = [
+        $this->validate($request, [
             'name' => 'required|max:255',
-        ];
-        if ($departmentData->device_id !== $device_id) {
-            $validateRule['device_id'] = 'required|unique:departments,device_id';
-        }
-        $this->validate($request, $validateRule);
+        ]);
 
         $department = User::find($departmentId);
         $department->name = $request->input('name');
         $department->save();
-
-        Department::where('user_id', '=', $departmentId)->update(
-            array('device_id' => $device_id)
-        );
 
         return Redirect::route('departments');
     }
