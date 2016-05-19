@@ -7,7 +7,6 @@
                         <th>帳號</th>
                         <th>名稱</th>
                         <th>Email</th>
-                        <th>儀器號碼</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -17,7 +16,6 @@
                             <td>{{$department->user['username']}}</td>
                             <td>{{$department->user['name']}}</td>
                             <td>{{$department->user['email']}}</td>
-                            <td>{{$department['device_id']}}</td>
                             <td>
                                 <a href="{{ url('/accounts/department', $department->user->id) }}" class="btn btn-link">修改</a>
                             </td>
