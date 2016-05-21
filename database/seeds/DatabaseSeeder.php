@@ -11,8 +11,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(DeviceHistoryTableSeeder::class);
-        $this->call(DeviceTableSeeder::class);
+        #$this->call(DeviceHistoryTableSeeder::class);
+        #$this->call(DeviceTableSeeder::class);
         $this->call(UserRolesSeeder::class);
     }
 }

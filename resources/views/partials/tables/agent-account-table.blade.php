@@ -7,7 +7,10 @@
                         <th>帳號</th>
                         <th>名稱</th>
                         <th>Email</th>
+                        @role('admin')
                         <th></th>
+                        <th></th>
+                        @endrole
                     </tr>
                 </thead>
                 <tbody>
@@ -16,8 +19,13 @@
                             <td>{{$agent->user['username']}}</td>
                             <td>{{$agent->user['name']}}</td>
                             <td>{{$agent->user['email']}}</td>
+                            @role('admin')
                             <td>
-                                <a href="{{ url('/accounts/agent', $agent->user->id) }}" class="btn btn-link">修改</a>
+                                <a target="_blank" href="{{ url('?agent_id=' . $agent->user_id) }}" class="btn btn-link">客戶清單</a>
+                            </td>
+                            @endrole
+                            <td>
+                                <a href="{{ url('/accounts/agent', $agent->user_id) }}" class="btn btn-link">修改</a>
                             </td>
                         </tr>
                     @endforeach
