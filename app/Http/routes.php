@@ -21,6 +21,7 @@ Route::get('/', ['uses' => 'HomeController@index']);
 Route::auth();
 
 Route::get('/dashboard/{id}',       ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
+Route::get('/devices/{id}',       ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
 Route::get('/stats',                ['middleware' => 'auth', 'uses' => 'StatsController@index']);
 Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsController@history']);
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);

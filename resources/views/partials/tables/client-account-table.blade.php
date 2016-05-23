@@ -23,7 +23,7 @@
                             <td>{{$client->user['email']}}</td>
                             <td>{{$client['user_limit']}}</td>
                             <td>
-                                <a target="_blank" href="{{ url('/dashboard', $client->device_account) }}" class="btn btn-link">{{$client->device_account}}</a>
+                                <a target="_blank" href="{{ url('/devices', $client->device_account) }}" class="btn btn-link">{{$client->device_account}}</a>
                             </td>
                             @role('admin')
                             <td>
