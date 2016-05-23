@@ -3,6 +3,7 @@
 namespace App\ViewComposers;
 
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Input;
 use Auth;
 use App\User;
 use App\Client;
@@ -20,13 +21,13 @@ class ClientComposer
     public function __construct()
     {
         $user = Auth::user();
+        $agent_id = Input::get('agent_id');
+
         if ($user) {
             if ($user->hasRole('admin')) {
-                $this->clients = Client::all();
+                $this->clients = empty($agent_id) ? Client::all() : Client::where("agent_id", "=", $agent_id)->get();
             } else if ($user->hasRole('agent')) {
                 $this->clients = Client::where("agent_id", "=", $user->id)->get();
-            } else {
-                $this->clients = [];
             }
         }
     }

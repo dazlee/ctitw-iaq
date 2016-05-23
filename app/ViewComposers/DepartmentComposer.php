@@ -3,6 +3,7 @@
 namespace App\ViewComposers;
 
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Input;
 use Auth;
 use App\User;
 use App\Department;
@@ -20,14 +21,13 @@ class DepartmentComposer
     public function __construct()
     {
         $user = Auth::user();
+        $client_id = Input::get('client_id');
 
         if ($user) {
             if ($user->hasRole('admin')) {
-                $this->departments = Department::all();
+                $this->departments = empty($client_id) ? Department::all() : Department::where('client_id', '=', $client_id)->get();
             } else if ($user->hasRole('client')) {
                 $this->departments = Department::where('client_id', '=', $user->id)->get();
-            } else  {
-                $this->departments = [];
             }
         }
     }

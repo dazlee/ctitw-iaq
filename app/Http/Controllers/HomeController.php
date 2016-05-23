@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Client;
+use App\User;
 use Auth;
 
 class HomeController extends Controller
@@ -29,26 +30,23 @@ class HomeController extends Controller
         $users = [];
         $list = '經銷商名單';
         $type = 'agent';
-        $filterId = NULL;
         $user = Auth::user();
         
-
         if ($user && $user->hasRole('admin')) {
             if ($request->get('agent_id')) {
-                $list = '客戶名單';
+                $username = User::find($request->get('agent_id'))->name;   
+                $list = "{$username}的客戶名單";
                 $type = 'client';
-                $filterId = $request->get('agent_id');
             } else if ($request->get('client_id')) {
-                $list = '部門名單';
+                $username = User::find($request->get('client_id'))->name;
+                $list = "{$username}的部門名單";
                 $type = 'department';
-                 $filterId = $request->get('client_id');
             }
         }
 
         return view('home', [
             'type' => $type,
             'list' => $list,
-            'filter_id' => $filterId
         ]);
     }
 }
