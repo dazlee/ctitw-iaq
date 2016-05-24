@@ -20,11 +20,10 @@ class AgentComposer
     public function __construct()
     {
         $user = Auth::user();
+
         if ($user) {
             if ($user->hasRole('admin')) {
                 $this->agents = Agent::all();
-            } else  {
-                $this->agents = [];
             }
         }
     }
