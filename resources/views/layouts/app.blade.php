@@ -72,6 +72,7 @@
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
+                    @role('client')
                     <li>
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境 <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -97,6 +98,7 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    @endrole
                     @role('admin')
                     <li>
                         <a href="/accounts/agent"><i class="fa fa-users fa-fw"></i> 經銷商管理</span></a>
