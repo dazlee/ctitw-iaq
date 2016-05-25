@@ -72,17 +72,18 @@
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
+                    @if ($showSide)
                     <li>
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境 <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="/stats">即時圖表</a>
+                                <a href="{{ url($statsUrl) }}">即時圖表</a>
                             </li>
                             <li>
-                                <a href="/history">歷史圖表</a>
+                                <a href="{{ url($historyUrl) }}">歷史圖表</a>
                             </li>
                             <li>
-                                <a href="/all">各部門資訊</a>
+                                <a href="{{ url($allUrl) }}">各部門資訊</a>
                             </li>
                         </ul>
                     </li>
@@ -91,12 +92,13 @@
                         <ul class="nav nav-second-level">
                             @foreach ($devices as $device)
                                 <li>
-                                    <a href="/dashboard/{{ $device->client->device_account.'-'.$device->index }}">{{ $device->name }}</a>
+                                    <a href="{{ $dashboardBaseUrl . '/' . $device->client->device_account.'-'.$device->index }}">{{ $device->name }}</a>
                                 </li>
                             @endforeach
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    @endif
                     @role('admin')
                     <li>
                         <a href="/accounts/agent"><i class="fa fa-users fa-fw"></i> 經銷商管理</span></a>

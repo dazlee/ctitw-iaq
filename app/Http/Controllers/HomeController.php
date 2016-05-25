@@ -31,15 +31,15 @@ class HomeController extends Controller
         $list = '經銷商名單';
         $type = 'agent';
         $user = Auth::user();
-        
+
         if ($user && $user->hasRole('admin')) {
             if ($request->get('agent_id')) {
-                $username = User::find($request->get('agent_id'))->name;   
+                $username = User::find($request->get('agent_id'))->name;
                 $list = "{$username}的客戶名單";
                 $type = 'client';
             } else if ($request->get('client_id')) {
                 $username = User::find($request->get('client_id'))->name;
-                $list = "{$username}的部門名單";
+                $list = "{$username}的帳號清單";
                 $type = 'department';
             }
         }

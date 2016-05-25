@@ -20,11 +20,18 @@ Route::get('/', ['uses' => 'HomeController@index']);
 
 Route::auth();
 
-Route::get('/dashboard/{id}',       ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
-Route::get('/devices/{id}',       ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
+Route::get('/dashboard/{device_id}',       ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
+Route::get('/devices/{id}',         ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
 Route::get('/stats',                ['middleware' => 'auth', 'uses' => 'StatsController@index']);
 Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsController@history']);
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
+
+Route::group(['middleware' => ['role:admin']], function () {
+    Route::get('/client/{id}/stats',   ['as' => '_client_stats',    'uses' => 'StatsController@index']);
+    Route::get('/client/{id}/history', ['as' => '_client_history',  'uses' => 'StatsController@history']);
+    Route::get('/client/{id}/all',     ['as' => '_client_all',      'uses' => 'StatsController@all']);
+    Route::get('/client/{id}/dashboard/{device_id}',      ['as' => '_client_device', 'uses' => 'DashboardController@indexForAdmin']);
+});
 
 Route::group(['prefix'=>'accounts'], function () {
     Route::get('agent',       ['as' => 'agents', 'middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);

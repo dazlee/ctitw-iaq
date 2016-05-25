@@ -8,12 +8,12 @@
         </div>
     </div>
     @role('admin')
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            {{$list}}
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">{{$list}}</h3>
+            </div>
         </div>
-    </div>
-    @include('partials.tables.' . $type .'-account-table')
+        @include('partials.tables.' . $type .'-account-table')
     @endrole
 </div>
 @endsection
