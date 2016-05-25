@@ -86,7 +86,7 @@ class AccountsController extends Controller
         $agent->name = $request->input('name');
         $agent->save();
 
-        return Redirect::route('agents');
+        return Redirect::back();
     }
 
 
@@ -182,7 +182,7 @@ class AccountsController extends Controller
 
         }
 
-        return Redirect::route('clients');
+        return Redirect::back();
     }
 
 
@@ -249,7 +249,7 @@ class AccountsController extends Controller
         $department->name = $request->input('name');
         $department->save();
 
-        return Redirect::route('departments');
+        return Redirect::back();
     }
 
 

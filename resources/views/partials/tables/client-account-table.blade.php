@@ -22,9 +22,7 @@
                             <td>{{$client->user['name']}}</td>
                             <td>{{$client->user['email']}}</td>
                             <td>{{$client['user_limit']}}</td>
-                            <td>
-                                <a target="_blank" href="{{ url('/stats/client/' . $client->user_id) }}" class="btn btn-link">{{$client->device_account}}</a>
-                            </td>
+                            <td>{{$client->device_account}}</td>
                             @role('admin')
                             <td>
                                 <a target="_blank" href="{{ url('?client_id=' . $client->user_id) }}" class="btn btn-link">帳號清單</a>
@@ -32,6 +30,9 @@
                             @endrole
                             <td>
                                 <a href="{{ url('/accounts/client', $client->user_id) }}" class="btn btn-link">修改</a>
+                                @role('admin')
+                                <a target="_blank" href="{{ url('/client/' . $client->user_id . '/stats') }}" class="btn btn-link">看紀錄</a>
+                                @endrole
                             </td>
                         </tr>
                     @endforeach
