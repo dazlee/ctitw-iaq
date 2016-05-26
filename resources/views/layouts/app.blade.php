@@ -114,9 +114,11 @@
                         <a href="/accounts/department"><i class="fa fa-users fa-fw"></i> 客戶帳號管理</span></a>
                     </li>
                     @endrole
+                    @role(['admin', 'client'])
                     <li>
                         <a href="/files"><i class="fa fa-users fa-fw"></i> 檔案列表</span></a>
                     </li>
+                    @endrole
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->

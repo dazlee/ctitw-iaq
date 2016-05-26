@@ -21,10 +21,12 @@
                                 <a href="{{ url('/files', $file->id) }}" class="btn btn-link" target="_blank">下載</a>
                             </td>
                             <td>
-                                <form id="delete-file" role="form" method="POST" action="{{ url('/files/' . $file->id . '/delete') }}">
+                                @role('client')
+                                <form class="delete-file" role="form" method="POST" action="{{ url('/files/' . $file->id . '/delete') }}">
                                     {!! csrf_field() !!}
-                                    <button type="submit" class="btn btn-danger">刪除</button>
+                                    <button type="button" class="btn btn-danger delete-file-button">刪除</button>
                                 </form>
+                                @endrole
                             </td>
                         </tr>
                     @endforeach
@@ -33,3 +35,17 @@
         </div>
     </div>
 </div>
+<script>
+    function addSubmitEventListenerList(list) {
+        for (var i = 0, len = list.length; i < len; i++) {
+            list[i].addEventListener("click", function (e) {
+                e.preventDefault();
+                if (confirm ("確定刪除？")) {
+                    e.target.parentNode.submit();
+                }
+            });
+        }
+    }
+    var list = document.getElementsByClassName("delete-file-button");
+    addSubmitEventListenerList(list);
+</script>

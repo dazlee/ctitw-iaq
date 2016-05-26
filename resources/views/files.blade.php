@@ -7,8 +7,9 @@
             <h1 class="page-header">檔案列表</h1>
         </div>
     </div>
-
-    @include('partials.forms.file-form')
+    @role('client')
+        @include('partials.forms.file-form')
+    @endrole
     @include('partials.tables.file-table')
 </div>
 @endsection
