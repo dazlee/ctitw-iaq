@@ -24,9 +24,9 @@ class FileComposer
 
         if ($user) {
             if ($user->hasRole('admin')) {
-                $this->files = UserFile::all();
+                $this->files = UserFile::orderBy('created_at', 'desc')->get();
             } else if ($user->hasRole('client')) {
-                $this->files = UserFile::where("user_id", "=", $user->id)->get();
+                $this->files = UserFile::where("user_id", "=", $user->id)->orderBy('created_at', 'desc')->get();
             }
         }
     }

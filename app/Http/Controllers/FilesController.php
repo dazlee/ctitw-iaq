@@ -45,9 +45,9 @@ class FilesController extends Controller
             $fileName = $file->getClientOriginalName();
 
             // check if there a file with same name
-            $fileCount = UserFile::where("file_name", "=", $fileName)->where("user_id", "=", $clientId)->count();
+            $fileCount = UserFile::where("file_name", "=", $fileName)->where("user_id", "=", $clientId)->get()->count();
             $validator = Validator::make(['file_count' => $fileCount], [
-                'file_count' => "numeric|same:0"
+                'file_count' => "integer|max:0"
             ]);
             if ($validator->fails())
             {

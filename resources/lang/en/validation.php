@@ -111,7 +111,7 @@ return [
             'max'  => 'max size is :max kb',
         ],
         'file_count'  => [
-            'same' => 'file is duplicated, please delete it first',
+            'max' => 'file is duplicated, please delete it first',
         ],
     ],
 
