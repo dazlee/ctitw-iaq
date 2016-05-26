@@ -12,6 +12,7 @@ use App\Http\Requests;
 use Auth;
 use Carbon\Carbon;
 use App\Client;
+use App\UserFile;
 
 class FilesController extends Controller
 {
@@ -49,6 +50,12 @@ class FilesController extends Controller
             // $current_time = Carbon::now()->timestamp;
             $fileName = $file->getClientOriginalName();
             $file->move($destinationPath, $fileName);
+
+            UserFile::create([
+                'user_id'      => $clientId,
+                'file_name' => $fileName,
+                'path'     => $destinationPath,
+            ]);
         }
 
         return Redirect::back();
