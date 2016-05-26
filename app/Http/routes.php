@@ -27,6 +27,7 @@ Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsCon
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
 Route::get('/files',                ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@index']);
 Route::get('/files/{file_id}',      ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@downloadFile']);
+Route::post('/files/{file_id}/delete',     ['middleware' => ['role:client'], 'uses' => 'FilesController@deleteFile']);
 
 Route::post('client/{client_id}/file', ['middleware' => ['role:client'], 'uses' => 'FilesController@uploadFile']);
 

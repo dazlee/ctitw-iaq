@@ -78,4 +78,20 @@ class FilesController extends Controller
         $filePath = $userFile->path . '/' . $userFile->file_name;
         return response()->download($filePath);
     }
+
+    public function deleteFile (Request $request, $file_id) {
+        $user = Auth::user();
+
+        $userFile = UserFile::find($file_id);
+        if ($userFile && $userFile->user_id == $user->id) {
+            $filePath = $userFile->path . '/' . $userFile->file_name;
+            if (File::exists($filePath)) {
+                File::delete($filePath);
+            }
+
+            $userFile->delete();
+        }
+
+        return Redirect::back();
+    }
 }
