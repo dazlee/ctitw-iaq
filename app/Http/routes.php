@@ -25,6 +25,9 @@ Route::get('/devices/{id}',         ['middleware' => 'auth', 'uses' => 'Dashboar
 Route::get('/stats',                ['middleware' => 'auth', 'uses' => 'StatsController@index']);
 Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsController@history']);
 Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
+Route::get('/files',                ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@index']);
+
+Route::post('client/{client_id}/file', ['middleware' => ['role:client'], 'uses' => 'FilesController@uploadFile']);
 
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/client/{id}/stats',   ['as' => '_client_stats',    'uses' => 'StatsController@index']);
