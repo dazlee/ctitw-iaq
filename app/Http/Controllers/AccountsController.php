@@ -191,7 +191,7 @@ class AccountsController extends Controller
      */
     public function department () {
         return view('accounts', array(
-            "name"      => "客戶管理帳號",
+            "name"      => "客戶帳號",
             "type"      => "department",
             "devices"   => Device::all(),
         ));
@@ -203,7 +203,7 @@ class AccountsController extends Controller
         $department['device_id'] = $departmentData->device_id;
 
         return view('account-details', array(
-            "name"      => "客戶管理帳號",
+            "name"      => "客戶帳號",
             "type"      => "department",
             "department"     => $department,
         ));

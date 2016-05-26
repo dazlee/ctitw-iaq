@@ -105,7 +105,14 @@ return [
         ],
         'device_account' => [
             'unique' => 'The :attribute is repeated',
-        ]
+        ],
+        'file' => [
+            'mimes' => 'only accept :values',
+            'max'  => 'max size is :max kb',
+        ],
+        'file_count'  => [
+            'max' => 'file is duplicated, please delete it first',
+        ],
     ],
 
     /*

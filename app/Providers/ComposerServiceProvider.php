@@ -28,6 +28,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(
             'partials.tables.department-account-table', 'App\ViewComposers\DepartmentComposer'
         );
+
+        view()->composer(
+            'partials.tables.file-table', 'App\ViewComposers\FileComposer'
+        );
     }
 
     /**
