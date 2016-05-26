@@ -17,7 +17,7 @@
                             <td>{{$file->file_name}}</td>
                             <td>{{ date('Y-m-d', strtotime($file->created_at)) }}</td>
                             <td>
-                                <a href="{{ url('/accounts/file', $file->user->id) }}" class="btn btn-link">下載</a>
+                                <a href="{{ url('/files', $file->id) }}" class="btn btn-link" target="_blank">下載</a>
                             </td>
                         </tr>
                     @endforeach

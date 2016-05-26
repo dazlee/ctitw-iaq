@@ -72,4 +72,10 @@ class FilesController extends Controller
 
         return Redirect::back();
     }
+
+    public function downloadFile (Request $request, $file_id) {
+        $userFile = UserFile::find($file_id);
+        $filePath = $userFile->path . '/' . $userFile->file_name;
+        return response()->download($filePath);
+    }
 }
