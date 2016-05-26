@@ -39,16 +39,28 @@ class FilesController extends Controller
             'file' => 'required|mimes:jpg,jpeg,bmp,png,pdf,doc,docx|max:256000',
         ]);
 
-        $client = Client::where("user_id", "=", $clientId)->first();
-        $destinationPath = base_path() . $this->uploadBasePath . '/' . $client->user->username;
-        if(!File::exists($destinationPath)) {
-            File::makeDirectory($destinationPath, $mode = 0777, true, true);
-        }
 
         $file = $request->file('file');
         if ($file) {
-            // $current_time = Carbon::now()->timestamp;
             $fileName = $file->getClientOriginalName();
+
+            // check if there a file with same name
+            $fileCount = UserFile::where("file_name", "=", $fileName)->where("user_id", "=", $clientId)->count();
+            $validator = Validator::make(['file_count' => $fileCount], [
+                'file_count' => "numeric|same:0"
+            ]);
+            if ($validator->fails())
+            {
+                return Redirect::back()->withErrors($validator);
+            }
+
+            $client = Client::where("user_id", "=", $clientId)->first();
+            $destinationPath = base_path() . $this->uploadBasePath . '/' . $client->user->username;
+            if(!File::exists($destinationPath)) {
+                File::makeDirectory($destinationPath, $mode = 0777, true, true);
+            }
+
+            // $current_time = Carbon::now()->timestamp;
             $file->move($destinationPath, $fileName);
 
             UserFile::create([

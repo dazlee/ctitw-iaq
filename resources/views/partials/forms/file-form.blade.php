@@ -4,13 +4,18 @@
             {!! csrf_field() !!}
 
             <div class="col-lg-5">
-                <div class="form-group{{ $errors->has('file') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('file') || $errors->has('file_count') ? ' has-error' : '' }}">
                     <label>上傳檔案</label>
                     <input type="file" name="file">
 
                     @if ($errors->has('file'))
                         <span class="help-block">
                             <strong>{{ $errors->first('file') }}</strong>
+                        </span>
+                    @endif
+                    @if ($errors->has('file_count'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('file_count') }}</strong>
                         </span>
                     @endif
                 </div>

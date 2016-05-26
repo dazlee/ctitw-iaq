@@ -109,7 +109,10 @@ return [
         'file' => [
             'mimes' => 'only accept :values',
             'max'  => 'max size is :max kb',
-        ]
+        ],
+        'file_count'  => [
+            'same' => 'file is duplicated, please delete it first',
+        ],
     ],
 
     /*

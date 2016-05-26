@@ -9,5 +9,6 @@
     </div>
 
     @include('partials.forms.file-form')
+    @include('partials.tables.file-table')
 </div>
 @endsection
