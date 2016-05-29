@@ -3,6 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Threshold;
+use Mail;
+use App\Client;
+use App\User;
 
 class DeviceHistory extends Model
 {
@@ -37,6 +41,54 @@ class DeviceHistory extends Model
 
 	    return $rows;
     }
+
+    public static function sendMail($content) {
+        $threshold = Threshold::first();
+        
+        if (empty($threshold)) {
+            return Null;
+        }
+
+        $subjects = [];
+        $keys = ['co2', 'temp', 'rh'];
+
+        foreach ($content as $row) {
+            $msg = Null;
+
+            foreach ($keys as $key) {
+                if ($row[$key] > $threshold->{$key}) {
+                    $msg .= sprintf('%s(%s) is higher than threshold(%s). ', $key, $row['co2'], $threshold->co2);
+                }
+            }
+
+
+            if (!empty($msg)) {
+                $client = Client::where('device_account', '=', $row['device_id'])->first();
+
+                if (count($client)) {
+                    $email = $client->user->email;
+                    $msg = sprintf('Device %s: %s<br/>', $row['device_id'], $msg);
+
+                    if (isset($subjects[$email])) {
+                        $subjects[$client->user->email] .= $msg;
+                    } else {
+                        $subjects[$client->user->email] = $msg;
+                    }
+                }
+            }
+        }
+        
+        if(empty($subjects)) {
+            return Null;
+        }
+
+        foreach ($subjects as $to => $body) {
+            Mail::send('emails.warning', ['to' => $to, 'body' => $body], function ($message) use ($to, $body) {
+                $message->to($to)->subject('Warning')->setBody($body);
+            });
+        }
+    }
+
 
     public function scopeBetweenDates($query, $fromDate, $toDate) {
         $fromDate = date_create($fromDate)->setTime(00, 00, 00);

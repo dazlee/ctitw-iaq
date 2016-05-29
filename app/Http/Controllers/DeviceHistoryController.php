@@ -23,17 +23,23 @@ class DeviceHistoryController extends Controller
         $file = $request->file($this->formDataKey);
         $content = file_get_contents($file);
         $device_history_list = DeviceHistory::parseContent($content);
-        $device_list = [];
 
         if (empty($device_history_list)) {
             return response()->json(['err' => 'The format of file is uncorrect'], 406);
         }
 
-        foreach ($device_history_list as $row) {
+        /*foreach ($device_history_list as $row) {
             Device::firstOrCreate(array('id' => $row['device_id']));
         }
+        */
 
-        DeviceHistory::insert($device_history_list);
+        try {
+            DeviceHistory::sendMail($device_history_list);
+        } catch (\Exception $e) {
+            return response()->json(['err' => 'SMTP Error: ' . $e->getMessage()], 406);
+        }
+
+        #DeviceHistory::insert($device_history_list);
         return response()->json(['msg' => $device_history_list], 201);
     }
 
