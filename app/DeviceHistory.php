@@ -12,7 +12,8 @@ class DeviceHistory extends Model
 {
     protected $table = 'device_history';
     protected $fillable = ['device_id', 'co2', 'temp', 'rh', 'created_at'];
-
+    
+    public static $checkItems = ['co2', 'temp', 'rh']; 
     public static $co2Pattern = '/CO2\(([0-9]+) ppm\)/';
     public static $tempPattern = '/temp\(([0-9]+)\)/';
     public static $rhPattern = '/rh\(([0-9]+) %\)/';
@@ -42,38 +43,48 @@ class DeviceHistory extends Model
 	    return $rows;
     }
 
-    public static function sendMail($content) {
+    public static function sendMail($rows) {
         $threshold = Threshold::first();
         
-        if (empty($threshold)) {
+        if (!count($threshold)) {
             return Null;
         }
 
         $subjects = [];
-        $keys = ['co2', 'temp', 'rh'];
 
-        foreach ($content as $row) {
+        foreach ($rows as $row) {
             $msg = Null;
 
-            foreach ($keys as $key) {
-                if ($row[$key] > $threshold->{$key}) {
-                    $msg .= sprintf('%s(%s) is higher than threshold(%s). ', $key, $row['co2'], $threshold->co2);
+            foreach (self::$checkItems as $item) {
+                if ($row[$item] > $threshold->{$item}) {
+                    $msg .= sprintf('%s(%s) is higher than threshold(%s). ', $item, $row[$item], $threshold->{$item});
                 }
             }
+        
+            if (empty($msg)) {
+                continue;
+            }
 
+            $msg = sprintf('%s, Device %s, %s<br/>', $row['record_at'], $row['device_id'], $msg);
+            $client = Client::where('device_account', '=', $row['device_id'])->first();
 
-            if (!empty($msg)) {
-                $client = Client::where('device_account', '=', $row['device_id'])->first();
+            if (!count($client)) {
+                continue;
+            }
 
-                if (count($client)) {
-                    $email = $client->user->email;
-                    $msg = sprintf('Device %s: %s<br/>', $row['device_id'], $msg);
+            $emails = [$client->user->email];
+            $departments = $client->departments;
+                        
+            foreach ($departments as $department) {
+                $email = $department->user->email;
+                $emails[] = $email;
+            }
 
-                    if (isset($subjects[$email])) {
-                        $subjects[$client->user->email] .= $msg;
-                    } else {
-                        $subjects[$client->user->email] = $msg;
-                    }
+            foreach ($emails as $email) {
+                if (isset($subjects[$email])) {
+                    $subjects[$email] .= $msg;
+                } else {
+                    $subjects[$email] = $msg;
                 }
             }
         }

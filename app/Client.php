@@ -10,7 +10,7 @@ class Client extends Model
     public $timestamps = false;
 
     public function departments() {
-        return $this->hasMany(Department::class);
+        return $this->hasMany(Department::class, 'client_id', 'user_id');
     }
 
     public function user() {
