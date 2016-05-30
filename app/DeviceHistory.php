@@ -121,4 +121,8 @@ class DeviceHistory extends Model
     public function scopeOfDevice($query, $deviceId) {
         return $query->where('device_id', $deviceId);
     }
+
+    public function scopeLike($query, $deviceAccount) {
+        return $query->where('device_id', 'like', "{$deviceAccount}%");
+    }
 }
