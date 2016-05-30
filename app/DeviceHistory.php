@@ -12,9 +12,9 @@ class DeviceHistory extends Model
 {
     protected $table = 'device_history';
     protected $fillable = ['device_id', 'co2', 'temp', 'rh', 'created_at'];
- 
+
     public static $device_name = 'A001-';
-    public static $checkItems = ['co2', 'temp', 'rh']; 
+    public static $checkItems = ['co2', 'temp', 'rh'];
     public static $co2Pattern = '/CO2\(([0-9]+) ppm\)/';
     public static $tempPattern = '/temp\(([0-9]+)\)/';
     public static $rhPattern = '/rh\(([0-9]+) %\)/';
@@ -46,7 +46,7 @@ class DeviceHistory extends Model
 
     public static function sendMail($rows) {
         $threshold = Threshold::first();
-        
+
         if (!count($threshold)) {
             return Null;
         }
@@ -61,21 +61,21 @@ class DeviceHistory extends Model
                     $msg .= sprintf('%s(%s) is higher than threshold(%s). ', $item, $row[$item], $threshold->{$item});
                 }
             }
-        
+
             if (empty($msg)) {
                 continue;
             }
 
             $msg = sprintf('%s, Device %s, %s<br/>', $row['record_at'], $row['device_id'], $msg);
-            $client = Client::where('device_account', '=', $row['device_id'])->first();
-
+            $device_account = explode("-",$row['device_id'])[0];
+            $client = Client::where('device_account', '=', $device_account)->first();
             if (!count($client)) {
                 continue;
             }
 
             $emails = [$client->user->email];
             $departments = $client->departments;
-                        
+
             foreach ($departments as $department) {
                 $email = $department->user->email;
                 $emails[] = $email;
@@ -89,11 +89,11 @@ class DeviceHistory extends Model
                 }
             }
         }
-        
+
         if(empty($subjects)) {
             return Null;
         }
-            
+
         foreach ($subjects as $to => $body) {
             Mail::send('emails.warning', ['to' => $to, 'body' => $body], function ($message) use ($to, $body) {
                 $message->to($to)->subject('Warning')->setBody($body);
