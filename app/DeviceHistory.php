@@ -12,7 +12,8 @@ class DeviceHistory extends Model
 {
     protected $table = 'device_history';
     protected $fillable = ['device_id', 'co2', 'temp', 'rh', 'created_at'];
-    
+ 
+    public static $device_name = 'A001-';
     public static $checkItems = ['co2', 'temp', 'rh']; 
     public static $co2Pattern = '/CO2\(([0-9]+) ppm\)/';
     public static $tempPattern = '/temp\(([0-9]+)\)/';
@@ -30,7 +31,7 @@ class DeviceHistory extends Model
 		        continue;
 
 	        $rows[] = [
-		        'device_id' => $fields[0],
+		        'device_id' => self::$device_name . (int)$fields[0],
 		        'co2' => (preg_match(self::$co2Pattern, $fields[6], $matched) !== False) ? $matched[1] : -1,
 		        'temp' => (preg_match(self::$tempPattern, $fields[7], $matched) !== False) ? $matched[1] : -1,
 		        'rh' => (preg_match(self::$rhPattern, $fields[8], $matched) !== False) ? $matched[1] : -1,
@@ -92,7 +93,7 @@ class DeviceHistory extends Model
         if(empty($subjects)) {
             return Null;
         }
-
+            
         foreach ($subjects as $to => $body) {
             Mail::send('emails.warning', ['to' => $to, 'body' => $body], function ($message) use ($to, $body) {
                 $message->to($to)->subject('Warning')->setBody($body);

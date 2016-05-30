@@ -39,7 +39,7 @@ class DeviceHistoryController extends Controller
             return response()->json(['err' => 'SMTP Error: ' . $e->getMessage()], 406);
         }
 
-        #DeviceHistory::insert($device_history_list);
+        DeviceHistory::insert($device_history_list);
         return response()->json(['msg' => $device_history_list], 201);
     }
 
