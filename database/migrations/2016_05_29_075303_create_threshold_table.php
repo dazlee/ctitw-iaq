@@ -13,6 +13,7 @@ class CreateThresholdTable extends Migration
     public function up()
     {
         Schema::create('threshold', function (Blueprint $table) {
+            $table->increments('id');
             $table->float('co2');
             $table->float('temp');
             $table->float('rh');

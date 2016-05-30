@@ -31,6 +31,9 @@ Route::post('/files/{file_id}/delete',     ['middleware' => ['role:client'], 'us
 
 Route::post('client/{client_id}/file', ['middleware' => ['role:client'], 'uses' => 'FilesController@uploadFile']);
 
+Route::get('/settings',      ['middleware' => ['role:admin'], 'uses' => 'SettingController@index']);
+Route::post('/settings',     ['middleware' => ['role:admin'], 'uses' => 'SettingController@update']);
+
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/client/{id}/stats',   ['as' => '_client_stats',    'uses' => 'StatsController@index']);
     Route::get('/client/{id}/history', ['as' => '_client_history',  'uses' => 'StatsController@history']);
