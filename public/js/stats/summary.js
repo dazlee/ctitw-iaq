@@ -15,5 +15,6 @@ require.config({
 });
 
 require(["client/summary"], function (Summary) {
-    Summary.initialize();
+    var deviceAccount = document.querySelector(".stats").dataset.deviceAccount;
+    Summary.initialize(deviceAccount);
 });

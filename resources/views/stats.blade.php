@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="page-wrapper dashboard" id="page-wrapper">
+<div class="page-wrapper dashboard stats" id="page-wrapper" data-device-account="<?php echo $deviceAccount;?>">
     <div class="row">
         <div class="col-lg-12">
             <h1 class="page-header">整體環境 - {{ $name }}</h1>

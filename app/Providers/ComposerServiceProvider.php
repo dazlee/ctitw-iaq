@@ -18,6 +18,10 @@ class ComposerServiceProvider extends ServiceProvider
         );
 
         view()->composer(
+            'stats', 'App\ViewComposers\StatsComposer'
+        );
+
+        view()->composer(
             'partials.tables.agent-account-table', 'App\ViewComposers\AgentComposer'
         );
 
