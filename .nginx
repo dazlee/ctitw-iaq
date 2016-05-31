@@ -1,0 +1,41 @@
+### Nginx Configutaion
+
+# 1.  Copy content to "/etc/nginx/sites-available/default" or a new file "/etc/nginx/sites-available/<file name>"
+# 1.1 (option) If you create a new file in "sites-available/", do ln -s /etc/nginx/sites-available/<file name> /etc/nginx/site-enabled/<file name>
+
+server {
+    listen 80;
+
+    root /var/www/ctitw-iaq/public; # 1.2 location of your service dir 
+    index index.php index.html index.htm;
+
+    server_name laravel.local.com; # 1.3 (option) domain name, please add the "<nginx ip> <host name>" to /etc/hosts in your computer
+
+    location / {
+	    try_files $uri $uri/ /index.php?$query_string;
+    }
+	
+    location ~ \.php$ {
+        try_files $uri /index.php =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php5-fpm.sock; # 1.4 (option) php version
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
+
+# 2. Change the owner of service dir, do "chown -R www-data:www-data /var/www/ctitw-iaq"
+
+# 3. (Opton) If you don't user www-data, Please follow the step to change the service owner.
+# 3.1 Modify the frist line of "user <username>" in /etc/nginx/nginx.conf
+# 3.2  /etc/php5/fpm/pool.d/www.conf
+#      user = <user name>
+#      group = <user group>
+#      listen.owner = <user name>
+#      listen.group = <user group>
+#      listen.mode = 0666
+# 3.3 Change the owner of service dir, do "chown -R <user name>:<user group> /var/www/ctitw-iaq"
+
+# 4. sudo service nginx restart; sudo service php-fpm restart
+
