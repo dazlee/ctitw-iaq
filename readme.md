@@ -16,6 +16,10 @@
 
     php artisan migrate # generate database table
 
+### 4. install memcached
+    sudo apt-get install -y memcached php5-memcached
+    sudo service <apache2/nginx> restart
+
 ### ps. execute these commands if you are going to reconstruct DB
     composer dump-autoload
     php artisan migrate:refresh
