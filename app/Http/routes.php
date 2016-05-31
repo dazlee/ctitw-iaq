@@ -20,25 +20,30 @@ Route::get('/', ['uses' => 'HomeController@index']);
 
 Route::auth();
 
-Route::get('/dashboard/{device_id}',       ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
-Route::get('/devices/{id}',         ['middleware' => 'auth', 'uses' => 'DashboardController@index']);
-Route::get('/stats',                ['middleware' => 'auth', 'uses' => 'StatsController@index']);
-Route::get('/history',              ['middleware' => 'auth', 'uses' => 'StatsController@history']);
-Route::get('/all',                  ['middleware' => 'auth', 'uses' => 'StatsController@all']);
-Route::get('/files',                ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@index']);
-Route::get('/files/{file_id}',      ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@downloadFile']);
+Route::get('/dashboard/{device_id}',       ['middleware' => ['role:client'], 'uses' => 'DashboardController@index']);
+// Route::get('/devices/{id}',                ['middleware' => ['role:client'], 'uses' => 'DashboardController@index']);
+Route::get('/stats',                       ['middleware' => ['role:client'], 'uses' => 'StatsController@index']);
+Route::get('/history',                     ['middleware' => ['role:client'], 'uses' => 'StatsController@history']);
+Route::get('/all',                         ['middleware' => ['role:client'], 'uses' => 'StatsController@all']);
+Route::get('/files',                       ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@index']);
+Route::get('/files/{file_id}',             ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@downloadFile']);
 Route::post('/files/{file_id}/delete',     ['middleware' => ['role:client'], 'uses' => 'FilesController@deleteFile']);
 
-Route::post('client/{client_id}/file', ['middleware' => ['role:client'], 'uses' => 'FilesController@uploadFile']);
+Route::post('client/{client_id}/file',     ['middleware' => ['role:client'], 'uses' => 'FilesController@uploadFile']);
 
-Route::get('/settings',      ['middleware' => ['role:admin'], 'uses' => 'SettingController@index']);
-Route::post('/settings',     ['middleware' => ['role:admin'], 'uses' => 'SettingController@update']);
+Route::get('/settings',                    ['middleware' => ['role:admin|client'], 'uses' => 'SettingController@index']);
 
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/client/{id}/stats',   ['as' => '_client_stats',    'uses' => 'StatsController@index']);
     Route::get('/client/{id}/history', ['as' => '_client_history',  'uses' => 'StatsController@history']);
     Route::get('/client/{id}/all',     ['as' => '_client_all',      'uses' => 'StatsController@all']);
     Route::get('/client/{id}/dashboard/{device_id}',      ['as' => '_client_device', 'uses' => 'DashboardController@indexForAdmin']);
+
+    Route::post('/settings',           ['uses' => 'SettingController@update']);
+});
+
+Route::group(['middleware' => ['role:client']], function () {
+    Route::post('/client/{client_id}/settings',     ['uses' => 'SettingController@updateClientSetting']);
 });
 
 Route::group(['prefix'=>'accounts'], function () {

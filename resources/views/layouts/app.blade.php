@@ -119,7 +119,7 @@
                         <a href="/files"><i class="fa fa-users fa-fw"></i> 檔案列表</span></a>
                     </li>
                     @endrole
-                    @role(['admin'])
+                    @role(['admin', 'client'])
                     <li>
                         <a href="/settings"><i class="fa fa-users fa-fw"></i> 設定</span></a>
                     </li>
