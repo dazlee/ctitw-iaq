@@ -47,6 +47,9 @@ Route::group(['prefix'=>'accounts'], function () {
     Route::post('agent',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createAgent']);
     Route::post('agent/{id}', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@updateAgent']);
 
+    Route::post('agent/{id}/deactive', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@deactive']);
+    Route::post('agent/{id}/active',   ['middleware' => ['role:admin'], 'uses' => 'AccountsController@active']);
+
     Route::get('client',      ['as' => 'clients', 'middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@client']);
     Route::get('client/{id}', ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@clientDetails']);
     Route::post('client',     ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@createClient']);

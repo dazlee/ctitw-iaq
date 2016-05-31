@@ -9,8 +9,8 @@
                         <th>Email</th>
                         @role('admin')
                         <th></th>
-                        <th></th>
                         @endrole
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>

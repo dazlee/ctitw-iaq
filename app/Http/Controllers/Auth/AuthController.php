@@ -7,6 +7,7 @@ use App\Role;
 use App\Permission;
 use Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
@@ -47,6 +48,13 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+    }
+
+    public function getCredentials(Request $request)
+    {
+        $credentials = $request->only($this->loginUsername(), 'password');
+
+        return array_add($credentials, 'active', '1');
     }
 
     /**

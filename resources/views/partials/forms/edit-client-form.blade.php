@@ -90,5 +90,28 @@
                 </div>
             </div>
         </form>
+
+
+        @if ($client->user['active'])
+        <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent/'.$client->user->id).'/deactive' }}">
+            {!! csrf_field() !!}
+            <div class="form-group">
+                <div class="col-md-1 col-md-offset-9">
+                    <button type="submit" class="btn btn-danger">停權</button>
+                </div>
+            </div>
+        </form>
+        @endif
+        @if (!$client->user['active'])
+        <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent/'.$client->user->id).'/active' }}">
+            {!! csrf_field() !!}
+            <div class="form-group">
+                <div class="col-md-1 col-md-offset-9">
+                    <button type="submit" class="btn btn-success">復權</button>
+                </div>
+            </div>
+        </form>
+        @endif
     </div>
+
 </div>

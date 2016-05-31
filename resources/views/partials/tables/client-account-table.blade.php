@@ -10,6 +10,7 @@
                         <th>帳號上限</th>
                         <th>儀器帳號</th>
                         @role('admin')
+                        <th>使用中</th>
                         <th></th>
                         @endrole
                         <th></th>
@@ -24,6 +25,9 @@
                             <td>{{$client['user_limit']}}</td>
                             <td>{{$client->device_account}}</td>
                             @role('admin')
+                            <td>
+                                {{$client->user['active'] ? "Yes" : "No"}}
+                            </td>
                             <td>
                                 <a target="_blank" href="{{ url('?client_id=' . $client->user_id) }}" class="btn btn-link">帳號清單</a>
                             </td>
