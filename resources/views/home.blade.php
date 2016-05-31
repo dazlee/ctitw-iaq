@@ -4,7 +4,11 @@
 <div class="page-wrapper dashboard" id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">濟耀國際</h1>
+            @if (Auth::guest())
+                <h1 class="page-header">濟耀國際</h1>
+            @else
+                <h1 class="page-header">{{ Auth::user()->name }}</h1>
+            @endif
         </div>
     </div>
     @role('admin')
