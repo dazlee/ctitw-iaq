@@ -15,9 +15,9 @@ class DeviceHistory extends Model
     protected $fillable = ['device_id', 'co2', 'temp', 'rh', 'created_at'];
 
     public static $checkItems = ['co2', 'temp', 'rh'];
-    public static $co2Pattern = '/CO2\(([0-9]+) ppm\)/';
-    public static $tempPattern = '/temp\(([0-9]+)\)/';
-    public static $rhPattern = '/rh\(([0-9]+) %\)/';
+    public static $co2Pattern = '/CO2\((\-?[0-9]+) ppm\)/';
+    public static $tempPattern = '/temp\((\-?[0-9]+)\)/';
+    public static $rhPattern = '/rh\((\-?[0-9]+) %\)/';
 
     public static function parseContent($deviceAccount, $content) {
         $rows = [];
@@ -30,11 +30,21 @@ class DeviceHistory extends Model
 	        if (count($fields) !== 9)
 		        continue;
 
+            $co2 = (preg_match(self::$co2Pattern, $fields[6], $matched) !== False) ? (float)$matched[1] : 0;
+            $temp = (preg_match(self::$tempPattern, $fields[7], $matched) !== False) ? (float)$matched[1] : 0;
+            $rh = (preg_match(self::$rhPattern, $fields[8], $matched) !== False) ? (float)$matched[1] : 0;
+
+            $co2 = $co2 > 3000 ? 3000 : $co2;
+            $co2 = $co2 < 0 ? 0 : $co2;
+            $temp = $temp > 40 ? 40 : $temp;
+            $temp = $temp < 0 ? 0 : $temp;
+            $rh = $rh > 100 ? 100 : $rh;
+            $rh = $rh < 0 ? 0 : $rh;
 	        $rows[] = [
 		        'device_id' => $deviceAccount . '-' . (int)$fields[0],
-		        'co2' => (preg_match(self::$co2Pattern, $fields[6], $matched) !== False) ? $matched[1] : -1,
-		        'temp' => (preg_match(self::$tempPattern, $fields[7], $matched) !== False) ? $matched[1] : -1,
-		        'rh' => (preg_match(self::$rhPattern, $fields[8], $matched) !== False) ? $matched[1] : -1,
+		        'co2' => $co2,
+		        'temp' => $temp,
+		        'rh' => $rh,
 		        'record_at' => sprintf("%s-%s-%s %s:%s:00", $fields[1], $fields[2], $fields[3], $fields[4], $fields[5]),
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
