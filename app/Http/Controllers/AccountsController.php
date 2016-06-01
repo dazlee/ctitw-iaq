@@ -77,10 +77,7 @@ class AccountsController extends Controller
             $user->agent()->save($agent);
         });
 
-        return view('accounts', array(
-            "name"      => "經銷商",
-            "type"      => "agent",
-        ));
+        return Redirect::back();
     }
     public function updateAgent (Request $request, $agentId)
     {
@@ -142,7 +139,7 @@ class AccountsController extends Controller
             $user->client()->save($client);
         });
 
-        return Redirect::route('clients');
+        return Redirect::back();
     }
     public function updateClient (Request $request, $clientId)
     {
@@ -312,6 +309,6 @@ class AccountsController extends Controller
 
             $user->delete();
         }
-        return Redirect::back();
+        return redirect('/');
     }
 }

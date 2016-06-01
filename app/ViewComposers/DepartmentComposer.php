@@ -28,7 +28,7 @@ class DepartmentComposer
         if ($user) {
             if ($user->hasRole('admin')) {
                 $this->departments = empty($client_id) ? Department::all() : Department::where('client_id', '=', $client_id)->get();
-                $this->userLimit = empty($client_id) ? Client::where("user_id", "=", $client_id)->user_limit : -1;
+                $this->userLimit = empty($client_id) ? 0 : Client::where("user_id", "=", $client_id)->first()->user_limit;
             } else if ($user->hasRole('client')) {
                 $this->departments = Department::where('client_id', '=', $user->id)->get();
                 $this->userLimit = $user->client->user_limit;

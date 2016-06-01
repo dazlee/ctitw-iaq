@@ -128,15 +128,23 @@
                 <h3 class="page-header">除權：將會刪除使用者所有資料，無法復原</h3>
             </div>
         </div>
-        <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent/'.$client->user->id).'/delete' }}">
+        <form id="delete-client" class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent/'.$client->user->id).'/delete' }}">
             {!! csrf_field() !!}
             <div class="form-group">
                 <div class="col-md-1">
-                    <button type="submit" class="btn btn-warning">除權</button>
+                    <button id="delete-client-button" type="button" class="btn btn-warning">除權</button>
                 </div>
             </div>
         </form>
         @endrole
     </div>
-
 </div>
+<script>
+    var deleteBtn = document.getElementById("delete-client-button");
+    deleteBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (confirm ("確定除權？\n此動作將無法復原")) {
+            document.getElementById("delete-client").submit();
+        }
+    });
+</script>
