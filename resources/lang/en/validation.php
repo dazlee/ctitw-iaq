@@ -101,7 +101,7 @@ return [
         'user_limit' => [
             'unique'        => 'The :attribute need to be set.',
             'between'       => 'The :attribute must be between :min - :max.',
-            'max'           => 'You have reach your :attribute, max is :max.',
+            'max'           => 'You have reach your :attribute.',
         ],
         'device_account' => [
             'unique' => 'The :attribute is repeated',

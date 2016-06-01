@@ -47,13 +47,19 @@ Route::group(['middleware' => ['role:client']], function () {
 });
 
 Route::group(['prefix'=>'accounts'], function () {
-    Route::get('agent',       ['as' => 'agents', 'middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
-    Route::get('agent/{id}',  ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agentDetails']);
-    Route::post('agent',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createAgent']);
-    Route::post('agent/{id}', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@updateAgent']);
 
-    Route::post('agent/{id}/deactive', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@deactive']);
-    Route::post('agent/{id}/active',   ['middleware' => ['role:admin'], 'uses' => 'AccountsController@active']);
+
+    Route::group(['middleware' => ['role:admin']], function () {
+        Route::get('agent',       ['as' => 'agents', 'middleware' => ['role:admin'], 'uses' => 'AccountsController@agent']);
+        Route::get('agent/{id}',  ['middleware' => ['role:admin'], 'uses' => 'AccountsController@agentDetails']);
+        Route::post('agent',      ['middleware' => ['role:admin'], 'uses' => 'AccountsController@createAgent']);
+        Route::post('agent/{id}', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@updateAgent']);
+
+        Route::post('agent/{id}/deactive', ['middleware' => ['role:admin'], 'uses' => 'AccountsController@deactive']);
+        Route::post('agent/{id}/active',   ['middleware' => ['role:admin'], 'uses' => 'AccountsController@active']);
+        Route::post('agent/{id}/delete',   ['middleware' => ['role:admin'], 'uses' => 'AccountsController@delete']);
+    });
+
 
     Route::get('client',      ['as' => 'clients', 'middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@client']);
     Route::get('client/{id}', ['middleware' => ['role:admin|agent'], 'uses' => 'AccountsController@clientDetails']);

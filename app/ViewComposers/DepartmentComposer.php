@@ -6,12 +6,14 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Input;
 use Auth;
 use App\User;
+use App\Client;
 use App\Department;
 
 class DepartmentComposer
 {
 
     protected $departments = [];
+    protected $userLimit = -1;
     /**
      * Create a new profile composer.
      *
@@ -26,8 +28,10 @@ class DepartmentComposer
         if ($user) {
             if ($user->hasRole('admin')) {
                 $this->departments = empty($client_id) ? Department::all() : Department::where('client_id', '=', $client_id)->get();
+                $this->userLimit = empty($client_id) ? Client::where("user_id", "=", $client_id)->user_limit : -1;
             } else if ($user->hasRole('client')) {
                 $this->departments = Department::where('client_id', '=', $user->id)->get();
+                $this->userLimit = $user->client->user_limit;
             }
         }
     }
@@ -41,5 +45,6 @@ class DepartmentComposer
     public function compose(View $view)
     {
         $view->with('departments', $this->departments);
+        $view->with('user_limit', $this->userLimit);
     }
 }

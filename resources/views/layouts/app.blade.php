@@ -88,7 +88,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 儀器<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-desktop fa-fw"></i> 儀器<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             @foreach ($devices as $device)
                                 <li>
@@ -116,12 +116,12 @@
                     @endrole
                     @role(['admin', 'client'])
                     <li>
-                        <a href="/files"><i class="fa fa-users fa-fw"></i> 檔案列表</span></a>
+                        <a href="/files"><i class="fa fa-file fa-fw"></i> 檔案列表</span></a>
                     </li>
                     @endrole
                     @role(['admin', 'client'])
                     <li>
-                        <a href="/settings"><i class="fa fa-users fa-fw"></i> 設定</span></a>
+                        <a href="/settings"><i class="fa fa-cog fa-fw"></i> 設定</span></a>
                     </li>
                     @endrole
                 </ul>

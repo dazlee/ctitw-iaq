@@ -85,7 +85,7 @@
             <!-- end of right column -->
 
             <div class="form-group">
-                <div class="col-md-8 col-md-offset-4">
+                <div class="col-md-8">
                     <button type="submit" class="btn btn-primary">送出</button>
                 </div>
             </div>
@@ -93,25 +93,50 @@
 
 
         @if ($client->user['active'])
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">停權：使用者將無法登入及使用</h3>
+            </div>
+        </div>
         <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent/'.$client->user->id).'/deactive' }}">
             {!! csrf_field() !!}
             <div class="form-group">
-                <div class="col-md-1 col-md-offset-9">
+                <div class="col-md-1">
                     <button type="submit" class="btn btn-danger">停權</button>
                 </div>
             </div>
         </form>
         @endif
         @if (!$client->user['active'])
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">復權：恢復使用者登入及使用權利</h3>
+            </div>
+        </div>
         <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent/'.$client->user->id).'/active' }}">
             {!! csrf_field() !!}
             <div class="form-group">
-                <div class="col-md-1 col-md-offset-9">
+                <div class="col-md-1">
                     <button type="submit" class="btn btn-success">復權</button>
                 </div>
             </div>
         </form>
         @endif
+        @role('admin')
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">除權：將會刪除使用者所有資料，無法復原</h3>
+            </div>
+        </div>
+        <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent/'.$client->user->id).'/delete' }}">
+            {!! csrf_field() !!}
+            <div class="form-group">
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-warning">除權</button>
+                </div>
+            </div>
+        </form>
+        @endrole
     </div>
 
 </div>

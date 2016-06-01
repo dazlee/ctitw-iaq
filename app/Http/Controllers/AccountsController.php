@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 use App\Http\Requests;
 use DB;
@@ -15,9 +16,14 @@ use App\Agent;
 use App\Client;
 use App\Department;
 use App\Device;
+use App\DeviceHistory;
+use App\Threshold;
+use App\UserFile;
 
 class AccountsController extends Controller
 {
+    private $uploadBasePath = '/uploads';
+
     public function index () {
         return view('accounts');
     }
@@ -210,7 +216,7 @@ class AccountsController extends Controller
     }
     public function createDepartment(Request $request) {
         $departmentCount = Department::where("client_id", "=", Auth::id())->count();
-        $userLimit = Client::where("user_id", "=", Auth::id())->first()->user_limit;
+        $userLimit = Client::where("user_id", "=", Auth::id())->first()->user_limit - 1;
         $data = [
             'user_limit' => $departmentCount
         ];
@@ -286,6 +292,25 @@ class AccountsController extends Controller
                 $depUser->active = true;
                 $depUser->save();
             }
+        }
+        return Redirect::back();
+    }
+
+    public function delete (Request $request, $id) {
+        $user = User::find($id);
+        if ($user->hasRole('client')) {
+            Device::where("client_id", "=", $id)->delete();
+            Department::where("client_id", "=", $id)->delete();
+            Threshold::where("user_id", "=", $id)->delete();
+            UserFile::where("user_id", "=", $id)->delete();
+            Client::where("user_id", "=", $id)->delete();
+
+            $destinationPath = base_path() . $this->uploadBasePath . '/' . $user->username;
+            if(File::exists($destinationPath)) {
+                File::deleteDirectory($destinationPath);
+            }
+
+            $user->delete();
         }
         return Redirect::back();
     }
