@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Threshold;
 use Mail;
 use App\Client;
+use App\Department;
 use App\User;
 
 class DeviceHistory extends Model
@@ -57,14 +58,16 @@ class DeviceHistory extends Model
             }
         }
 
+        $adminEmail = Role::where("name", "=", "admin")->first()->users()->first()->email;
         $subjects = [];
+        $body = "";
 
         foreach ($rows as $row) {
             $msg = Null;
 
             foreach (self::$checkItems as $item) {
                 if ($row[$item] > $threshold->{$item}) {
-                    $msg .= sprintf('%s(%s) is higher than threshold(%s). ', $item, $row[$item], $threshold->{$item});
+                    $msg .= sprintf('%s值(%s) 超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
                 }
             }
 
@@ -72,34 +75,35 @@ class DeviceHistory extends Model
                 continue;
             }
 
-            $msg = sprintf('%s, Device %s, %s<br/>', $row['record_at'], $row['device_id'], $msg);
-
-            $emails = [$client->user->email];
-            $departments = $client->departments;
-
-            foreach ($departments as $department) {
-                $email = $department->user->email;
-                $emails[] = $email;
+            $index = explode('-', $row['device_id'])[1];
+            $device = Device::where("client_id", "=", $client->user_id)->where("index", "=", $index)->first();
+            if (!isset($device)) {
+                continue;
             }
-
-            foreach ($emails as $email) {
-                if (isset($subjects[$email])) {
-                    $subjects[$email] .= $msg;
-                } else {
-                    $subjects[$email] = $msg;
-                }
-            }
+            $deviceName = $device->name;
+            $msg = sprintf('%s, 儀器：%s(%s), %s<br/>', $row['record_at'], $deviceName, $row['device_id'], $msg);
+            $body .= $msg;
         }
 
-        if(empty($subjects)) {
+        if(empty($body)) {
             return Null;
         }
 
-        foreach ($subjects as $to => $body) {
-            Mail::send('emails.warning', ['to' => $to, 'body' => $body], function ($message) use ($to, $body) {
-                $message->to($to)->subject('Warning')->setBody($body);
-            });
+        $clientEmail = $client->user->email;
+        $departments = $client->departments;
+        $departmentMails = [];
+
+        foreach ($departments as $department) {
+            $departmentMails[] = $department->user->email;
         }
+
+        Mail::send('emails.warning', ['to' => $clientEmail, 'body' => $body], function ($message) use ($clientEmail, $departmentMails, $adminEmail, $body) {
+            $message->to($clientEmail)->cc($adminEmail);
+            foreach ($departmentMails as $departmentMail) {
+                $message->cc($departmentMail);
+            }
+            $message->subject('超標警報')->setBody($body);
+        });
     }
 
 

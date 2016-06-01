@@ -38,6 +38,14 @@ According to [Cache](https://laravel.com/docs/5.2/cache#cache-tags), file and da
 
     CACHE_DRIVER=memcached
 
+    [Class name validation .... (bug from entrust)]
+    goto:
+    vendor/zizaco/entrust/src/Entrust/Traits/EntrustRoleTrait.php:51
+    from:
+    this->belongsToMany(Config::get('auth.model'),...
+    to:
+    this->belongsToMany(Config::get('auth.providers.users.model'),...
+
 ## Installing Entrust
 User.php can use Authenticatable just fine, no need to change the extension to Eloquent. (Maybe that's the settings from previous version of Laravel.)
 
