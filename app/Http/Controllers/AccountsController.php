@@ -259,4 +259,34 @@ class AccountsController extends Controller
             "type"      => "device",
         ));
     }
+
+    public function deactive (Request $request, $id) {
+        $user = User::find($id);
+        $user->active = false;
+        $user->save();
+        if ($user->hasRole('client')) {
+            $departments = Department::where("client_id", "=", $user->id)->get();
+            foreach ($departments as $department) {
+                $depUser = User::find($department->user_id);
+                $depUser->active = false;
+                $depUser->save();
+            }
+        }
+        return Redirect::back();
+    }
+
+    public function active (Request $request, $id) {
+        $user = User::find($id);
+        $user->active = true;
+        $user->save();
+        if ($user->hasRole('client')) {
+            $departments = Department::where("client_id", "=", $user->id)->get();
+            foreach ($departments as $department) {
+                $depUser = User::find($department->user_id);
+                $depUser->active = true;
+                $depUser->save();
+            }
+        }
+        return Redirect::back();
+    }
 }

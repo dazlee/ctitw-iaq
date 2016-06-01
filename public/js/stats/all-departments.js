@@ -15,5 +15,6 @@ require.config({
 });
 
 require(["client/all-departments"], function (AllDepartments) {
-    AllDepartments.initialize();
+    var deviceAccount = document.querySelector(".stats").dataset.deviceAccount;
+    AllDepartments.initialize(deviceAccount);
 });

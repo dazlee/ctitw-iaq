@@ -17,6 +17,7 @@ class CreateThresholdTable extends Migration
             $table->float('co2');
             $table->float('temp');
             $table->float('rh');
+            $table->string('user_id')->default("");
         });
     }
 

@@ -13,9 +13,9 @@ class ThresholdTableSeeder extends Seeder
     public function run()
     {
         Threshold::insert([
-            'co2' => 200, 
-            'temp' => 8, 
-            'rh' => 40
+            'co2' => 1000,
+            'temp' => 30,
+            'rh' => 90,
         ]);
     }
 }

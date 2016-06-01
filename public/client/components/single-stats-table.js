@@ -34,7 +34,7 @@ define(["lodash",
         });
     }
     function initializeTable() {
-        fetchUtils.fetchJSON(fetchUtils.formUrl(_endpoint, _queries), {
+        fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
         .then(drawTable);

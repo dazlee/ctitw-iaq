@@ -13,13 +13,12 @@ class DeviceHistory extends Model
     protected $table = 'device_history';
     protected $fillable = ['device_id', 'co2', 'temp', 'rh', 'created_at'];
 
-    public static $device_name = 'A001-';
     public static $checkItems = ['co2', 'temp', 'rh'];
     public static $co2Pattern = '/CO2\(([0-9]+) ppm\)/';
     public static $tempPattern = '/temp\(([0-9]+)\)/';
     public static $rhPattern = '/rh\(([0-9]+) %\)/';
 
-    public static function parseContent($content) {
+    public static function parseContent($deviceAccount, $content) {
         $rows = [];
 	    $lines = explode("\n", $content);
 	    $created_at = $updated_at = date('Y-m-d G:i:s');
@@ -31,7 +30,7 @@ class DeviceHistory extends Model
 		        continue;
 
 	        $rows[] = [
-		        'device_id' => self::$device_name . (int)$fields[0],
+		        'device_id' => $deviceAccount . '-' . (int)$fields[0],
 		        'co2' => (preg_match(self::$co2Pattern, $fields[6], $matched) !== False) ? $matched[1] : -1,
 		        'temp' => (preg_match(self::$tempPattern, $fields[7], $matched) !== False) ? $matched[1] : -1,
 		        'rh' => (preg_match(self::$rhPattern, $fields[8], $matched) !== False) ? $matched[1] : -1,
@@ -44,11 +43,18 @@ class DeviceHistory extends Model
 	    return $rows;
     }
 
-    public static function sendMail($rows) {
-        $threshold = Threshold::first();
-
-        if (!count($threshold)) {
+    public static function sendMail($deviceAccount, $rows) {
+        $client = Client::where('device_account', '=', $deviceAccount)->first();
+        if (!count($client)) {
             return Null;
+        }
+
+        $threshold = Threshold::where("user_id", "=", $client->user_id)->first();
+        if (!count($threshold)) {
+            $threshold = Threshold::first();
+            if (!count($threshold)) {
+                return Null;
+            }
         }
 
         $subjects = [];
@@ -67,11 +73,6 @@ class DeviceHistory extends Model
             }
 
             $msg = sprintf('%s, Device %s, %s<br/>', $row['record_at'], $row['device_id'], $msg);
-            $device_account = explode("-",$row['device_id'])[0];
-            $client = Client::where('device_account', '=', $device_account)->first();
-            if (!count($client)) {
-                continue;
-            }
 
             $emails = [$client->user->email];
             $departments = $client->departments;

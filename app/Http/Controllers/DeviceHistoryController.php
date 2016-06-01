@@ -21,8 +21,10 @@ class DeviceHistoryController extends Controller
         }
 
         $file = $request->file($this->formDataKey);
+        $fileName = $file->getClientOriginalName();
+        $deviceAccount = explode("-", $fileName)[0];
         $content = file_get_contents($file);
-        $device_history_list = DeviceHistory::parseContent($content);
+        $device_history_list = DeviceHistory::parseContent($deviceAccount, $content);
 
         if (empty($device_history_list)) {
             return response()->json(['err' => 'The format of file is uncorrect'], 406);
@@ -34,7 +36,7 @@ class DeviceHistoryController extends Controller
         */
 
         try {
-            DeviceHistory::sendMail($device_history_list);
+            DeviceHistory::sendMail($deviceAccount, $device_history_list);
         } catch (\Exception $e) {
             return response()->json(['err' => 'SMTP Error: ' . $e->getMessage()], 406);
         }

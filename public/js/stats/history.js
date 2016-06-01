@@ -15,5 +15,6 @@ require.config({
 });
 
 require(["client/history"], function (History) {
-    History.initialize();
+    var deviceAccount = document.querySelector(".stats").dataset.deviceAccount;
+    History.initialize(deviceAccount);
 });

@@ -6,13 +6,16 @@ define(["client/components/single-stats-table",
             apiConfigs) {
 
     return {
-        initialize: function () {
+        initialize: function (deviceAccount) {
             var endpoint = apiConfigs.endpoints.devices;
             SingleStatsTable.initialize(endpoint, {
                 summary: 1,
                 nodata: 1,
+                deviceAccount: deviceAccount,
             }, "summary");
-            SingleStatsChart.initialize(endpoint);
+            SingleStatsChart.initialize(endpoint, {
+                deviceAccount: deviceAccount,
+            });
         }
     };
 });

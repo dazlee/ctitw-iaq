@@ -113,6 +113,9 @@ return [
         'file_count'  => [
             'max' => 'file is duplicated, please delete it first',
         ],
+        'file_limit'  => [
+            'max' => 'files limit is reached.',
+        ]
     ],
 
     /*

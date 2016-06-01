@@ -7,10 +7,10 @@
             <h1 class="page-header">設定</h1>
         </div>
     </div>
-    @role('admin')
+    @role(['admin', 'client'])
         <div class="row">
             <div class="col-lg-12">
-                <h3 class="page-header">上限值</h3>
+                <h3 class="page-header">Email警報上限值</h3>
             </div>
         </div>
         @include('partials.forms.threshold-form')

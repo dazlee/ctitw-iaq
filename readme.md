@@ -3,7 +3,7 @@
 ### 1. Command for auto build
     sudo apt-get install mysql-server php5-mysql nginx php5-fpm php5-cli php5-mcrypt git
     curl -sS https://getcomposer.org/installer | php
-    cp composer.phar /usr/bin
+    cp composer.phar  /usr/bin/composer
 
     composer install
     composer dump-autoload
@@ -15,6 +15,10 @@
 ### 3. migrate database tables
 
     php artisan migrate # generate database table
+
+### 4. install memcached
+    sudo apt-get install -y memcached php5-memcached
+    sudo service <apache2/nginx> restart
 
 ### ps. execute these commands if you are going to reconstruct DB
     composer dump-autoload

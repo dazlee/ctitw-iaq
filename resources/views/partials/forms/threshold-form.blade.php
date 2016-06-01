@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-lg-8">
-        <form class="form-horizontal" role="form" method="POST" action="{{ url('/settings') }}">
+        <form class="form-horizontal" role="form" method="POST" action="{{ $updateUrl }}">
             {!! csrf_field() !!}
 
             <div class="form-group{{ $errors->has('co2') ? ' has-error' : '' }}">
@@ -48,7 +48,6 @@
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-4">
                     <button type="submit" class="btn btn-primary">送出</button>
-                    <button type="reset" class="btn btn-default">重置</button>
                 </div>
             </div>
         </form>

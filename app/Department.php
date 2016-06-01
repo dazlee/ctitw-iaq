@@ -12,4 +12,8 @@ class Department extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+
+    public function client() {
+        return $this->hasOne(Client::class, 'user_id', 'client_id');
+    }
 }
