@@ -32,11 +32,14 @@
     php artisan make:seeder UserRolesSeeder
 
 ## Trouble Shooting
+### memcached settings
+
     [BadMethodCallException]
     This cache store does not support tagging.
 According to [Cache](https://laravel.com/docs/5.2/cache#cache-tags), file and database drivers do not support cache tags. Need to change following in .env
 
     CACHE_DRIVER=memcached
+### Entrust bug: Class name validation...
 
     [Class name validation .... (bug from entrust)]
     goto:
@@ -45,11 +48,11 @@ According to [Cache](https://laravel.com/docs/5.2/cache#cache-tags), file and da
     this->belongsToMany(Config::get('auth.model'),...
     to:
     this->belongsToMany(Config::get('auth.providers.users.model'),...
+### Class 'memcached' not found
 
-    Class 'Memcached' not found
     make sure memcached is running by:
     sudo service memcached status
-    if not:
+    if not, try to run these:
     sudo apt-get install mysql-server php5-mysql php5 php5-memcached memcached
     sudo service memcached restart
     sudo service nginx restart
