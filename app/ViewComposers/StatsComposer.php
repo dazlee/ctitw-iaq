@@ -32,8 +32,7 @@ class StatsComposer
             } else if ($user->hasRole('client')) {
                 $client = Client::where("user_id", "=", $user->id)->first();
             } else if ($user->hasRole('department')) {
-                $client = Department::where("user_id", "=", $user->id)->first();
-                $client->client;
+                $client = Department::where("user_id", "=", $user->id)->first()->client;
             }
 
             $this->deviceAccount = $client->device_account;

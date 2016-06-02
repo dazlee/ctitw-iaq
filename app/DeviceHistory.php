@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Threshold;
 use Mail;
 use App\Client;
+use App\Department;
 use App\User;
 
 class DeviceHistory extends Model
@@ -14,9 +15,9 @@ class DeviceHistory extends Model
     protected $fillable = ['device_id', 'co2', 'temp', 'rh', 'created_at'];
 
     public static $checkItems = ['co2', 'temp', 'rh'];
-    public static $co2Pattern = '/CO2\(([0-9]+) ppm\)/';
-    public static $tempPattern = '/temp\(([0-9]+)\)/';
-    public static $rhPattern = '/rh\(([0-9]+) %\)/';
+    public static $co2Pattern = '/CO2\((\-?[0-9]+) ppm\)/';
+    public static $tempPattern = '/temp\((\-?[0-9]+)\)/';
+    public static $rhPattern = '/rh\((\-?[0-9]+) %\)/';
 
     public static function parseContent($deviceAccount, $content) {
         $rows = [];
@@ -29,11 +30,21 @@ class DeviceHistory extends Model
 	        if (count($fields) !== 9)
 		        continue;
 
+            $co2 = (preg_match(self::$co2Pattern, $fields[6], $matched) !== False) ? (float)$matched[1] : 0;
+            $temp = (preg_match(self::$tempPattern, $fields[7], $matched) !== False) ? (float)$matched[1] : 0;
+            $rh = (preg_match(self::$rhPattern, $fields[8], $matched) !== False) ? (float)$matched[1] : 0;
+
+            $co2 = $co2 > 3000 ? 3000 : $co2;
+            $co2 = $co2 < 0 ? 0 : $co2;
+            $temp = $temp > 40 ? 40 : $temp;
+            $temp = $temp < 0 ? 0 : $temp;
+            $rh = $rh > 100 ? 100 : $rh;
+            $rh = $rh < 0 ? 0 : $rh;
 	        $rows[] = [
 		        'device_id' => $deviceAccount . '-' . (int)$fields[0],
-		        'co2' => (preg_match(self::$co2Pattern, $fields[6], $matched) !== False) ? $matched[1] : -1,
-		        'temp' => (preg_match(self::$tempPattern, $fields[7], $matched) !== False) ? $matched[1] : -1,
-		        'rh' => (preg_match(self::$rhPattern, $fields[8], $matched) !== False) ? $matched[1] : -1,
+		        'co2' => $co2,
+		        'temp' => $temp,
+		        'rh' => $rh,
 		        'record_at' => sprintf("%s-%s-%s %s:%s:00", $fields[1], $fields[2], $fields[3], $fields[4], $fields[5]),
                 'created_at' => $created_at,
                 'updated_at' => $updated_at
@@ -57,14 +68,16 @@ class DeviceHistory extends Model
             }
         }
 
+        $adminEmail = Role::where("name", "=", "admin")->first()->users()->first()->email;
         $subjects = [];
+        $body = "";
 
         foreach ($rows as $row) {
             $msg = Null;
 
             foreach (self::$checkItems as $item) {
                 if ($row[$item] > $threshold->{$item}) {
-                    $msg .= sprintf('%s(%s) is higher than threshold(%s). ', $item, $row[$item], $threshold->{$item});
+                    $msg .= sprintf('%s值(%s) 超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
                 }
             }
 
@@ -72,34 +85,35 @@ class DeviceHistory extends Model
                 continue;
             }
 
-            $msg = sprintf('%s, Device %s, %s<br/>', $row['record_at'], $row['device_id'], $msg);
-
-            $emails = [$client->user->email];
-            $departments = $client->departments;
-
-            foreach ($departments as $department) {
-                $email = $department->user->email;
-                $emails[] = $email;
+            $index = explode('-', $row['device_id'])[1];
+            $device = Device::where("client_id", "=", $client->user_id)->where("index", "=", $index)->first();
+            if (!isset($device)) {
+                continue;
             }
-
-            foreach ($emails as $email) {
-                if (isset($subjects[$email])) {
-                    $subjects[$email] .= $msg;
-                } else {
-                    $subjects[$email] = $msg;
-                }
-            }
+            $deviceName = $device->name;
+            $msg = sprintf('%s, 儀器：%s(%s), %s<br/>', $row['record_at'], $deviceName, $row['device_id'], $msg);
+            $body .= $msg;
         }
 
-        if(empty($subjects)) {
+        if(empty($body)) {
             return Null;
         }
 
-        foreach ($subjects as $to => $body) {
-            Mail::send('emails.warning', ['to' => $to, 'body' => $body], function ($message) use ($to, $body) {
-                $message->to($to)->subject('Warning')->setBody($body);
-            });
+        $clientEmail = $client->user->email;
+        $departments = $client->departments;
+        $departmentMails = [];
+
+        foreach ($departments as $department) {
+            $departmentMails[] = $department->user->email;
         }
+
+        Mail::send('emails.warning', ['to' => $clientEmail, 'body' => $body], function ($message) use ($clientEmail, $departmentMails, $adminEmail, $body) {
+            $message->to($clientEmail)->cc($adminEmail);
+            foreach ($departmentMails as $departmentMail) {
+                $message->cc($departmentMail);
+            }
+            $message->subject('超標警報')->setBody($body);
+        });
     }
 
 

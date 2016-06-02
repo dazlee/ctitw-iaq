@@ -53,17 +53,17 @@ define(["chartConfigs",
     }
 
     function initializeChart() {
-        fetchUtils.fetchJSON(_endpoint, {
+        fetchUtils.fetchJSON(_api, {
             Accept: "application/json"
         })
         .then(parseAndSaveDeviceData)
         .then(drawChart);
     }
     function refreshChart() {
-        var api = fetchUtils.formUrl(_endpoint, {
+        var api = fetchUtils.formUrl(_endpoint, _.extend({}, _queries, {
             fromDate: dateUtils.formatYMD(_period.from),
             toDate: dateUtils.formatYMD(_period.to),
-        });
+        }));
         fetchUtils.fetchJSON(api, {
             Accept: "application/json"
         })

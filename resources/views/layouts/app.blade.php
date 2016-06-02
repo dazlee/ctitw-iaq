@@ -52,8 +52,8 @@
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
                 @if (Auth::guest())
-                    <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ url('/register') }}">Register</a></li>
+                    <li><a href="{{ url('/login') }}">登入</a></li>
+                    <li><a href="{{ url('/register') }}">註冊</a></li>
                 @else
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -61,76 +61,73 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                            <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>/登出</a></li>
                         </ul>
                     </li>
                 @endif
             </ul>
         </div>
-
-
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    @if ($showSide)
-                    <li>
-                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境 <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="{{ url($statsUrl) }}">即時圖表</a>
-                            </li>
-                            <li>
-                                <a href="{{ url($historyUrl) }}">歷史圖表</a>
-                            </li>
-                            <li>
-                                <a href="{{ url($allUrl) }}">各部門資訊</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 儀器<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            @foreach ($devices as $device)
-                                <li>
-                                    <a href="{{ $dashboardBaseUrl . '/' . $device->client->device_account.'-'.$device->index }}">{{ $device->name }}</a>
-                                </li>
-                            @endforeach
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    @endif
-                    @role('admin')
-                    <li>
-                        <a href="/accounts/agent"><i class="fa fa-users fa-fw"></i> 經銷商管理</span></a>
-                    </li>
-                    @endrole
-                    @role('agent')
-                    <li>
-                        <a href="/accounts/client"><i class="fa fa-users fa-fw"></i> 客戶管理</span></a>
-                    </li>
-                    @endrole
-                    @role('client')
-                    <li>
-                        <a href="/accounts/department"><i class="fa fa-users fa-fw"></i> 客戶帳號管理</span></a>
-                    </li>
-                    @endrole
-                    @role(['admin', 'client'])
-                    <li>
-                        <a href="/files"><i class="fa fa-users fa-fw"></i> 檔案列表</span></a>
-                    </li>
-                    @endrole
-                    @role(['admin', 'client'])
-                    <li>
-                        <a href="/settings"><i class="fa fa-users fa-fw"></i> 設定</span></a>
-                    </li>
-                    @endrole
-                </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
-        </div>
-        <!-- /.navbar-static-side -->
     </nav>
-
+    <div class="navbar-default sidebar" role="navigation">
+        <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+                @if ($showSide)
+                <li>
+                    <a href="#"><i class="fa fa-dashboard fa-fw"></i> 整體環境 <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="{{ url($statsUrl) }}">即時圖表</a>
+                        </li>
+                        <li>
+                            <a href="{{ url($historyUrl) }}">歷史圖表</a>
+                        </li>
+                        <li>
+                            <a href="{{ url($allUrl) }}">各部門資訊</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-desktop fa-fw"></i> 儀器<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        @foreach ($devices as $device)
+                            <li>
+                                <a href="{{ $dashboardBaseUrl . '/' . $device->client->device_account.'-'.$device->index.'/' }}">{{ $device->name }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                @endif
+                @role('admin')
+                <li>
+                    <a href="/accounts/agent"><i class="fa fa-users fa-fw"></i> 經銷商管理</span></a>
+                </li>
+                @endrole
+                @role('agent')
+                <li>
+                    <a href="/accounts/client"><i class="fa fa-users fa-fw"></i> 客戶管理</span></a>
+                </li>
+                @endrole
+                @role('client')
+                <li>
+                    <a href="/accounts/department"><i class="fa fa-users fa-fw"></i> 客戶帳號管理</span></a>
+                </li>
+                @endrole
+                @role(['admin', 'client'])
+                <li>
+                    <a href="/files"><i class="fa fa-file fa-fw"></i> 檔案列表</span></a>
+                </li>
+                @endrole
+                @role(['admin', 'client'])
+                <li>
+                    <a href="/settings"><i class="fa fa-cog fa-fw"></i> 設定</span></a>
+                </li>
+                @endrole
+            </ul>
+        </div>
+        <!-- /.sidebar-collapse -->
+    </div>
+    <!-- /.navbar-static-side -->
     @yield('content')
 
     <!-- JavaScripts -->

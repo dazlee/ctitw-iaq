@@ -11,6 +11,11 @@
             @endif
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12">
+            歡迎回來
+        </div>
+    </div>
     @role('admin')
         <div class="row">
             <div class="col-lg-12">

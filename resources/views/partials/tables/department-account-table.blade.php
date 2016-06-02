@@ -1,5 +1,11 @@
 <div class="row">
+    <div class="col-md-4">
+        <div class="alert alert-info">
+            帳號數量上限：{{ $user_limit }}
+        </div>
+    </div>
     <div class="col-md-8 col-md-offset-1">
+
         <div class="row pt-6">
             <table class="table table-hover">
                 <thead>

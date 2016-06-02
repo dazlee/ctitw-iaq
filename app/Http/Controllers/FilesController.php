@@ -36,7 +36,7 @@ class FilesController extends Controller
         // For files, size corresponds to the file size in kilobytes.
         // limit to 25 mb
         $this->validate($request, [
-            'file' => 'required|mimes:jpg,jpeg,bmp,png,pdf,doc,docx|max:10240',
+            'file' => 'required|mimes:jpg,jpeg,bmp,png,pdf,doc,docx|max:5120',
         ]);
 
 
@@ -49,7 +49,7 @@ class FilesController extends Controller
             $fileCount = UserFile::where("file_name", "=", $fileName)->where("user_id", "=", $clientId)->get()->count();
             $validator = Validator::make(['file_count' => $fileCount, 'file_limit' => $totalFileCount], [
                 'file_count' => "integer|max:0",
-                'file_limit' => "integer|max:4",
+                'file_limit' => "integer|max:9",
             ]);
             if ($validator->fails())
             {
