@@ -20,12 +20,11 @@ class AverageBuilder extends BaseBuilder{
         }
  
         if ($this->request->query('timestamp') == 1) {
-            return [$this->key => DeviceHistory::selectRaw('record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')->ofDays(6)->sortRecord('asc')->groupBy('record_at')->get()
-            ];
+            return [$this->key => $this->query->selectRaw('record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')->groupBy('record_at')->get()];
         }
 
         if ($this->request->query('device_level') == 1) {
-            return [$this->key => DeviceHistory::selectRaw('device_id, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')->ofDays(6)->groupBy('device_id')->get()];
+            return [$this->key => $this->query->selectRaw('device_id, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')->groupBy('device_id')->get()];
         }
 
         $query = $this->query->get();
