@@ -46,6 +46,15 @@ According to [Cache](https://laravel.com/docs/5.2/cache#cache-tags), file and da
     to:
     this->belongsToMany(Config::get('auth.providers.users.model'),...
 
+    Class 'Memcached' not found
+    make sure memcached is running by:
+    sudo service memcached status
+    if not:
+    sudo apt-get install mysql-server php5-mysql php5 php5-memcached memcached
+    sudo service memcached restart
+    sudo service nginx restart
+    sudo service php5-fpm restart
+
 ## Installing Entrust
 User.php can use Authenticatable just fine, no need to change the extension to Eloquent. (Maybe that's the settings from previous version of Laravel.)
 
