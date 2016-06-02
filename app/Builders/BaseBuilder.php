@@ -13,8 +13,14 @@ class BaseBuilder {
     }
 
     protected function createQuery($request) {
+        $fromDate = $request->query('fromDate');
+        $toDate = $request->query('toDate');
         $deviceAccount = $request->query('deviceAccount');
-        
+ 
+        if (isset($fromDate) && isset($toDate) && isset($deviceAccount)) {
+            return DeviceHistory::like($deviceAccount)->betweenDates($fromDate, $toDate)->sortRecord('asc');
+        }
+
         if (isset($deviceAccount)) {
             return DeviceHistory::like($deviceAccount)->ofDays(6)->sortRecord('asc');
         }
