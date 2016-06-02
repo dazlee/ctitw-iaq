@@ -12,6 +12,7 @@ define(["client/components/realtime-info-panel",
             var endpoint = apiConfigs.endpoints.devices + deviceId;
             RealtimeInfoPanel.initialize(endpoint, {
                 latest: 1,
+                nodata: 1,
             }, "latest");
             RealtimeInfoChart.initialize(endpoint);
             SingleStatsTable.initialize(endpoint, {

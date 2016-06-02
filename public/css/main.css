@@ -40,8 +40,15 @@
     color: red;
 }
 
-.dashboard {
+#page-wrapper.dashboard {
     padding-bottom: 40px !important;
+    min-height: 350px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 51px;
+    position: absolute;
+    overflow: scroll;
 }
 
 
@@ -113,4 +120,18 @@
 
 .table>tbody>tr>td {
     vertical-align: middle;
+}
+
+
+.sidebar {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    overflow: scroll;
+}
+
+
+.container.login {
+    margin-top: 40px;
 }

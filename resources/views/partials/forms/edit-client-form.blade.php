@@ -91,7 +91,7 @@
             </div>
         </form>
 
-
+        @role('admin')
         @if ($client->user['active'])
         <div class="row">
             <div class="col-lg-12">
@@ -122,7 +122,6 @@
             </div>
         </form>
         @endif
-        @role('admin')
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="page-header">除權：將會刪除使用者所有資料，無法復原</h3>

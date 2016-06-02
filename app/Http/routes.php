@@ -20,11 +20,11 @@ Route::get('/', ['uses' => 'HomeController@index']);
 
 Route::auth();
 
-Route::get('/dashboard/{device_id}',       ['middleware' => ['role:client'], 'uses' => 'DashboardController@index']);
+Route::get('/dashboard/{device_id}',       ['middleware' => ['role:client|department'], 'uses' => 'DashboardController@index']);
 // Route::get('/devices/{id}',                ['middleware' => ['role:client'], 'uses' => 'DashboardController@index']);
-Route::get('/stats',                       ['middleware' => ['role:client'], 'uses' => 'StatsController@index']);
-Route::get('/history',                     ['middleware' => ['role:client'], 'uses' => 'StatsController@history']);
-Route::get('/all',                         ['middleware' => ['role:client'], 'uses' => 'StatsController@all']);
+Route::get('/stats',                       ['middleware' => ['role:client|department'], 'uses' => 'StatsController@index']);
+Route::get('/history',                     ['middleware' => ['role:client|department'], 'uses' => 'StatsController@history']);
+Route::get('/all',                         ['middleware' => ['role:client|department'], 'uses' => 'StatsController@all']);
 Route::get('/files',                       ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@index']);
 Route::get('/files/{file_id}',             ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@downloadFile']);
 Route::post('/files/{file_id}/delete',     ['middleware' => ['role:client'], 'uses' => 'FilesController@deleteFile']);
