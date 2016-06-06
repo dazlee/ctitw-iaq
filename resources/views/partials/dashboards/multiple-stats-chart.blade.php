@@ -6,7 +6,7 @@
             </div>
             <div id="device-selector-multiple-stats-chart" class="col-sm-10">
                 @foreach ($devices as $device)
-                    <button class="btn btn-device btn-sm mr-5" data-device-id="{{$device->client->device_account . '-' . $device->index}}">{{$device->name}}</button>
+                    <button class="btn btn-device btn-sm mr-5" data-device-id="{{$device->client->device_account . '-' . $device->index}}" data-device-name="{{$device->name}}">{{$device->name}}</button>
                 @endforeach
             </div>
         </div>
