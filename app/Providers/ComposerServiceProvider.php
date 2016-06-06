@@ -40,6 +40,11 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(
             'settings', 'App\ViewComposers\SettingComposer'
         );
+
+        view()->composer(
+            ['partials.dashboards.multiple-stats-table',
+             'partials.dashboards.multiple-stats-chart'], 'App\ViewComposers\MultipleStatsComposer'
+        );
     }
 
     /**

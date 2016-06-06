@@ -9,11 +9,13 @@ define(["lodash",
     var _tableElement;
     var _tableBodyElement;
     var _period = {};
+    var _defaultCellData = ['-', '-', '-', '-', '-', '-', '-', '-', '-'];
+    var _deviceRows = [];
 
     var _parseAndFillMinMaxAvgs;
 
     function initializeFunctions() {
-        var CellKeys = ["device_id", "co2-max", "co2-min", "co2-avg",
+        var CellKeys = ["co2-max", "co2-min", "co2-avg",
                                     "temp-max", "temp-min", "temp-avg",
                                     "rh-max", "rh-min", "rh-avg"];
         var appendChild = R.curry(function (parent, child) {
@@ -32,13 +34,40 @@ define(["lodash",
             R.forEach(appendChildToTr, tds);
             return tr;
         };
-        var mapToDataArray = function (data) {
-            return CellKeys.map(function (key) {
+        var mapDeviceIdToDataArray = function (compsed, data) {
+            var dataArray = CellKeys.map(function (key) {
                 return data[key];
             });
+            compsed[data.device_id] = dataArray;
+            return compsed;
         };
+        var generateDeviceCellArray = function (data) {
+            return _deviceRows.map(function (_deviceRow) {
+                var td = document.createElement("td");
+                td.innerHTML = _deviceRow.device_name;
+                td.class = "device-name";
+                var tds = [];
+                if (data[_deviceRow.device_id]) {
+                    tds = generateCellArray(data[_deviceRow.device_id]);
+                } else {
+                    tds = generateCellArray(_defaultCellData);
+                }
+                tds.unshift(td);
+                return tds;
+            });
+        };
+
+        var toFixed = R.curry(function (fixed, num) {
+            return num.toFixed(fixed);
+        });
+        var toFixed2 = toFixed(2);
+        var mapToFixed2 = R.map(toFixed2);
+        var mapToFixed2ForDataArray = R.mapObjIndexed(function (dataArray, key, obj) {
+            return mapToFixed2(dataArray);
+        });
+
         var appendToTBody = appendChild(_tableBodyElement);
-        var generateRows = R.map(R.compose(generateRow, generateCellArray, mapToDataArray));
+        var generateRows = R.compose(R.map(generateRow), generateDeviceCellArray, mapToFixed2ForDataArray, R.reduce(mapDeviceIdToDataArray, {}));
         var appendRowsToTBody = R.forEach(appendToTBody);
         _parseAndFillMinMaxAvgs = R.compose(appendRowsToTBody, generateRows);
     }
@@ -52,6 +81,15 @@ define(["lodash",
         _period.from = new Date();
         _period.to = new Date();
         _period.from.setDate(_period.from.getDate() - 30);
+
+        _deviceRows = document.querySelectorAll("#multiple-stats-table tbody tr");
+        _deviceRows = Array.prototype.slice.call(_deviceRows).map((ele) => {
+            return {
+                id: ele.id,
+                device_id: ele.id.split("_")[1],
+                device_name: ele.querySelector(".device-name").innerHTML
+            };
+        });
     }
     function initializeDateRangePicker() {
         $("#daterange-multiple-stats-table").datepicker({

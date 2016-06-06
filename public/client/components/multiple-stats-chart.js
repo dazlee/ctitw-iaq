@@ -12,6 +12,7 @@ define(["chartConfigs",
     var _dataTypeFilter = "co2";
     var _isDrawDeviceChart = {};
     var _period = {};
+    var _deviceIdNameMap = {};
     var _deviceSelector;
 
     var _parseAndFillMinMaxAvgs;
@@ -37,6 +38,13 @@ define(["chartConfigs",
 
             drawChart();
         });
+
+        var _deviceSelectorButtons = document.querySelectorAll("#device-selector-multiple-stats-chart button");
+        _deviceSelectorButtons = Array.prototype.slice.call(_deviceSelectorButtons);
+        _deviceIdNameMap = _deviceSelectorButtons.reduce(function (reduced, button) {
+            reduced[button.dataset.deviceId] = button.dataset.deviceName;
+            return reduced;
+        }, {});
     }
     function initializeData () {
         _period.from = new Date();
@@ -59,12 +67,6 @@ define(["chartConfigs",
         button.dataset.deviceId = key;
         button.innerHTML = key;
         return button;
-    }
-    function updateDeviceSelector() {
-        _deviceSelector.innerHTML = "";
-        R.map(_appendToDeviceSelector,
-            R.mapObjIndexed(generateDeviceSwitchButton, _isDrawDeviceChart)
-        );
     }
     function initializeUnitSelector() {
         $('#unit-selector-multiple-stats-chart a').click(function (e) {
@@ -113,7 +115,6 @@ define(["chartConfigs",
         })
         .then(parseAndSaveDeviceData)
         .then(updateIsDrawDeviceChart)
-        .then(updateDeviceSelector)
         .then(drawChart);
     }
     function refreshChart() {
@@ -137,7 +138,8 @@ define(["chartConfigs",
 
         var multipleDeviceSeries = deviceUtils.generateChartSeriesListForMultiDeviceWithDataTypeFilter(_dataTypeFilter, multipleDeviceData);
         var series = R.reduce(function (reduced, key) {
-            if (_isDrawDeviceChart[key]) {
+            if (_isDrawDeviceChart[key] && multipleDeviceSeries[key]) {
+                multipleDeviceSeries[key].name = _deviceIdNameMap[key] + " " + multipleDeviceSeries[key].name;
                 reduced.push(multipleDeviceSeries[key]);
             }
             return reduced;
