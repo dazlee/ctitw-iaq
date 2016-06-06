@@ -13,13 +13,22 @@ class BaseBuilder {
     }
 
     protected function createQuery($request) {
+        $fromDate = $request->query('fromDate');
+        $toDate = $request->query('toDate');
         $deviceAccount = $request->query('deviceAccount');
-        
-        if (isset($deviceAccount)) {
-            return DeviceHistory::like($deviceAccount)->ofDays(6)->sortRecord('asc');
+        $query = DeviceHistory::sortRecord('asc');
+
+        if (isset($fromDate) && isset($toDate)) {
+            $query = $query->betweenDates($fromDate, $toDate);
+        } else {
+            $query = $query->ofDays(6);
         }
 
-        return DeviceHistory::ofDays(6)->sortRecord('asc');
+        if (!empty($deviceAccount)) {
+            $query = $query->like($deviceAccount);
+        }
+
+        return $query;
     }
 
     protected function createQueryOfDevice($request, $deviceId) {
