@@ -4,17 +4,23 @@ define(["chartConfigs",
         "device-utils"], function (chartConfigs, _, fetchUtils, deviceUtils) {
 
     var _api, _endpoint, _queries, _responseKey;
-    var _co2Value, _co2Number;
-    var _tempValue, _tempNumber;
-    var _rhValue, _rhNumber;
+    var _co2Threshold, _co2Value, _co2Number;
+    var _tempThreshold, _tempValue, _tempNumber;
+    var _rhThreshold, _rhValue, _rhNumber;
 
     function initializeViews() {
-        _co2Value = document.querySelector("#realtime-info-co2-panel .value");
+        var co2Panel = document.querySelector("#realtime-info-co2-panel");
+        _co2Threshold = parseFloat(co2Panel.dataset.co2Threshold);
+        _co2Value = co2Panel.querySelector(".value");
         _co2Number = _co2Value.querySelector(".number");
 
-        _tempValue = document.querySelector("#realtime-info-temp-panel .value");
+        var tempPanel = document.querySelector("#realtime-info-temp-panel");
+        _tempThreshold = parseFloat(tempPanel.dataset.tempThreshold);
+        _tempValue = tempPanel.querySelector(".value");
         _tempNumber = _tempValue.querySelector(".number");
 
+        var rhPanel = document.querySelector("#realtime-info-rh-panel");
+        _rhThreshold = parseFloat(rhPanel.dataset.rhThreshold);
         _rhValue = document.querySelector("#realtime-info-rh-panel .value");
         _rhNumber = _rhValue.querySelector(".number");
     }
@@ -27,17 +33,17 @@ define(["chartConfigs",
     function refreshTableLayout (json) {
         var currentData = json[_responseKey];
 
-        if (currentData.co2 > 50) {
+        if (currentData.co2 > _co2Threshold) {
             _co2Value.classList.add('fg-red');
         } else {
             _co2Value.classList.remove('fg-red');
         }
-        if (currentData.temp > 20) {
+        if (currentData.temp > _tempThreshold) {
             _tempValue.classList.add('fg-red');
         } else {
             _tempValue.classList.remove('fg-red');
         }
-        if (currentData.rh > 20) {
+        if (currentData.rh > _rhThreshold) {
             _rhValue.classList.add('fg-red');
         } else {
             _rhValue.classList.remove('fg-red');
