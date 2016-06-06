@@ -36,7 +36,20 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    @foreach ($devices as $device)
+                        <tr id="device_{{$device->client->device_account}}-{{$device->index}}">
+                            <td class="device-name">{{$device->name}}</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
