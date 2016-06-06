@@ -45,6 +45,10 @@ class ComposerServiceProvider extends ServiceProvider
             ['partials.dashboards.multiple-stats-table',
              'partials.dashboards.multiple-stats-chart'], 'App\ViewComposers\MultipleStatsComposer'
         );
+
+        view()->composer(
+            ['partials.dashboards.realtime-info-panel'], 'App\ViewComposers\ThresholdComposer'
+        );
     }
 
     /**
