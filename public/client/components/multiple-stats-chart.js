@@ -60,12 +60,6 @@ define(["chartConfigs",
         button.innerHTML = key;
         return button;
     }
-    function updateDeviceSelector() {
-        _deviceSelector.innerHTML = "";
-        R.map(_appendToDeviceSelector,
-            R.mapObjIndexed(generateDeviceSwitchButton, _isDrawDeviceChart)
-        );
-    }
     function initializeUnitSelector() {
         $('#unit-selector-multiple-stats-chart a').click(function (e) {
             e.preventDefault();
@@ -113,7 +107,6 @@ define(["chartConfigs",
         })
         .then(parseAndSaveDeviceData)
         .then(updateIsDrawDeviceChart)
-        .then(updateDeviceSelector)
         .then(drawChart);
     }
     function refreshChart() {
@@ -137,7 +130,7 @@ define(["chartConfigs",
 
         var multipleDeviceSeries = deviceUtils.generateChartSeriesListForMultiDeviceWithDataTypeFilter(_dataTypeFilter, multipleDeviceData);
         var series = R.reduce(function (reduced, key) {
-            if (_isDrawDeviceChart[key]) {
+            if (_isDrawDeviceChart[key] && multipleDeviceSeries[key]) {
                 reduced.push(multipleDeviceSeries[key]);
             }
             return reduced;

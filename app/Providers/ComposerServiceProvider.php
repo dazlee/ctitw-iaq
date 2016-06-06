@@ -42,7 +42,8 @@ class ComposerServiceProvider extends ServiceProvider
         );
 
         view()->composer(
-            'partials.dashboards.multiple-stats-table', 'App\ViewComposers\MultipleStatsTableComposer'
+            ['partials.dashboards.multiple-stats-table',
+             'partials.dashboards.multiple-stats-chart'], 'App\ViewComposers\MultipleStatsComposer'
         );
     }
 

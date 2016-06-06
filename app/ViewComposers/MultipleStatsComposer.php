@@ -11,7 +11,7 @@ use App\Client;
 use App\Department;
 use App\Device;
 
-class MultipleStatsTableComposer
+class MultipleStatsComposer
 {
 
     protected $devices = [];

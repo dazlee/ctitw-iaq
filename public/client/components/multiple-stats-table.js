@@ -56,8 +56,18 @@ define(["lodash",
                 return tds;
             });
         };
+
+        var toFixed = R.curry(function (fixed, num) {
+            return num.toFixed(fixed);
+        });
+        var toFixed2 = toFixed(2);
+        var mapToFixed2 = R.map(toFixed2);
+        var mapToFixed2ForDataArray = R.mapObjIndexed(function (dataArray, key, obj) {
+            return mapToFixed2(dataArray);
+        });
+
         var appendToTBody = appendChild(_tableBodyElement);
-        var generateRows = R.compose(R.map(generateRow), generateDeviceCellArray, R.reduce(mapDeviceIdToDataArray, {}));
+        var generateRows = R.compose(R.map(generateRow), generateDeviceCellArray, mapToFixed2ForDataArray, R.reduce(mapDeviceIdToDataArray, {}));
         var appendRowsToTBody = R.forEach(appendToTBody);
         _parseAndFillMinMaxAvgs = R.compose(appendRowsToTBody, generateRows);
     }
