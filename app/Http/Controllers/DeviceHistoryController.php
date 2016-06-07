@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\File;
 use App\Http\Requests;
 use App\DeviceHistory;
 use App\Device;
@@ -14,6 +15,7 @@ class DeviceHistoryController extends Controller
 {
 
     private $formDataKey = 'file';
+    private $fileBasePath = '/files';
 
     public function upload(Request $request) {
         if (!$request->hasFile($this->formDataKey)) {
@@ -22,10 +24,17 @@ class DeviceHistoryController extends Controller
 
         $file = $request->file($this->formDataKey);
         $fileName = $file->getClientOriginalName();
-        $deviceAccount = explode("-", $fileName)[0];
+        $fileNameComponents = explode("-", $fileName);
+        $deviceAccount = $fileNameComponents[0];
 
         if (stripos($fileName, 'hour') !== False) {
-            $path =  public_path() . '/files';
+            $year = $fileNameComponents[1];
+            $month = (float)$fileNameComponents[2];
+            $quarter = (int)($month / 3);
+            $path = base_path() . $this->fileBasePath . '/' . $deviceAccount . '/' . $year . '/Q' . $quarter;
+            if(!File::exists($path)) {
+                File::makeDirectory($path, $mode = 0777, true, true);
+            }
             $file->move($path, $fileName);
             return response()->json(['msg' => 'Success to upload file to webserver'], 201);
         }
