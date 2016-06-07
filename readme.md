@@ -58,6 +58,13 @@ According to [Cache](https://laravel.com/docs/5.2/cache#cache-tags), file and da
     sudo service nginx restart
     sudo service php5-fpm restart
 
+### Install ZipArchive
+
+    pecl install zip
+    add 'extension=zip.so' to php.init (in /etc/php/<version>/cli, /etc/php/<version>/fpm)
+    sudo service php5-fpm restart
+    sudo service nginx restart
+
 ## Installing Entrust
 User.php can use Authenticatable just fine, no need to change the extension to Eloquent. (Maybe that's the settings from previous version of Laravel.)
 
