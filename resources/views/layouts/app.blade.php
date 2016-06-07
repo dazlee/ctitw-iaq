@@ -118,7 +118,7 @@
                     <a href="/files"><i class="fa fa-file fa-fw"></i> 檔案列表</span></a>
                 </li>
                 @endrole
-                @role(['admin', 'client'])
+                @role(['client'])
                 <li>
                     <a href="/stats-files"><i class="fa fa-file fa-fw"></i> 年度統計下載</span></a>
                 </li>
