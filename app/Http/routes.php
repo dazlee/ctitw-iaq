@@ -29,7 +29,10 @@ Route::get('/files',                       ['middleware' => ['role:admin|client'
 Route::get('/files/{file_id}',             ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@downloadFile']);
 Route::post('/files/{file_id}/delete',     ['middleware' => ['role:client'], 'uses' => 'FilesController@deleteFile']);
 
-Route::post('client/{client_id}/file',     ['middleware' => ['role:client'], 'uses' => 'FilesController@uploadFile']);
+Route::post('/client/{client_id}/file',     ['middleware' => ['role:client'], 'uses' => 'FilesController@uploadFile']);
+
+Route::get('/stats-files',                 ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@statsFiles']);
+Route::get('/stats-files/{deviceAccount}/{year}/{quarter}', ['middleware' => ['role:admin|client'], 'uses' => 'FilesController@getStatsFiles']);
 
 Route::get('/settings',                    ['middleware' => ['role:admin|client'], 'uses' => 'SettingController@index']);
 

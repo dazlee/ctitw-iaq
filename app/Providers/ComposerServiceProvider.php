@@ -49,6 +49,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(
             ['partials.dashboards.realtime-info-panel'], 'App\ViewComposers\ThresholdComposer'
         );
+
+        view()->composer(
+            'stats-files', 'App\ViewComposers\StatsFileComposer'
+        );
     }
 
     /**

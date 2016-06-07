@@ -17,6 +17,7 @@ use App\UserFile;
 class FilesController extends Controller
 {
     private $uploadBasePath = '/uploads';
+    private $filesBasePath = '/files';
     private $formDataKey = 'file';
 
     public function __construct()
@@ -94,6 +95,45 @@ class FilesController extends Controller
             $userFile->delete();
         }
 
+        return Redirect::back();
+    }
+
+
+    public function statsFiles()
+    {
+        return view('stats-files', [
+        ]);
+    }
+
+    public function getStatsFiles(Request $request, $deviceAccount, $year, $quarter)
+    {
+        $path = base_path() . $this->filesBasePath . '/' . $deviceAccount . '/' . $year . '/' . $quarter;
+        if(File::exists($path)) {
+
+            $filename = $path . "/" . $year . '-' . $quarter . ".zip";
+            if (File::exists($filename)) {
+                File::delete($filename);
+            }
+
+            $files = scandir($path);
+            $zip = new \ZipArchive;
+
+            //If there is an issue... close
+            if ($zip->open($filename, \ZipArchive::CREATE)!==TRUE) {
+                exit("cannot open <$filename>\n");
+            }else{
+                $zip->addFromString('readme.txt', $year . '-' . $quarter);
+                foreach($files as $file){
+                    if ($file === '.' || $file === '..') {
+                        continue;
+                    }
+                    $zip->addFile($path.'/'.$file, $file);
+                }
+                $zip->close();
+            }
+
+            return response()->download($filename);
+        }
         return Redirect::back();
     }
 }
