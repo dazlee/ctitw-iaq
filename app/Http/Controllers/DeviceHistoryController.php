@@ -23,6 +23,13 @@ class DeviceHistoryController extends Controller
         $file = $request->file($this->formDataKey);
         $fileName = $file->getClientOriginalName();
         $deviceAccount = explode("-", $fileName)[0];
+
+        if (stripos($fileName, 'hour') !== False) {
+            $path =  public_path() . '/files';
+            $file->move($path, $fileName);
+            return response()->json(['msg' => 'Success to upload file to webserver'], 201);
+        }
+
         $content = file_get_contents($file);
         $device_history_list = DeviceHistory::parseContent($deviceAccount, $content);
 
