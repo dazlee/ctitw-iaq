@@ -138,7 +138,7 @@ class DeviceHistory extends Model
             $count = self::ofDevice($deviceId)->count();
         }
 
-        return (($count+1)%3 == 0) ? True : False;
+        return (($count+1)%6 == 0) ? True : False;
     }
 
     public function scopeOfLastHour($query, $datetime) {
