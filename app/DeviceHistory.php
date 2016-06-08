@@ -75,13 +75,15 @@ class DeviceHistory extends Model
 
         foreach ($rows as $row) {
             $msg = Null;
-            $criticalMsg = Null;
 
             foreach (self::$checkItems as $item) {
                 if ($row[$item] > $threshold->{$item}) {
-                    $msg .= sprintf('%s值(%s) 超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
-                    if (self::isKeepingHigherInLastHour($row['device_id'], $row['record_at'], $item, $threshold->{$item})) {
-                        $criticalMsg .= sprintf('%s值(%s) 已在一小時內超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
+                    if (self::isSwitchedToAbnormal($row['device_id'], $item, $threshold->{$item})) {
+                        $msg .= sprintf('%s值(%s) 超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
+                    }
+                    
+                    if (self::isKeepingHigherDuringHours($row['device_id'], $row['record_at'], $item, $threshold->{$item})) {
+                        $msg .= sprintf('%s值(%s) 已在一小時內連續超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
                     }
                 }
             }
@@ -95,7 +97,7 @@ class DeviceHistory extends Model
                 continue;
             }
             $deviceName = $device->name;
-            $msg = sprintf('%s, 儀器：%s(%s), %s %s<br/>', $row['record_at'], $deviceName, $row['device_id'], $criticalMsg, $msg);
+            $msg = sprintf('%s, 儀器：%s(%s), %s<br/>', $row['record_at'], $deviceName, $row['device_id'], $msg);
             $body .= $msg;
         }
 
@@ -120,9 +122,23 @@ class DeviceHistory extends Model
         });
     }
 
-    public static function isKeepingHigherInLastHour($deviceId, $record_at, $item, $threshold) {
-        $hasDown = self::ofDevice($deviceId)->where($item, '<', $threshold)->ofLastHour($record_at)->count();
-        return $hasDown ? False : True;
+    public static function isSwitchedToAbnormal($deviceId, $item, $threshold) {
+        $row = self::ofDevice($deviceId)->SortRecord('desc')->first();
+        return ($row->{$item} <= $threshold) ? True : False;
+    }
+
+    public static function isKeepingHigherDuringHours($deviceId, $record_at, $item, $threshold) {
+        # find the last normal record time
+        $row = self::ofDevice($deviceId)->SortRecord('desc')->where($item, '<', $threshold)->first();
+
+        # count the number of records which are higher than theshold
+        if (count($row) > 0) {
+            $count = self::ofDevice($deviceId)->where('record_at', '>', $row->record_at)->count();
+        } else {
+            $count = self::ofDevice($deviceId)->count();
+        }
+
+        return (($count+1)%3 == 0) ? True : False;
     }
 
     public function scopeOfLastHour($query, $datetime) {
