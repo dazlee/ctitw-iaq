@@ -60,6 +60,7 @@ class DeviceHistory extends Model
             return Null;
         }
 
+
         $threshold = Threshold::where("user_id", "=", $client->user_id)->first();
         if (!count($threshold)) {
             $threshold = Threshold::first();
@@ -74,13 +75,16 @@ class DeviceHistory extends Model
 
         foreach ($rows as $row) {
             $msg = Null;
+            $criticalMsg = Null;
 
             foreach (self::$checkItems as $item) {
                 if ($row[$item] > $threshold->{$item}) {
                     $msg .= sprintf('%s值(%s) 超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
+                    if (self::isKeepingHigherInLastHour($row['device_id'], $row['record_at'], $item, $threshold->{$item})) {
+                        $criticalMsg .= sprintf('%s值(%s) 已在一小時內超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
+                    }
                 }
             }
-
             if (empty($msg)) {
                 continue;
             }
@@ -91,7 +95,7 @@ class DeviceHistory extends Model
                 continue;
             }
             $deviceName = $device->name;
-            $msg = sprintf('%s, 儀器：%s(%s), %s<br/>', $row['record_at'], $deviceName, $row['device_id'], $msg);
+            $msg = sprintf('%s, 儀器：%s(%s), %s %s<br/>', $row['record_at'], $deviceName, $row['device_id'], $criticalMsg, $msg);
             $body .= $msg;
         }
 
@@ -116,6 +120,16 @@ class DeviceHistory extends Model
         });
     }
 
+    public static function isKeepingHigherInLastHour($deviceId, $record_at, $item, $threshold) {
+        $hasDown = self::ofDevice($deviceId)->where($item, '<', $threshold)->ofLastHour($record_at)->count();
+        return $hasDown ? False : True;
+    }
+
+    public function scopeOfLastHour($query, $datetime) {
+        $date = new \DateTime($datetime);
+        $datetime = $date->modify('-1 hour')->format('Y-m-d H:i:s');
+        return $query->where('record_at', '>', $datetime);
+    }
 
     public function scopeBetweenDates($query, $fromDate, $toDate) {
         $fromDate = date_create($fromDate)->setTime(00, 00, 00);
