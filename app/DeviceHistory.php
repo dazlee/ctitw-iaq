@@ -15,9 +15,9 @@ class DeviceHistory extends Model
     protected $fillable = ['device_id', 'co2', 'temp', 'rh', 'created_at'];
 
     public static $checkItems = ['co2', 'temp', 'rh'];
-    public static $co2Pattern = '/CO2\((\-?[0-9]+) ppm\)/';
-    public static $tempPattern = '/temp\((\-?[0-9]+)\)/';
-    public static $rhPattern = '/rh\((\-?[0-9]+) %\)/';
+    public static $co2Pattern = '/CO2\((\-?[0-9]+(\.\d{1,2})?) ppm\)/';
+    public static $tempPattern = '/temp\((\-?[0-9]+(\.\d{1,2})?)\)/';
+    public static $rhPattern = '/rh\((\-?[0-9]+(\.\d{1,2})?) %\)/';
 
     public static function parseContent($deviceAccount, $content) {
         $rows = [];
