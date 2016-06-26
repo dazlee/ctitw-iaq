@@ -46,11 +46,6 @@ class DeviceHistoryController extends Controller
             return response()->json(['err' => 'The format of file is uncorrect'], 406);
         }
 
-        /*foreach ($device_history_list as $row) {
-            Device::firstOrCreate(array('id' => $row['device_id']));
-        }
-        */
-
         try {
             DeviceHistory::sendMail($deviceAccount, $device_history_list);
         } catch (\Exception $e) {

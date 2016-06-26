@@ -60,6 +60,7 @@ class DeviceHistory extends Model
             return Null;
         }
 
+
         $threshold = Threshold::where("user_id", "=", $client->user_id)->first();
         if (!count($threshold)) {
             $threshold = Threshold::first();
@@ -77,10 +78,15 @@ class DeviceHistory extends Model
 
             foreach (self::$checkItems as $item) {
                 if ($row[$item] > $threshold->{$item}) {
-                    $msg .= sprintf('%s值(%s) 超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
+                    if (self::isSwitchedToAbnormal($row['device_id'], $item, $threshold->{$item})) {
+                        $msg .= sprintf('%s值(%s) 超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
+                    }
+                    
+                    if (self::isKeepingHigherDuringHours($row['device_id'], $row['record_at'], $item, $threshold->{$item})) {
+                        $msg .= sprintf('%s值(%s) 已在一小時內連續超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
+                    }
                 }
             }
-
             if (empty($msg)) {
                 continue;
             }
@@ -116,6 +122,30 @@ class DeviceHistory extends Model
         });
     }
 
+    public static function isSwitchedToAbnormal($deviceId, $item, $threshold) {
+        $row = self::ofDevice($deviceId)->SortRecord('desc')->first();
+        return ($row->{$item} <= $threshold) ? True : False;
+    }
+
+    public static function isKeepingHigherDuringHours($deviceId, $record_at, $item, $threshold) {
+        # find the last normal record time
+        $row = self::ofDevice($deviceId)->SortRecord('desc')->where($item, '<', $threshold)->first();
+
+        # count the number of records which are higher than theshold
+        if (count($row) > 0) {
+            $count = self::ofDevice($deviceId)->where('record_at', '>', $row->record_at)->count();
+        } else {
+            $count = self::ofDevice($deviceId)->count();
+        }
+
+        return (($count+1)%6 == 0) ? True : False;
+    }
+
+    public function scopeOfLastHour($query, $datetime) {
+        $date = new \DateTime($datetime);
+        $datetime = $date->modify('-1 hour')->format('Y-m-d H:i:s');
+        return $query->where('record_at', '>', $datetime);
+    }
 
     public function scopeBetweenDates($query, $fromDate, $toDate) {
         $fromDate = date_create($fromDate)->setTime(00, 00, 00);
