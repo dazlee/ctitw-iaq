@@ -124,7 +124,8 @@ define(["chartConfigs",
                 rh: [],
             };
             return dataList.reduce(function (reduced, data) {
-                var timestamp = new Date(data.record_at).getTime();
+		var date = new Date(data.record_at);
+                var timestamp = date.getTime() - (date.getTimezoneOffset() * 60000);
                 reduced.co2.push([timestamp, data.co2]);
                 reduced.temp.push([timestamp, data.temp]);
                 reduced.rh.push([timestamp, data.rh]);
@@ -144,7 +145,8 @@ define(["chartConfigs",
                     };
                 }
                 var tempData = {};
-                var timestamp = new Date(data.record_at).getTime();
+		var date = new Date(data.record_at);
+                var timestamp = date.getTime() - (date.getTimezoneOffset() * 60000);
                 reduced[key].co2.push([timestamp, data.co2]);
                 reduced[key].temp.push([timestamp, data.temp]);
                 reduced[key].rh.push([timestamp, data.rh]);
