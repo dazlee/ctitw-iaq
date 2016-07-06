@@ -30,7 +30,7 @@ class DeviceHistoryController extends Controller
         if (stripos($fileName, 'hour') !== False) {
             $year = $fileNameComponents[1];
             $month = (float)$fileNameComponents[2];
-            $quarter = (int)($month / 3);
+            $quarter = ceil($month / 3);
             $path = base_path() . $this->fileBasePath . '/' . $deviceAccount . '/' . $year . '/Q' . $quarter;
             if(!File::exists($path)) {
                 File::makeDirectory($path, $mode = 0777, true, true);
