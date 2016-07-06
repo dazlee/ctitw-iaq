@@ -115,6 +115,10 @@ return [
         ],
         'file_limit'  => [
             'max' => 'files limit is reached.',
+        ],
+        'password'    => [
+            'confirmed' => '密碼不一致',
+            'min' => '密碼至少要:min個字母.',
         ]
     ],
 

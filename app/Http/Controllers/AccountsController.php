@@ -83,10 +83,14 @@ class AccountsController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
+            'password' => 'min:6|confirmed',
         ]);
 
         $agent = User::find($agentId);
         $agent->name = $request->input('name');
+        if ($request->input('password')) {
+            $agent->password = bcrypt($request->input('password'));
+        }
         $agent->save();
 
         return Redirect::back();
@@ -146,10 +150,14 @@ class AccountsController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'user_limit' => 'required|numeric|between:0,16',
+            'password' => 'min:6|confirmed',
         ]);
 
         $client = User::find($clientId);
         $client->name = $request->get('name');
+        if ($request->input('password')) {
+            $client->password = bcrypt($request->input('password'));
+        }
         $client->save();
 
         Client::where('user_id', '=', $clientId)->update([
@@ -246,10 +254,14 @@ class AccountsController extends Controller
 
         $this->validate($request, [
             'name' => 'required|max:255',
+            'password' => 'min:6|confirmed',
         ]);
 
         $department = User::find($departmentId);
         $department->name = $request->input('name');
+        if ($request->input('password')) {
+            $department->password = bcrypt($request->input('password'));
+        }
         $department->save();
 
         return Redirect::back();
