@@ -14,8 +14,11 @@ define(["client/components/single-stats-table",
                 deviceAccount: deviceAccount,
             }, "summary");
             SingleStatsChart.initialize(endpoint, {
+                avg: 1,
+                nodata: 1,
+                timestamp: 1,
                 deviceAccount: deviceAccount,
-            });
+            }, "avg");
         }
     };
 });

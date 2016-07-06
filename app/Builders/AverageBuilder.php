@@ -4,6 +4,7 @@ namespace App\Builders;
 
 use App\Builders\BaseBuilder;
 use App\DeviceHistory;
+use DB;
 
 class AverageBuilder extends BaseBuilder{
     private $key = 'avg';
@@ -20,7 +21,19 @@ class AverageBuilder extends BaseBuilder{
         }
  
         if ($this->request->query('timestamp') == 1) {
-            return [$this->key => $this->query->selectRaw('record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')->groupBy('record_at')->get()];
+            $deviceAccount = $this->request->query('deviceAccount');
+            $client = DB::select('select * from clients where device_account = ?', [$deviceAccount]);
+            if (count($client) > 0)  {
+                $client_id = $client[0]->user_id;
+                $devices = DB::select('select * from devices where client_id = ?', [$client_id]);
+                $device_ids = [];
+                foreach ($devices as $device) {
+                    array_push($device_ids, $deviceAccount . '-' . $device->index);
+                }
+                return [$this->key => $this->query->selectRaw('record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')->whereIn('device_id', $device_ids)->groupBy('record_at')->get()];
+            } else {
+                return [$this->key => $this->query->selectRaw('record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')->groupBy('record_at')->get()];
+            }
         }
 
         if ($this->request->query('device_level') == 1) {

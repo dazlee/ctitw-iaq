@@ -18,13 +18,16 @@ define(["chartConfigs",
 
     var filterData = R.curry(function (checker, benchmark, data) {
         var previousTimestamp = 0;
-        return data.reduce(function (reduced, v) {
-            if (checker(v[0] - previousTimestamp, benchmark)) {
+        var result = data.reduceRight(function (reduced, v) {
+            var diff = Math.abs(v[0] - previousTimestamp);
+            if (checker(diff, benchmark)) {
                 previousTimestamp = v[0];
                 reduced.push(v);
             }
             return reduced;
         }, []);
+        result.reverse();
+        return result;
     });
 
     var filterDataByMinutes = filterData(gteMinutes);
