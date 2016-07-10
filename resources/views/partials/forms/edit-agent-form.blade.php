@@ -3,25 +3,26 @@
         <form class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/agent/'.$agent->user->id) }}">
             {!! csrf_field() !!}
 
-            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                <label class="col-md-4 control-label">經銷商Email</label>
-
-                <div class="col-md-8">
-                    <input type="email" class="form-control" name="email" value="{{ old('email') ? old('email') : $agent->user['email'] }}" disabled="true">
-
-                    @if ($errors->has('email'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                    @endif
-                </div>
-            </div>
 
             <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
                 <label class="col-md-4 control-label">經銷商帳號</label>
 
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="username" value="{{ $agent->user['username'] }}" disabled="true">
+                </div>
+            </div>
+
+            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                <label class="col-md-4 control-label">經銷商Email</label>
+
+                <div class="col-md-8">
+                    <input type="email" class="form-control" name="email" value="{{ old('email') ? old('email') : $agent->user['email'] }}">
+
+                    @if ($errors->has('email'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                    @endif
                 </div>
             </div>
 

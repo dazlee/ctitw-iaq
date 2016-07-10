@@ -84,10 +84,12 @@ class AccountsController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'password' => 'min:6|confirmed',
+            'email' => 'email|max:255|unique:users,email,'.$agentId,
         ]);
 
         $agent = User::find($agentId);
         $agent->name = $request->input('name');
+        $agent->email = $request->input('email');
         if ($request->input('password')) {
             $agent->password = bcrypt($request->input('password'));
         }
@@ -149,12 +151,14 @@ class AccountsController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$clientId,
             'user_limit' => 'required|numeric|between:0,16',
             'password' => 'min:6|confirmed',
         ]);
 
         $client = User::find($clientId);
         $client->name = $request->get('name');
+        $client->email = $request->get('email');
         if ($request->input('password')) {
             $client->password = bcrypt($request->input('password'));
         }
@@ -254,11 +258,13 @@ class AccountsController extends Controller
 
         $this->validate($request, [
             'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$departmentId,
             'password' => 'min:6|confirmed',
         ]);
 
         $department = User::find($departmentId);
         $department->name = $request->input('name');
+        $department->email = $request->input('email');
         if ($request->input('password')) {
             $department->password = bcrypt($request->input('password'));
         }

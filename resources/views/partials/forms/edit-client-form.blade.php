@@ -4,25 +4,26 @@
             {!! csrf_field() !!}
 
             <div class="col-lg-5">
-                <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                    <label class="col-md-4 control-label">客戶Email</label>
-
-                    <div class="col-md-8">
-                        <input type="email" class="form-control" name="email" value="{{ old('email') ? old('email') : $client->user['email'] }}" disabled="true">
-
-                        @if ($errors->has('email'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('email') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
 
                 <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
                     <label class="col-md-4 control-label">客戶帳號</label>
 
                     <div class="col-md-8">
                         <input type="text" class="form-control" name="username" value="{{ $client->user['username'] }}" disabled="true">
+                    </div>
+                </div>
+
+                <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                    <label class="col-md-4 control-label">客戶Email</label>
+
+                    <div class="col-md-8">
+                        <input type="email" class="form-control" name="email" value="{{ old('email') ? old('email') : $client->user['email'] }}">
+
+                        @if ($errors->has('email'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 </div>
 
