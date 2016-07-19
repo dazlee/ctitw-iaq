@@ -125,7 +125,7 @@
                 @endrole
                 @role(['admin', 'client'])
                 <li>
-                    <a href="/settings"><i class="fa fa-cog fa-fw"></i> 設定</span></a>
+                    <a href="/settings"><i class="fa fa-cog fa-fw"></i> 警示設定</span></a>
                 </li>
                 @endrole
             </ul>
