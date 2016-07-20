@@ -272,6 +272,14 @@ class AccountsController extends Controller
 
         return Redirect::back();
     }
+    public function deleteDepartment (Request $request, $id) {
+        $user = User::find($id);
+        if ($user->hasRole('department')) {
+            Department::where("user_id", "=", $id)->delete();
+            $user->delete();
+        }
+        return redirect('/');
+    }
 
 
     public function device () {
@@ -310,7 +318,7 @@ class AccountsController extends Controller
         }
         return Redirect::back();
     }
-
+    // delete client for admin usage
     public function delete (Request $request, $id) {
         $user = User::find($id);
         if ($user->hasRole('client')) {
