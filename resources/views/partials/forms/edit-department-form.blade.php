@@ -73,5 +73,28 @@
                 </div>
             </div>
         </form>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">刪除客戶帳號</h3>
+            </div>
+        </div>
+        <form id="delete-department" class="form-horizontal" role="form" method="POST" action="{{ url('/accounts/department/'.$department->id).'/delete' }}">
+            {!! csrf_field() !!}
+            <div class="form-group">
+                <div class="col-md-1">
+                    <button id="delete-department-button" type="button" class="btn btn-danger">刪除帳號</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+<script>
+    var deleteBtn = document.getElementById("delete-department-button");
+    deleteBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (confirm ("確定刪除帳號？\n此動作將無法復原")) {
+            document.getElementById("delete-department").submit();
+        }
+    });
+</script>
