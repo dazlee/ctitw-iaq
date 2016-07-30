@@ -13,7 +13,6 @@
         <div class="row pt-6">
             <div class="col-sm-2 pt-6">
                 <button id="refresh-single-stats-chart" class="btn btn-success btn-sm">刷新</button>
-                <button id="download-single-stats-chart" class="btn btn-primary btn-sm">下載</button>
             </div>
             <div id="unit-selector-single-stats-chart" class="col-sm-6 p-0 pt-6">
                 <ul class="nav nav-pills">

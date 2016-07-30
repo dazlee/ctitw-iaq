@@ -10,7 +10,7 @@
                         <div class="title">二氧化碳</div>
                         <div class="value"><span class="number">0</span> ppm</div>
                     </div>
-                    <div class="footer">法定均值 {{$threshold->co2}} ppm</div>
+                    <div class="footer">警示值 {{$threshold->co2}} ppm</div>
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
                         <div class="title">溫度</div>
                         <div class="value"><span class="number">0</span> °C</div>
                     </div>
-                    <div class="footer">法定均值 {{$threshold->temp}} °C</div>
+                    <div class="footer">警示值 {{$threshold->temp}} °C</div>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
                         <div class="title">濕度</div>
                         <div class="value"><span class="number">0</span> %</div>
                     </div>
-                    <div class="footer">法定均值 {{$threshold->rh}} %</div>
+                    <div class="footer">警示值 {{$threshold->rh}} %</div>
                 </div>
             </div>
         </div>
