@@ -69,7 +69,6 @@ class CheckDeviceHistory extends Command
         date_default_timezone_set("Asia/Taipei");
         $recordAt = strtotime($record['record_at']);
         $now = time();
-        Log::info('getEmailType minutes diff: ' . round(abs($recordAt - $now) / 60) . " minutes");
         $diff = round(abs($recordAt - $now) / 60);
         if ($diff >= 30 && $diff < 40) {
             return self::_30MINS;
@@ -89,6 +88,7 @@ class CheckDeviceHistory extends Command
         return "$clientName - 儀器 ${device['device_name']}(${device['device_id']}) 已經${time}沒有回應。 </br>\r\n";
     }
     private function sendEmail ($client, $body) {
+        Log::Info("Sending email for device nonresponding to client: " . $client->user['name']);
         $clientEmail = $client->user['email'];
         $agentEmail = $client->agent->user['email'];
         $adminEmail = $client->agent->admin['email'];
