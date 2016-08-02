@@ -54,6 +54,63 @@ class DeviceHistory extends Model
 	    return $rows;
     }
 
+    public static function sendMalfunctionMail ($deviceAccount, $rows) {
+        $client = Client::where('device_account', '=', $deviceAccount)->first();
+        if (!count($client)) {
+            return Null;
+        }
+
+        $body = "";
+        $clientName = $client->user['name'];
+        foreach ($rows as $row) {
+            $index = explode('-', $row['device_id'])[1];
+            $device = Device::where("client_id", "=", $client->user_id)->where("index", "=", $index)->first();
+            if (!isset($device)) {
+                continue;
+            }
+            $deviceHistories = DeviceHistory::where("device_id", "=", $row['device_id'])->orderBy('record_at', 'desc')->take(12)->get();
+            $count = 0;
+            foreach ($deviceHistories as $deviceHistory) {
+                if ($deviceHistory->co2 == $row['co2'] &&
+                    $deviceHistory->temp == $row['temp'] &&
+                    $deviceHistory->rh == $row['rh']) {
+                        $count++;
+                    } else {
+                        break;
+                    }
+            }
+            error_log("count==". $count);
+            $time = "";
+            switch ($count) {
+                case 3:
+                    $time = "30分鐘";
+                    break;
+                case 6:
+                    $time = "一小時";
+                    break;
+                case 9:
+                    $time = "一小時30分鐘";
+                    break;
+                case 12:
+                    $time = "兩小時";
+                    break;
+            }
+            if (!empty($time)) {
+                $body .= "$clientName - 儀器 ${device['device_name']}(${device['device_id']}) $time內數據可能有異常。 </br>\r\n";
+            }
+        }
+
+        if (!empty($body)) {
+            $clientEmail = "daz.lee1987@gmail.com";//$client->user['email'];
+            $agentEmail = "daz.lee1987@gmail.com";//$client->agent->user['email'];
+            $adminEmail = "daz.lee1987@gmail.com";//$client->agent->admin['email'];
+            Mail::send('emails.warning', ['to' => $clientEmail, 'body' => $body], function ($message) use ($clientEmail, $agentEmail, $adminEmail, $body) {
+                $message->to($clientEmail)->cc($agentEmail)->cc($adminEmail);
+                $message->subject('儀器數據異常警報')->setBody($body);
+            });
+        }
+    }
+
     public static function sendMail($deviceAccount, $rows) {
         $client = Client::where('device_account', '=', $deviceAccount)->first();
         if (!count($client)) {
@@ -80,7 +137,7 @@ class DeviceHistory extends Model
                 if (self::isSwitchedToHigh($row['device_id'], $item, $threshold->{$item}, $row[$item])) {
                     $msg .= sprintf('%s值(%s) 超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
                 }
-                    
+
                 if (self::isKeepingHighInOneHour($row['device_id'], $row['record_at'], $item, $threshold->{$item}, $row[$item])) {
                     $msg .= sprintf('%s值(%s) 已在一小時內連續超過上限(%s)。  ', $item, $row[$item], $threshold->{$item});
                 }
@@ -99,7 +156,7 @@ class DeviceHistory extends Model
             $msg = sprintf('%s, 儀器：%s(%s), %s<br/>', $row['record_at'], $deviceName, $row['device_id'], $msg);
             $body .= $msg;
         }
-    
+
         if(empty($body)) {
             return Null;
         }

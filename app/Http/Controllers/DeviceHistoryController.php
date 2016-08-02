@@ -48,6 +48,7 @@ class DeviceHistoryController extends Controller
 
         try {
             DeviceHistory::sendMail($deviceAccount, $device_history_list);
+            DeviceHistory::sendMalfunctionMail($deviceAccount, $device_history_list);
         } catch (\Exception $e) {
             return response()->json(['err' => 'SMTP Error: ' . $e->getMessage()], 406);
         }
