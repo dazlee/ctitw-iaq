@@ -35,6 +35,11 @@ class DeviceHistoryController extends Controller
             if(!File::exists($path)) {
                 File::makeDirectory($path, $mode = 0777, true, true);
             }
+
+            if ($file->getSize() == 0) {
+                return response()->json(['msg' => 'Receive 0 bytes file from ftp'], 406);
+            }
+
             $file->move($path, $fileName);
             return response()->json(['msg' => 'Success to upload file to webserver'], 201);
         }
