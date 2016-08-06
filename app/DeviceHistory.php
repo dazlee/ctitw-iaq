@@ -8,6 +8,7 @@ use Mail;
 use App\Client;
 use App\Department;
 use App\User;
+use Log;
 
 class DeviceHistory extends Model
 {
@@ -68,7 +69,7 @@ class DeviceHistory extends Model
             if (!isset($device)) {
                 continue;
             }
-            $deviceHistories = DeviceHistory::where("device_id", "=", $row['device_id'])->orderBy('record_at', 'desc')->take(12)->get();
+            $deviceHistories = DeviceHistory::where("device_id", "=", $row['device_id'])->orderBy('record_at', 'desc')->take(13)->get();
             $count = 0;
             foreach ($deviceHistories as $deviceHistory) {
                 if ($deviceHistory->co2 == $row['co2'] &&
@@ -96,14 +97,15 @@ class DeviceHistory extends Model
                     break;
             }
             if (!empty($time)) {
-                $body .= "$clientName - 儀器 ${device['device_name']}(${device['device_id']}) $time內數據可能有異常。 </br>\r\n";
+                $deviceName = $device->name;
+                $body .= sprintf('%s - 儀器 %s(%s) %s內數據可能有異常。</br>', $clientName, $deviceName, $row['device_id'], $time);
             }
         }
 
         if (!empty($body)) {
-            $clientEmail = "daz.lee1987@gmail.com";//$client->user['email'];
-            $agentEmail = "daz.lee1987@gmail.com";//$client->agent->user['email'];
-            $adminEmail = "daz.lee1987@gmail.com";//$client->agent->admin['email'];
+            $clientEmail = $client->user['email'];
+            $agentEmail = $client->agent->user['email'];
+            $adminEmail = $client->agent->admin['email'];
             Mail::send('emails.warning', ['to' => $clientEmail, 'body' => $body], function ($message) use ($clientEmail, $agentEmail, $adminEmail, $body) {
                 $message->to($clientEmail)->cc($agentEmail)->cc($adminEmail);
                 $message->subject('儀器數據異常警報')->setBody($body);
