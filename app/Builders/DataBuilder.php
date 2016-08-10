@@ -20,8 +20,9 @@ class DataBuilder extends BaseBuilder{
         }
 
         if ($this->request->query('d') == 1) {
-            return [$this->key => $this->query->selectRaw('record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')
-                ->groupBy(DB::raw('DAY(record_at)'))->get()
+            return [$this->key => $this->query->selectRaw('device_id, record_at, AVG(co2) as co2, AVG(temp) as temp, AVG(rh) as rh')
+                ->groupBy(DB::raw('device_id, DAY(record_at)'))
+                ->get()
             ];
         }
 
