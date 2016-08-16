@@ -14,6 +14,7 @@ define(["client/components/multiple-stats-table",
             }, "min_avg_max");
             MultipleStatsChart.initialize(endpoint, {
                 deviceAccount: deviceAccount,
+                d: 1,
             });
         }
     };
