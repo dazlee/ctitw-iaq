@@ -115,7 +115,7 @@
                 @endrole
                 @role(['admin', 'client'])
                 <li>
-                    <a href="/files"><i class="fa fa-file fa-fw"></i> 檔案列表</span></a>
+                    <a href="/files"><i class="fa fa-file fa-fw"></i> 管理計劃書存檔</span></a>
                 </li>
                 @endrole
                 @role(['client'])
