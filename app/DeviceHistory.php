@@ -83,9 +83,6 @@ class DeviceHistory extends Model
             error_log("count==". $count);
             $time = "";
             switch ($count) {
-                case 3:
-                    $time = "30分鐘";
-                    break;
                 case 6:
                     $time = "一小時";
                     break;

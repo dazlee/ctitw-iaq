@@ -70,9 +70,7 @@ class CheckDeviceHistory extends Command
         $recordAt = strtotime($record['record_at']);
         $now = time();
         $diff = round(abs($recordAt - $now) / 60);
-        if ($diff >= 30 && $diff < 40) {
-            return self::_30MINS;
-        } else if ($diff >= 60 && $diff < 70) {
+        if ($diff >= 60 && $diff < 70) {
             return self::_60MINS;
         } else if ($diff >= 90 && $diff < 100) {
             return self::_90MINS;
