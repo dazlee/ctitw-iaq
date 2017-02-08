@@ -91,7 +91,7 @@ class CheckDeviceHistory extends Command
         Log::Info("Sending email for device nonresponding to client: " . $client->user['name']);
         $clientEmail = $client->user['email'];
         $agentEmail = $client->agent->user['email'];
-        $adminEmail = $client->agent->admin['email'];
+        $adminEmail = "dannytsai0905@gmail.com";//$client->agent->admin['email'];
         Mail::send('emails.warning', ['to' => $clientEmail, 'body' => $body], function ($message) use ($clientEmail, $agentEmail, $adminEmail, $body) {
             $message->to($clientEmail)->cc($agentEmail)->cc($adminEmail);
             $message->subject('儀器無回應警報')->setBody($body);

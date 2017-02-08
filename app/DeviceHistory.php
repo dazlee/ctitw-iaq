@@ -105,9 +105,9 @@ class DeviceHistory extends Model
         if (!empty($body)) {
             $clientEmail = $client->user['email'];
             $agentEmail = $client->agent->user['email'];
-            $adminEmail = $client->agent->admin['email'];
+            $adminEmail = "dannytsai0905@gmail.com";//$client->agent->admin['email'];
             Mail::send('emails.warning', ['to' => $clientEmail, 'body' => $body], function ($message) use ($clientEmail, $agentEmail, $adminEmail, $body) {
-                $message->to($clientEmail)->cc($agentEmail)->cc($adminEmail);
+                $message->to($clientEmail)->cc($agentEmail)->cc($adminEmail)->cc("daz.lee1987@gmail.com");
                 $message->subject('儀器數據異常警報')->setBody($body);
             });
         }
@@ -128,7 +128,7 @@ class DeviceHistory extends Model
             }
         }
 
-        $adminEmail = Role::where("name", "=", "admin")->first()->users()->first()->email;
+        $adminEmail = "dannytsai0905@gmail.com";//Role::where("name", "=", "admin")->first()->users()->first()->email;
         $subjects = [];
         $body = "";
 
@@ -171,6 +171,7 @@ class DeviceHistory extends Model
             $departmentMails[] = $department->user->email;
         }
 
+	
         Mail::send('emails.warning', ['to' => $clientEmail, 'body' => $body], function ($message) use ($clientEmail, $departmentMails, $adminEmail, $body) {
             $message->to($clientEmail)->cc($adminEmail);
             foreach ($departmentMails as $departmentMail) {
@@ -178,6 +179,7 @@ class DeviceHistory extends Model
             }
             $message->subject('超標警報')->setBody($body);
         });
+	
     }
 
     public static function isSwitchedToHigh($deviceId, $item, $threshold, $value) {
